@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'object_tracking_classes.dart';
 
 class PluginMappintelligence {
   static const MethodChannel _channel =
@@ -74,5 +75,25 @@ class PluginMappintelligence {
     return _channel
         .invokeMethod<bool>('isAnonymousTrackingEnabled')
         .then<bool>((bool? value) => value ?? false);
+  }
+
+  static Future<void> trackPage(String currentWidgetName) async {
+    await _channel.invokeMethod('trackPage', [currentWidgetName]);
+  }
+
+  static Future<void> trackCustomPage(
+      String customName, Map<String, String> trackingParameters) async {
+    await _channel
+        .invokeMethod('trackCustomPage', [customName, trackingParameters]);
+  }
+
+  static Future<void> trackPageWithCustomData(
+      MIPageViewEvent pageViewEvent) async {
+    var pageProperties = pageViewEvent.pageParameters;
+    var searchTerm = pageProperties.searchTerm;
+    var categories = pageProperties.categories;
+    var params = pageProperties.params;
+    await _channel.invokeMethod(
+        'trackPageWithCustomData', [searchTerm, categories, params]);
   }
 }

@@ -60,6 +60,24 @@
     NSNumber* isEnabled = [NSNumber numberWithBool:[[MappIntelligence shared] anonymousTracking]];
     NSLog(@"Flutter: is anonymus trackint enabled: %@", isEnabled);
     result(isEnabled);
+  } else if ([@"trackPage" isEqualToString: call.method]) {
+    NSString* pageName = call.arguments[0];
+    [[MappIntelligence shared] trackCustomPage:pageName trackingParams:nil];
+  } else if ([@"trackCustomPage" isEqualToString: call.method]) {
+    NSString* pageName = call.arguments[0];
+    NSDictionary* pageParameters = call.arguments[1];
+    [[MappIntelligence shared] trackCustomPage:pageName trackingParams:pageParameters];
+  } else if ([@"trackPageWithCustomData" isEqualToString: call.method]) {
+    // page properties
+    NSString* searchTerm = call.arguments[0];
+    NSDictionary* categories = call.arguments[1];
+    NSDictionary* params = call.arguments[2];
+    MIPageParameters* pageProperties = [[MIPageParameters alloc] initWithPageParams:params pageCategory:categories search:searchTerm];
+    
+    
+    MIPageViewEvent* pageViewEvent = [[MIPageViewEvent alloc] initWithName:@"testName"];
+    [pageViewEvent setPageParameters:pageProperties];
+    [[MappIntelligence shared] trackPage:pageViewEvent];
   }
   else { 
     result(FlutterMethodNotImplemented);
