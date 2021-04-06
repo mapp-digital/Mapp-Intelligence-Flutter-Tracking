@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'object_tracking_classes.dart';
 
@@ -89,11 +92,9 @@ class PluginMappintelligence {
 
   static Future<void> trackPageWithCustomData(
       MIPageViewEvent pageViewEvent) async {
-    var pageProperties = pageViewEvent.pageParameters;
-    var searchTerm = pageProperties.searchTerm;
-    var categories = pageProperties.categories;
-    var params = pageProperties.params;
+    print("test print:");
+    debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
     await _channel.invokeMethod(
-        'trackPageWithCustomData', [searchTerm, categories, params]);
+        'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
   }
 }

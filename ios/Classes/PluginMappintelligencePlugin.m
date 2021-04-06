@@ -68,16 +68,34 @@
     NSDictionary* pageParameters = call.arguments[1];
     [[MappIntelligence shared] trackCustomPage:pageName trackingParams:pageParameters];
   } else if ([@"trackPageWithCustomData" isEqualToString: call.method]) {
-    // page properties
-    NSString* searchTerm = call.arguments[0];
-    NSDictionary* categories = call.arguments[1];
-    NSDictionary* params = call.arguments[2];
-    MIPageParameters* pageProperties = [[MIPageParameters alloc] initWithPageParams:params pageCategory:categories search:searchTerm];
+
+    NSString* jsonString = call.arguments[0];
+    NSData* data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *s = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
     
-    
-    MIPageViewEvent* pageViewEvent = [[MIPageViewEvent alloc] initWithName:@"testName"];
-    [pageViewEvent setPageParameters:pageProperties];
-    [[MappIntelligence shared] trackPage:pageViewEvent];
+    MIPageParameters* pageProperties = s[@"pageParameters"];
+    NSLog(@"\npage:%@", pageProperties);
+    MICampaignParameters* campaignParameters = s[@"campaignParameters"];
+    NSLog(@"\ncampaign:%@", campaignParameters);
+    MISessionParameters* sessionProperties = s[@"sessionParameters"];
+    NSLog(@"\nsession:%@", sessionProperties);
+    MIUserCategories* userCategories = s[@"userCategories"];
+    NSLog(@"\nuser:%@", userCategories);
+    MIEcommerceParameters* ecommerceProperties = s[@"ecommerceParameters"];
+    NSLog(@"\necommerce:%@", ecommerceProperties);
+    NSString* eventName = s[@"name"];
+    NSLog(@"\neventName:%@", eventName);
+
+    MIPageViewEvent* event = [[MIPageViewEvent alloc] init];
+    [event setPageName:eventName];
+    [event setPageParameters:pageProperties];
+    [event setUserCategories:userCategories];
+    [event setSessionParameters:sessionProperties];
+    [event setCampaignParameters:campaignParameters];
+    [event setEcommerceParameters:ecommerceProperties];
+    NSLog(@"\nevent:%@", event);
+    //TODO: it will need to be done with new initializators with dictionary
+    //[[MappIntelligence shared] trackPage: event];
   }
   else { 
     result(FlutterMethodNotImplemented);
