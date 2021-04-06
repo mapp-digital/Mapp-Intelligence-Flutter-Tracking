@@ -169,3 +169,31 @@ class MIPageViewEvent {
         'campaignParameters': campaignParameters?.toJson()
       };
 }
+
+class EventParameters {
+  Map<int, String>? parameters;
+
+  Map<String, dynamic> toJson() => {
+        'parameters':
+            parameters?.map((key, value) => MapEntry(key.toString(), value))
+      };
+}
+
+class ActionEvent {
+  ActionEvent(this.name);
+  String? name;
+  EventParameters? eventParameters;
+  MISessionParameters? sessionParameters;
+  MIUserCategories? userCategories;
+  MIEcommerceParameters? ecommerceParameters;
+  MICampaignParameters? campaignParameters;
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'eventParameters': eventParameters?.toJson(),
+        'sessionParameters': sessionParameters?.toJson(),
+        'userCategories': userCategories?.toJson(),
+        'ecommerceParameters': ecommerceParameters?.toJson(),
+        'campaignParameters': campaignParameters?.toJson()
+      };
+}

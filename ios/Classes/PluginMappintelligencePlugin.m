@@ -96,8 +96,13 @@
     NSLog(@"\nevent:%@", event);
     //TODO: it will need to be done with new initializators with dictionary
     //[[MappIntelligence shared] trackPage: event];
-  }
-  else { 
+  } else if ([@"trackAction" isEqualToString: call.method]) {
+    NSString* jsonString = call.arguments[0];
+    NSData* data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary * s = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSLog(@"\ndictionary for track action:%@", s);
+    //TODO: mapp with dictionary and new lib 
+  }else { 
     result(FlutterMethodNotImplemented);
   }
 }

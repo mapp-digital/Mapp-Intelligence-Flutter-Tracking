@@ -97,4 +97,10 @@ class PluginMappintelligence {
     await _channel.invokeMethod(
         'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
   }
+
+  static Future<void> trackAction(ActionEvent actionEvent) async {
+    debugPrint(jsonEncode(actionEvent.toJson()), wrapWidth: 1024);
+    await _channel
+        .invokeMethod('trackAction', [jsonEncode(actionEvent.toJson())]);
+  }
 }
