@@ -102,7 +102,18 @@
     NSMutableDictionary * s = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
     NSLog(@"\ndictionary for track action:%@", s);
     //TODO: mapp with dictionary and new lib 
-  }else { 
+  } else if ([@"trackUrl" isEqualToString: call.method]) {
+    NSString* urlString = call.arguments[0];
+    NSString* mediaCode = call.arguments[1];
+    NSURL* url = [[NSURL alloc] initWithString:urlString];
+    [[MappIntelligence shared] trackUrl:url withMediaCode:mediaCode];
+
+  } else if ([@"trackUrlWitouthMediaCode" isEqualToString: call.method]) {
+    NSString* urlString = call.arguments[0];
+    NSURL* url = [[NSURL alloc] initWithString:urlString];
+    [[MappIntelligence shared] trackUrl:url withMediaCode:NULL];
+  }
+  else { 
     result(FlutterMethodNotImplemented);
   }
 }

@@ -135,6 +135,7 @@ class MIEcommerceParameters {
 enum MICampaignAction { click, view }
 
 class MICampaignParameters {
+  MICampaignParameters(this.campaignId);
   String? campaignId;
   MICampaignAction? action;
   String? mediaCode;

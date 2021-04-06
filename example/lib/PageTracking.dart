@@ -76,7 +76,7 @@ class PageTracking extends StatelessWidget {
         product1.categories = {44: "product1Cat"};
         ecommerceProperties.products = [product1];
 
-        var campaignProperties = MICampaignParameters();
+        var campaignProperties = MICampaignParameters(null);
         campaignProperties.action = MICampaignAction.click;
         campaignProperties.campaignId = "4387324978789234";
         campaignProperties.customParameters = {78: 'campaignParameter1'};
