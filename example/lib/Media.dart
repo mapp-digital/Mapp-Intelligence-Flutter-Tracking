@@ -36,7 +36,7 @@ class Media extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ecommerce'),
+        title: Text('Media'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
