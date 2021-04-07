@@ -114,4 +114,10 @@ class PluginMappintelligence {
       await _channel.invokeMethod('trackUrl', [urlString, mediaCode]);
     }
   }
+
+  static Future<void> trackMedia(MediaEvent mediaEvent) async {
+    debugPrint(jsonEncode(mediaEvent.toJson()), wrapWidth: 1024);
+    await _channel
+        .invokeMethod('trackMedia', [jsonEncode(mediaEvent.toJson())]);
+  }
 }

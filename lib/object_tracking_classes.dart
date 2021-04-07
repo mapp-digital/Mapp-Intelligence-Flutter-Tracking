@@ -198,3 +198,45 @@ class ActionEvent {
         'campaignParameters': campaignParameters?.toJson()
       };
 }
+
+class MediaParameters {
+  MediaParameters(this.name);
+  String? name;
+  String? action;
+  int? bandwith;
+  int? duration;
+  int? position;
+  bool? soundIsMuted;
+  double? soundVolume;
+  Map<int, String>? customCategories;
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'action': action,
+        'bandwith': bandwith,
+        'duration': duration,
+        'position': position,
+        'soundIsMuted': soundIsMuted,
+        'soundVolume': soundVolume,
+        'customCategories': customCategories
+            ?.map((key, value) => MapEntry(key.toString(), value))
+      };
+}
+
+class MediaEvent {
+  MediaEvent(this.name, this.mediaParameters);
+  String? name;
+  EventParameters? eventParameters;
+  //media parameters is mandatory
+  MediaParameters mediaParameters;
+  MIEcommerceParameters? ecommerceParameters;
+  MISessionParameters? sessionParameters;
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'eventParameters': eventParameters?.toJson(),
+        'mediaParameters': mediaParameters.toJson(),
+        'ecommerceParameters': ecommerceParameters?.toJson(),
+        'sessionParameters': sessionParameters?.toJson()
+      };
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plugin_mappintelligence/object_tracking_classes.dart';
+import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence_example/VideoPlayer.dart';
 
 class Media extends StatelessWidget {
@@ -6,12 +8,14 @@ class Media extends StatelessWidget {
     List<Widget> buttons = [];
     buttons.add(ElevatedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoPlayerApp(),
-          ),
-        );
+        var mediaProperties = MediaParameters("TestVideo");
+        mediaProperties.action = "view";
+        mediaProperties.position = 12;
+        mediaProperties.duration = 120;
+        mediaProperties.customCategories = {20: "mediaCat"};
+
+        var mediaEvent = MediaEvent("Test", mediaProperties);
+        PluginMappintelligence.trackMedia(mediaEvent);
       },
       child: Text('Test Media1'),
       style:
@@ -24,7 +28,14 @@ class Media extends StatelessWidget {
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
-      onPressed: () async {},
+      onPressed: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoPlayerApp(),
+          ),
+        );
+      },
       child: Text('Player Example2'),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),

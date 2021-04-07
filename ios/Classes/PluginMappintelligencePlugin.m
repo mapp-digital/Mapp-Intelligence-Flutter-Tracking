@@ -112,6 +112,13 @@
     NSString* urlString = call.arguments[0];
     NSURL* url = [[NSURL alloc] initWithString:urlString];
     [[MappIntelligence shared] trackUrl:url withMediaCode:NULL];
+  } else if ([@"trackMedia" isEqualToString: call.method]) {
+    NSString* jsonString = call.arguments[0];
+    NSData* data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *s = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSLog(@"\ndictionary for track media:%@", s);
+    //TODO: mapp with dictionary and new lib 
+
   }
   else { 
     result(FlutterMethodNotImplemented);
