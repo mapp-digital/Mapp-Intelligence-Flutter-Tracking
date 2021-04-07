@@ -2,17 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-
-//void main() => runApp(VideoPlayerApp());
+import 'package:chewie/chewie.dart';
 
 class VideoPlayerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp(
-    //   title: 'Video Player Demo',
-    //   home: VideoPlayerScreen(),
-    // );
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Video Player Demo'),
@@ -31,7 +25,7 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
+  late ChewieController _chewieController;
 
   @override
   void initState() {
@@ -41,9 +35,28 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     _controller = VideoPlayerController.network(
       'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
     );
+    _chewieController = ChewieController(
+      videoPlayerController: _controller,
+      aspectRatio: 3 / 2,
+      autoPlay: false,
+      looping: true,
+      // Try playing around with some of these other options:
+
+      // showControls: false,
+      // materialProgressColors: ChewieProgressColors(
+      //   playedColor: Colors.red,
+      //   handleColor: Colors.blue,
+      //   backgroundColor: Colors.grey,
+      //   bufferedColor: Colors.lightGreen,
+      // ),
+      // placeholder: Container(
+      //   color: Colors.grey,
+      // ),
+      // autoInitialize: true,
+    );
 
     // Initialize the controller and store the Future for later use.
-    _initializeVideoPlayerFuture = _controller.initialize();
+    Future<void> _initializeVideoPlayerFuture = _controller.initialize();
 
     // Use the controller to loop the video.
     _controller.setLooping(true);
@@ -55,7 +68,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
     _controller.dispose();
-
+    _chewieController.dispose();
     super.dispose();
   }
 
@@ -64,43 +77,57 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     return Scaffold(
       // Use a FutureBuilder to display a loading spinner while waiting for the
       // VideoPlayerController to finish initializing.
-      body: FutureBuilder(
-        future: _initializeVideoPlayerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the VideoPlayerController has finished initialization, use
-            // the data it provides to limit the aspect ratio of the video.
-            return AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              // Use the VideoPlayer widget to display the video.
-              child: VideoPlayer(_controller),
-            );
-          } else {
-            // If the VideoPlayerController is still initializing, show a
-            // loading spinner.
-            return Center(child: CircularProgressIndicator());
-          }
-        },
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Center(
+              child: Chewie(
+                controller: _chewieController,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              _chewieController.enterFullScreen();
+            },
+            child: Text('Fullscreen'),
+          ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _chewieController.dispose();
+                      /*_videoPlayerController2.pause();
+                        _videoPlayerController2.seekTo(Duration(seconds: 0));*/
+
+                      _chewieController = ChewieController(
+                        videoPlayerController: _controller,
+                        aspectRatio: 3 / 2,
+                        autoPlay: false,
+                        looping: true,
+                      );
+
+                      _controller
+                        ..initialize().then((_) {
+                          setState(() {
+                            _controller.seekTo(Duration(seconds: 3));
+                            _controller.play();
+                          });
+                        });
+                    });
+                  },
+                  child: Padding(
+                    child: Text("Seek To"),
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Wrap the play or pause in a call to `setState`. This ensures the
-          // correct icon is shown.
-          setState(() {
-            // If the video is playing, pause it.
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              // If the video is paused, play it.
-              _controller.play();
-            }
-          });
-        },
-        // Display the correct icon depending on the state of the player.
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
