@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:plugin_mappintelligence/object_tracking_classes.dart';
+import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
@@ -25,6 +27,8 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late VideoPlayerController _controller;
+  bool _previousIsPlaying = false;
+  int _seekPosition = 0;
   late ChewieController _chewieController;
 
   @override
@@ -54,6 +58,39 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       // ),
       // autoInitialize: true,
     );
+
+    void trackMedia(String action) {
+      var mediaProperties = MediaParameters("TestVideoExample");
+      mediaProperties.action = action;
+      mediaProperties.position = _controller.value.position.inSeconds;
+      mediaProperties.duration = _controller.value.duration.inSeconds;
+      mediaProperties.soundVolume = _controller.value.volume * 255.0;
+      print('volume: ');
+      print(_controller.value.volume * 255.0);
+      mediaProperties.soundIsMuted =
+          _controller.value.volume == 0.0 ? true : false;
+
+      var mediaEvent = MediaEvent("VideoPlayerController", mediaProperties);
+      PluginMappintelligence.trackMedia(mediaEvent);
+    }
+
+    _controller.addListener(() {
+      if (_controller.value.isPlaying != _previousIsPlaying) {
+        if (_controller.value.isPlaying) {
+          _previousIsPlaying = true;
+          trackMedia("play");
+        } else {
+          _previousIsPlaying = false;
+          trackMedia("stop");
+        }
+      }
+
+      if ((_controller.value.position.inMilliseconds - _seekPosition).abs() >
+          700) {
+        trackMedia("seek");
+      }
+      _seekPosition = _controller.value.position.inMilliseconds;
+    });
 
     // Initialize the controller and store the Future for later use.
     Future<void> _initializeVideoPlayerFuture = _controller.initialize();
@@ -99,9 +136,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   onPressed: () {
                     setState(() {
                       _chewieController.dispose();
-                      /*_videoPlayerController2.pause();
-                        _videoPlayerController2.seekTo(Duration(seconds: 0));*/
-
                       _chewieController = ChewieController(
                         videoPlayerController: _controller,
                         aspectRatio: 3 / 2,
