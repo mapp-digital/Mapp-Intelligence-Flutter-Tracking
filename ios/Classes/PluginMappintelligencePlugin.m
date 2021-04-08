@@ -1,4 +1,5 @@
 #import "PluginMappintelligencePlugin.h"
+#import <WebKit/WebKit.h>
 
 @implementation PluginMappintelligencePlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -119,6 +120,10 @@
     NSLog(@"\ndictionary for track media:%@", s);
     //TODO: mapp with dictionary and new lib 
 
+  } else if ([@"trackWebview" isEqualToString: call.method]) {
+    NSLog(@"track webview at native level");
+    WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
+    [[MIWebViewTracker sharedInstance] updateConfiguration:configuration];
   }
   else { 
     result(FlutterMethodNotImplemented);

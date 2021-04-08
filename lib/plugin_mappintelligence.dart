@@ -120,4 +120,9 @@ class PluginMappintelligence {
     await _channel
         .invokeMethod('trackMedia', [jsonEncode(mediaEvent.toJson())]);
   }
+
+  static Future<void> trackWebview() async {
+    debugPrint("trackWebview is pressed");
+    await _channel.invokeMethod('trackWebview');
+  }
 }
