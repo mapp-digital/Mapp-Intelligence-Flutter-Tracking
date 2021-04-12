@@ -1,7 +1,13 @@
 #import "PluginMappintelligencePlugin.h"
 #import <WebKit/WebKit.h>
+#import <UIKit/UIKit.h>
+
+@interface PluginMappintelligencePlugin ()
+@property WKWebView* webView;
+@end
 
 @implementation PluginMappintelligencePlugin
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
       methodChannelWithName:@"plugin_mappintelligence"
@@ -121,13 +127,53 @@
     //TODO: mapp with dictionary and new lib 
 
   } else if ([@"trackWebview" isEqualToString: call.method]) {
-    NSLog(@"track webview at native level");
-    WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
-    [[MIWebViewTracker sharedInstance] updateConfiguration:configuration];
+    NSNumber* x =  call.arguments[0];
+    NSNumber* y = call.arguments[1];
+    NSNumber* width = call.arguments[2];
+    NSNumber* height = call.arguments[3];
+    NSString* urlString = call.arguments[4];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+      WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
+      [[MIWebViewTracker sharedInstance] updateConfiguration:configuration];
+        UIViewController* base = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        UIViewController* topViewController = [self topViewController:base];
+        
+        if(topViewController) {
+            self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(x.doubleValue, y.doubleValue, width.doubleValue, height.doubleValue) configuration:configuration];
+            [[topViewController view] addSubview:self.webView];
+            NSURLRequest* request = [[NSURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:urlString]];
+            [self.webView loadRequest:request];
+        }
+    });
+  } else if ([@"disposeWebview" isEqualToString: call.method]) {
+    if (self.webView) {
+        self.webView.removeFromSuperview;
+    }
+    self.webView = NULL;
   }
   else { 
     result(FlutterMethodNotImplemented);
   }
+}
+
+-(UIViewController* ) topViewController: (UIViewController* ) base {
+    if ([base isKindOfClass:UINavigationController.class]) {
+        UINavigationController* nav  = (UINavigationController*) base;
+        return [self topViewController:[nav visibleViewController]];
+    }
+    if ([base isKindOfClass:UITabBarController.class]) {
+        UITabBarController* tab = (UITabBarController*) base;
+        UIViewController* selected = [tab selectedViewController];
+        if (selected) {
+            return [self topViewController:selected];
+        }
+    }
+    UIViewController* presented = [base presentedViewController];
+    if (presented) {
+        return [self topViewController:presented];
+    }
+    return base;
 }
 
 @end

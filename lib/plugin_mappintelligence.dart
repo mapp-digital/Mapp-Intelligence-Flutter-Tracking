@@ -121,8 +121,19 @@ class PluginMappintelligence {
         .invokeMethod('trackMedia', [jsonEncode(mediaEvent.toJson())]);
   }
 
-  static Future<void> trackWebview() async {
+  static Future<void> trackWebview(double? x, double? y, double? width,
+      double? height, String urlString) async {
     debugPrint("trackWebview is pressed");
-    await _channel.invokeMethod('trackWebview');
+    if (x != null && y != null && width != null && height != null) {
+      await _channel
+          .invokeMethod('trackWebview', [x, y, width, height, urlString]);
+    } else {
+      await _channel.invokeMethod('trackWebview', [urlString]);
+    }
+  }
+
+//This method is only for iOS
+  static Future<void> disposeWebview() async {
+    await _channel.invokeMethod('disposeWebview');
   }
 }
