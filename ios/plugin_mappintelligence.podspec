@@ -16,7 +16,7 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'MappIntelligence' , '5.0.0-beta7'
+  s.dependency 'MappIntelligence' , '5.0.0-beta8'
   s.platform = :ios, '10.0'
 
   # Flutter.framework does not contain a i386 slice.

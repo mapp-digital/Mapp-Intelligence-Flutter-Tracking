@@ -79,36 +79,71 @@
     NSString* jsonString = call.arguments[0];
     NSData* data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *s = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    s = [self removeNullsFromDictionary:s];
+    MIPageViewEvent* event = [[MIPageViewEvent alloc] initWithName:s[@"name"]];
     
-    MIPageParameters* pageProperties = s[@"pageParameters"];
-    NSLog(@"\npage:%@", pageProperties);
-    MICampaignParameters* campaignParameters = s[@"campaignParameters"];
-    NSLog(@"\ncampaign:%@", campaignParameters);
-    MISessionParameters* sessionProperties = s[@"sessionParameters"];
-    NSLog(@"\nsession:%@", sessionProperties);
-    MIUserCategories* userCategories = s[@"userCategories"];
-    NSLog(@"\nuser:%@", userCategories);
-    MIEcommerceParameters* ecommerceProperties = s[@"ecommerceParameters"];
-    NSLog(@"\necommerce:%@", ecommerceProperties);
-    NSString* eventName = s[@"name"];
-    NSLog(@"\neventName:%@", eventName);
-
-    MIPageViewEvent* event = [[MIPageViewEvent alloc] init];
-    [event setPageName:eventName];
-    [event setPageParameters:pageProperties];
-    [event setUserCategories:userCategories];
-    [event setSessionParameters:sessionProperties];
-    [event setCampaignParameters:campaignParameters];
-    [event setEcommerceParameters:ecommerceProperties];
+    if(s[@"pageParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"pageParameters"]];
+        MIPageParameters* pageParameters = [[MIPageParameters alloc] initWithDictionary:dict];
+        [event setPageParameters:pageParameters];
+    }
+    if(s[@"campaignParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"campaignParameters"]];
+        MICampaignParameters* campaignActionParameters = [[MICampaignParameters alloc] initWithDictionary:dict];
+        [event setCampaignParameters:campaignActionParameters];
+    }
+    if (s[@"sessionParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"sessionParameters"]];
+        MISessionParameters* sessionActionProperties = [[MISessionParameters alloc] initWithDictionary:dict];
+        [event setSessionParameters:sessionActionProperties];
+    }
+    if(s[@"userCategories"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"userCategories"]];
+        MIUserCategories* userActionCategories = [[MIUserCategories alloc] initWithDictionary:dict];
+        [event setUserCategories:userActionCategories];
+    }
+    if (s[@"ecommerceParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"ecommerceParameters"]];
+        MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
+        [event setEcommerceParameters:ecommerceActionProperties];
+    }
     NSLog(@"\nevent:%@", event);
-    //TODO: it will need to be done with new initializators with dictionary
-    //[[MappIntelligence shared] trackPage: event];
+    [[MappIntelligence shared] trackPage: event];
   } else if ([@"trackAction" isEqualToString: call.method]) {
     NSString* jsonString = call.arguments[0];
-    NSData* data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary * s = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-    NSLog(@"\ndictionary for track action:%@", s);
-    //TODO: mapp with dictionary and new lib 
+    NSData* actionData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary * actionS = [NSJSONSerialization JSONObjectWithData:actionData options:0 error:NULL];
+    actionS = [self removeNullsFromDictionary:actionS];
+    MIActionEvent* actionEvent = [[MIActionEvent alloc] initWithName:actionS[@"name"]];
+    
+    if(actionS[@"eventParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"eventParameters"]];
+        MIEventParameters* eventParameters = [[MIEventParameters alloc] initWithDictionary:dict];
+        [actionEvent setEventParameters:eventParameters];
+    }
+    if(actionS[@"campaignParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"campaignParameters"]];
+        MICampaignParameters* campaignActionParameters = [[MICampaignParameters alloc] initWithDictionary:dict];
+        [actionEvent setCampaignParameters:campaignActionParameters];
+    }
+    if (actionS[@"sessionParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"sessionParameters"]];
+        MISessionParameters* sessionActionProperties = [[MISessionParameters alloc] initWithDictionary:dict];
+        [actionEvent setSessionParameters:sessionActionProperties];
+    }
+    if(actionS[@"userCategories"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"userCategories"]];
+        MIUserCategories* userActionCategories = [[MIUserCategories alloc] initWithDictionary:dict];
+        [actionEvent setUserCategories:userActionCategories];
+    }
+    if (actionS[@"ecommerceParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"ecommerceParameters"]];
+        MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
+        [actionEvent setEcommerceParameters:ecommerceActionProperties];
+    }
+    
+    [[MappIntelligence shared] trackAction:actionEvent];
+
   } else if ([@"trackUrl" isEqualToString: call.method]) {
     NSString* urlString = call.arguments[0];
     NSString* mediaCode = call.arguments[1];
@@ -119,12 +154,35 @@
     NSString* urlString = call.arguments[0];
     NSURL* url = [[NSURL alloc] initWithString:urlString];
     [[MappIntelligence shared] trackUrl:url withMediaCode:NULL];
+    
   } else if ([@"trackMedia" isEqualToString: call.method]) {
     NSString* jsonString = call.arguments[0];
-    NSData* data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *s = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-    NSLog(@"\ndictionary for track media:%@", s);
-    //TODO: mapp with dictionary and new lib 
+    NSData* mediaData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *mediaS = [NSJSONSerialization JSONObjectWithData:mediaData options:0 error:NULL];
+    mediaS = [self removeNullsFromDictionary:mediaS];
+    
+    NSMutableDictionary* dict = [self removeNullsFromDictionary:mediaS[@"mediaParameters"]];
+    MIMediaParameters* mediaParameters = [[MIMediaParameters alloc] initWithDictionary:dict];
+    
+    MIMediaEvent* mediaEvent = [[MIMediaEvent alloc] initWithPageName:mediaS[@"name"] parameters: mediaParameters];
+    
+    if(mediaS[@"eventParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:mediaS[@"eventParameters"]];
+        MIEventParameters* eventParameters = [[MIEventParameters alloc] initWithDictionary:dict];
+        [mediaEvent setEventParameters:eventParameters];
+    }
+    if (mediaS[@"sessionParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:mediaS[@"sessionParameters"]];
+        MISessionParameters* sessionMediaProperties = [[MISessionParameters alloc] initWithDictionary:dict];
+        [mediaEvent setSessionParameters:sessionMediaProperties];
+    }
+    if (mediaS[@"ecommerceParameters"]) {
+        NSMutableDictionary* dict = [self removeNullsFromDictionary:mediaS[@"ecommerceParameters"]];
+        MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
+        [mediaEvent setEcommerceParameters:ecommerceActionProperties];
+    }
+    
+    [[MappIntelligence shared] trackMedia:mediaEvent];
 
   } else if ([@"trackWebview" isEqualToString: call.method]) {
     NSNumber* x =  call.arguments[0];
@@ -174,6 +232,16 @@
         return [self topViewController:presented];
     }
     return base;
+}
+
+-(NSMutableDictionary* )removeNullsFromDictionary: (NSDictionary* ) dict {
+    NSMutableDictionary *prunedDictionary = [NSMutableDictionary dictionary];
+    for (NSString * key in [dict allKeys])
+    {
+        if (![[dict objectForKey:key] isKindOfClass:[NSNull class]])
+            [prunedDictionary setObject:[dict objectForKey:key] forKey:key];
+    }
+    return prunedDictionary;
 }
 
 @end
