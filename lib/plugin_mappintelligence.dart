@@ -80,19 +80,18 @@ class PluginMappintelligence {
         .then<bool>((bool? value) => value ?? false);
   }
 
-  static Future<void> trackPage(String currentWidgetName) async {
-    await _channel.invokeMethod('trackPage', [currentWidgetName]);
-  }
-
-  static Future<void> trackCustomPage(
-      String customName, Map<String, String> trackingParameters) async {
-    await _channel
-        .invokeMethod('trackCustomPage', [customName, trackingParameters]);
+  static Future<void> trackPage(String customName,
+      [Map<String, String>? trackingParameters]) async {
+    if (trackingParameters == null) {
+      await _channel.invokeMethod('trackPage', [customName]);
+    } else {
+      await _channel
+          .invokeMethod('trackCustomPage', [customName, trackingParameters]);
+    }
   }
 
   static Future<void> trackPageWithCustomData(
       MIPageViewEvent pageViewEvent) async {
-    print("test print:");
     debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
     await _channel.invokeMethod(
         'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
@@ -105,9 +104,6 @@ class PluginMappintelligence {
   }
 
   static Future<void> trackUrl(String urlString, String? mediaCode) async {
-    print(urlString);
-    print("\n");
-    print(mediaCode);
     if (mediaCode == null) {
       await _channel.invokeMethod('trackUrlWitouthMediaCode', [urlString]);
     } else {
