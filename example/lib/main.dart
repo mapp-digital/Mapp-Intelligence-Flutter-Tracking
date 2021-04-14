@@ -102,9 +102,9 @@ class _HomePageState extends State<HomePage> {
   ListView _buildListView(BuildContext context) {
     print('broj ekrana je: $_screens.length');
     PluginMappintelligence.initialize(
-        [21322312, 231312312], 'www.testDomain.com');
+        [794940687426749], 'http://tracker-int-01.webtrekk.net');
     PluginMappintelligence.setLogLevel(1);
-    PluginMappintelligence.setBatchSupportEnabled(true);
+    PluginMappintelligence.setBatchSupportEnabled(false);
     PluginMappintelligence.setBatchSupportSize(150);
     PluginMappintelligence.setRequestInterval(60);
     PluginMappintelligence.setRequestPerQueue(300);
