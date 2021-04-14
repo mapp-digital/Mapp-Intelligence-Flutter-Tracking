@@ -26,8 +26,8 @@
     [[MappIntelligence shared] initWithConfiguration:array onTrackdomain:domain];
     result(@"Succesfull initialize");
   } else if ([@"setLogLevel" isEqualToString: call.method]) {
+    NSLog(@"iOS native: logLevel: %@", call.arguments[0]);
     NSNumber* logLevelNumber = call.arguments[0];
-    NSLog(@"Flutter: logLevel: %@", logLevelNumber);
     [[MappIntelligence shared] setLogLevel:[logLevelNumber intValue]];
   } else if ([@"setBatchSupportEnabled" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
@@ -104,6 +104,10 @@
     }
     if (s[@"ecommerceParameters"]) {
         NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"ecommerceParameters"]];
+        NSArray<NSDictionary*>* products = dict[@"products"];
+        if (products) {
+            dict[@"products"] = [self nullCheckedProducts:products];
+        }
         MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
         [event setEcommerceParameters:ecommerceActionProperties];
     }
@@ -138,6 +142,10 @@
     }
     if (actionS[@"ecommerceParameters"]) {
         NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"ecommerceParameters"]];
+        NSArray<NSDictionary*>* products = dict[@"products"];
+        if (products) {
+            dict[@"products"] = [self nullCheckedProducts:products];
+        }
         MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
         [actionEvent setEcommerceParameters:ecommerceActionProperties];
     }
@@ -154,7 +162,7 @@
     NSString* urlString = call.arguments[0];
     NSURL* url = [[NSURL alloc] initWithString:urlString];
     [[MappIntelligence shared] trackUrl:url withMediaCode:NULL];
-    
+
   } else if ([@"trackMedia" isEqualToString: call.method]) {
     NSString* jsonString = call.arguments[0];
     NSData* mediaData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -178,6 +186,10 @@
     }
     if (mediaS[@"ecommerceParameters"]) {
         NSMutableDictionary* dict = [self removeNullsFromDictionary:mediaS[@"ecommerceParameters"]];
+        NSArray<NSDictionary*>* products = dict[@"products"];
+        if (products) {
+            dict[@"products"] = [self nullCheckedProducts:products];
+        }
         MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
         [mediaEvent setEcommerceParameters:ecommerceActionProperties];
     }
@@ -242,6 +254,15 @@
             [prunedDictionary setObject:[dict objectForKey:key] forKey:key];
     }
     return prunedDictionary;
+}
+
+-(NSMutableArray<NSDictionary*>*)nullCheckedProducts: (NSArray<NSDictionary*>*) products {
+    NSMutableArray<NSDictionary*>* nullCheckedProducts = [[NSMutableArray alloc] init];
+    for (NSDictionary* productDict in products) {
+        NSDictionary* nullCheckedProduct = [self removeNullsFromDictionary:productDict];
+        [nullCheckedProducts addObject:nullCheckedProduct];
+    }
+    return nullCheckedProducts;
 }
 
 @end

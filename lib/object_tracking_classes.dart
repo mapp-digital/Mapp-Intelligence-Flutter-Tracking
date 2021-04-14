@@ -1,4 +1,4 @@
-class MIPageParameters {
+class PageParameters {
   String? searchTerm;
   Map<int, String>? params;
   Map<int, String>? categories;
@@ -11,7 +11,7 @@ class MIPageParameters {
       };
 }
 
-class MISessionParameters {
+class SessionParameters {
   Map<int, String>? parameters;
 
   Map<String, dynamic> toJson() => {
@@ -20,25 +20,25 @@ class MISessionParameters {
       };
 }
 
-enum MIGender { unknown, male, female }
+enum Gender { unknown, male, female }
 
-class MIBirthday {
+class Birthday {
   final int day;
   final int month;
   final int year;
-  const MIBirthday(this.day, this.month, this.year);
+  const Birthday(this.day, this.month, this.year);
 
   Map<String, dynamic> toJson() => {'day': day, 'month': month, 'year': year};
 }
 
-class MIUserCategories {
-  MIBirthday? birthday;
+class UserCategories {
+  Birthday? birthday;
   String? city;
   String? country;
   String? emailAddress;
   String? emailReceiverId;
   String? firstName;
-  MIGender? gender;
+  Gender? gender;
   String? customerId;
   String? lastName;
   bool? newsletterSubscribed;
@@ -68,9 +68,9 @@ class MIUserCategories {
       };
 }
 
-enum MIStatus { noneStatus, addedToBasket, purchased, viewed }
+enum Status { noneStatus, addedToBasket, purchased, viewed }
 
-class MIProduct {
+class Product {
   String? name;
   double? cost;
   int? quantity;
@@ -85,9 +85,9 @@ class MIProduct {
       };
 }
 
-class MIEcommerceParameters {
-  List<MIProduct>? products;
-  MIStatus? status;
+class EcommerceParameters {
+  List<Product>? products;
+  Status? status;
   String? currency;
   String? orderID;
   double? orderValue;
@@ -132,12 +132,12 @@ class MIEcommerceParameters {
       };
 }
 
-enum MICampaignAction { click, view }
+enum CampaignAction { click, view }
 
-class MICampaignParameters {
-  MICampaignParameters(this.campaignId);
+class CampaignParameters {
+  CampaignParameters(this.campaignId);
   String? campaignId;
-  MICampaignAction? action;
+  CampaignAction? action;
   String? mediaCode;
   bool? oncePerSession;
   Map<int, String>? customParameters;
@@ -152,14 +152,14 @@ class MICampaignParameters {
       };
 }
 
-class MIPageViewEvent {
-  MIPageViewEvent(this.name);
+class PageViewEvent {
+  PageViewEvent(this.name);
   String? name;
-  MIPageParameters? pageParameters;
-  MISessionParameters? sessionParameters;
-  MIUserCategories? userCategories;
-  MIEcommerceParameters? ecommerceParameters;
-  MICampaignParameters? campaignParameters;
+  PageParameters? pageParameters;
+  SessionParameters? sessionParameters;
+  UserCategories? userCategories;
+  EcommerceParameters? ecommerceParameters;
+  CampaignParameters? campaignParameters;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -184,10 +184,10 @@ class ActionEvent {
   ActionEvent(this.name);
   String? name;
   EventParameters? eventParameters;
-  MISessionParameters? sessionParameters;
-  MIUserCategories? userCategories;
-  MIEcommerceParameters? ecommerceParameters;
-  MICampaignParameters? campaignParameters;
+  SessionParameters? sessionParameters;
+  UserCategories? userCategories;
+  EcommerceParameters? ecommerceParameters;
+  CampaignParameters? campaignParameters;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -229,8 +229,8 @@ class MediaEvent {
   EventParameters? eventParameters;
   //media parameters is mandatory
   MediaParameters mediaParameters;
-  MIEcommerceParameters? ecommerceParameters;
-  MISessionParameters? sessionParameters;
+  EcommerceParameters? ecommerceParameters;
+  SessionParameters? sessionParameters;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -240,3 +240,5 @@ class MediaEvent {
         'sessionParameters': sessionParameters?.toJson()
       };
 }
+
+enum LogLevel { all, debug, warning, error, fault, info, none }

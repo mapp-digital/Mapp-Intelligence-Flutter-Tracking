@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -22,9 +21,9 @@ class PluginMappintelligence {
     return 'successfull $version';
   }
 
-  static Future<String?> setLogLevel(int logLevel) async {
+  static Future<String?> setLogLevel(LogLevel logLevel) async {
     final String? version =
-        await _channel.invokeMethod('setLogLevel', [logLevel]);
+        await _channel.invokeMethod('setLogLevel', [logLevel.index + 1]);
     return '$version';
   }
 
@@ -91,7 +90,7 @@ class PluginMappintelligence {
   }
 
   static Future<void> trackPageWithCustomData(
-      MIPageViewEvent pageViewEvent) async {
+      PageViewEvent pageViewEvent) async {
     debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
     await _channel.invokeMethod(
         'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);

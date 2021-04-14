@@ -24,11 +24,11 @@ class ActionTracking extends StatelessWidget {
         var eventParameters = EventParameters();
         eventParameters.parameters = {20: "ck20Param1"};
 
-        var sessionPropertis = MISessionParameters();
+        var sessionPropertis = SessionParameters();
         sessionPropertis.parameters = {10: 'sessionParameter1'};
 
-        var userCategorises = MIUserCategories();
-        userCategorises.birthday = MIBirthday(7, 12, 1991);
+        var userCategorises = UserCategories();
+        userCategorises.birthday = Birthday(7, 12, 1991);
         userCategorises.city = "Nis";
         userCategorises.country = "Serbia";
         userCategorises.customerId = "99898390";

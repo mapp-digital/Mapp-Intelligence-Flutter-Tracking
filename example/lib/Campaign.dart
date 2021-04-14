@@ -8,13 +8,13 @@ class Campaign extends StatelessWidget {
     buttons.add(ElevatedButton(
       onPressed: () async {
         var campaignProperties =
-            MICampaignParameters("email.newsletter.nov2020.thursday");
+            CampaignParameters("email.newsletter.nov2020.thursday");
         campaignProperties.mediaCode = "abc";
         campaignProperties.oncePerSession = true;
-        campaignProperties.action = MICampaignAction.view;
+        campaignProperties.action = CampaignAction.view;
         campaignProperties.customParameters = {12: "camParam1"};
 
-        var event = MIPageViewEvent("TestCampaign");
+        var event = PageViewEvent("TestCampaign");
         event.campaignParameters = campaignProperties;
         PluginMappintelligence.trackPageWithCustomData(event);
       },

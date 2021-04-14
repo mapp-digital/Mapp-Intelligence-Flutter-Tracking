@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence_example/ActionTracking.dart';
 import 'package:plugin_mappintelligence_example/Campaign.dart';
@@ -103,7 +104,7 @@ class _HomePageState extends State<HomePage> {
     print('broj ekrana je: $_screens.length');
     PluginMappintelligence.initialize(
         [794940687426749], 'http://tracker-int-01.webtrekk.net');
-    PluginMappintelligence.setLogLevel(1);
+    PluginMappintelligence.setLogLevel(LogLevel.all);
     PluginMappintelligence.setBatchSupportEnabled(false);
     PluginMappintelligence.setBatchSupportSize(150);
     PluginMappintelligence.setRequestInterval(60);

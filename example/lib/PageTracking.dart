@@ -25,23 +25,23 @@ class PageTracking extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
-        var pageProperties = MIPageParameters();
+        var pageProperties = PageParameters();
         pageProperties.searchTerm = "searchTerm";
         pageProperties.categories = {1: 'tom', 2: 'pass@123'};
         pageProperties.params = {11: 'tom', 22: 'pass@123'};
 
-        var sessionPropertis = MISessionParameters();
+        var sessionPropertis = SessionParameters();
         sessionPropertis.parameters = {10: 'sessionParameter1'};
 
-        var userCategorises = MIUserCategories();
-        userCategorises.birthday = MIBirthday(7, 12, 1991);
+        var userCategorises = UserCategories();
+        userCategorises.birthday = Birthday(7, 12, 1991);
         userCategorises.city = "Nis";
         userCategorises.country = "Serbia";
         userCategorises.customerId = "99898390";
         userCategorises.emailAddress = "stefan.stevanovic@mapp.com";
         userCategorises.emailReceiverId = "8743798";
         userCategorises.firstName = "Stefan";
-        userCategorises.gender = MIGender.male;
+        userCategorises.gender = Gender.male;
         userCategorises.lastName = "Stevanovic";
         userCategorises.newsletterSubscribed = true;
         userCategorises.phoneNumber = "83203298320923";
@@ -50,7 +50,7 @@ class PageTracking extends StatelessWidget {
         userCategorises.ustomCategories = {111: 'usercat1', 222: 'usercat2'};
         userCategorises.zipCode = "780s00";
 
-        var ecommerceProperties = MIEcommerceParameters();
+        var ecommerceProperties = EcommerceParameters();
         ecommerceProperties.cancellationValue = 99.4;
         ecommerceProperties.couponValue = 88.9;
         ecommerceProperties.currency = "EUR";
@@ -68,22 +68,22 @@ class PageTracking extends StatelessWidget {
         ecommerceProperties.shippingCost = 22.3;
         ecommerceProperties.shippingServiceProvider = "DHL";
         ecommerceProperties.shippingSpeed = "low";
-        ecommerceProperties.status = MIStatus.addedToBasket;
-        var product1 = MIProduct();
+        ecommerceProperties.status = Status.addedToBasket;
+        var product1 = Product();
         product1.name = "T-Shirt";
         product1.quantity = 10;
         product1.cost = 33.2;
         product1.categories = {44: "product1Cat"};
         ecommerceProperties.products = [product1];
 
-        var campaignProperties = MICampaignParameters(null);
-        campaignProperties.action = MICampaignAction.click;
+        var campaignProperties = CampaignParameters(null);
+        campaignProperties.action = CampaignAction.click;
         campaignProperties.campaignId = "4387324978789234";
         campaignProperties.customParameters = {78: 'campaignParameter1'};
         campaignProperties.mediaCode = "mediaCode";
         campaignProperties.oncePerSession = false;
 
-        var pageViewEvent = MIPageViewEvent("testNameFlutter");
+        var pageViewEvent = PageViewEvent("testNameFlutter");
         pageViewEvent.pageParameters = pageProperties;
         pageViewEvent.sessionParameters = sessionPropertis;
         pageViewEvent.userCategories = userCategorises;
