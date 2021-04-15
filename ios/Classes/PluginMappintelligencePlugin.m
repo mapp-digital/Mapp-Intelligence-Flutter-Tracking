@@ -39,7 +39,7 @@
   } else if ([@"setRequestInterval" isEqualToString: call.method]) {
     NSNumber* interval = call.arguments[0];
     NSLog(@"Flutter interval: %@", interval);
-    [[MappIntelligence shared] setRequestInterval:[interval intValue]];
+    [[MappIntelligence shared] setRequestInterval:[interval intValue]*60];
   } else if ([@"setRequestPerQueue" isEqualToString: call.method]) {
     NSNumber* requestsNumber = call.arguments[0];
     NSLog(@"Flutter requests number: %@", requestsNumber);
@@ -164,7 +164,7 @@
     NSURL* url = [[NSURL alloc] initWithString:urlString];
     [[MappIntelligence shared] trackUrl:url withMediaCode:mediaCode];
 
-  } else if ([@"trackUrlWitouthMediaCode" isEqualToString: call.method]) {
+  } else if ([@"trackUrlWithoutMediaCode" isEqualToString: call.method]) {
     NSString* urlString = call.arguments[0];
     NSURL* url = [[NSURL alloc] initWithString:urlString];
     [[MappIntelligence shared] trackUrl:url withMediaCode:NULL];

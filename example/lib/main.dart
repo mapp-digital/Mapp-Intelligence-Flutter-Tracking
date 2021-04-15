@@ -13,6 +13,7 @@ import 'package:plugin_mappintelligence_example/Ecommerce.dart';
 import 'package:plugin_mappintelligence_example/Media.dart';
 import 'package:plugin_mappintelligence_example/PageTracking.dart';
 import 'package:plugin_mappintelligence_example/Webview.dart';
+import 'package:plugin_mappintelligence_example/WebviewForAndroid.dart';
 
 void main() {
   runApp(MyApp());
@@ -73,6 +74,7 @@ class _HomePageState extends State<HomePage> {
         "Campaign",
         "Ecommerce",
         "Webview",
+        "WebviewForAndroid",
         "Media"
       ];
       print('set state: $_screens');
@@ -94,6 +96,8 @@ class _HomePageState extends State<HomePage> {
       case 5:
         return WebviewApp();
       case 6:
+        return WebviewForAndroid();
+      case 7:
         return Media();
       default:
         return DetailsView(index);
@@ -105,7 +109,7 @@ class _HomePageState extends State<HomePage> {
         [794940687426749], 'http://tracker-int-01.webtrekk.net');
     PluginMappintelligence.setLogLevel(LogLevel.all);
     PluginMappintelligence.setBatchSupportEnabledWithSize(true, 150);
-    PluginMappintelligence.setRequestInterval(60);
+    PluginMappintelligence.setRequestInterval(1);
     PluginMappintelligence.setRequestPerQueue(300);
 
     return ListView.builder(

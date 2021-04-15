@@ -58,22 +58,6 @@ class PluginMappintelligence {
     await _channel.invokeMethod('reset');
   }
 
-  static Future<void> enableAnonymousTracking(bool status) async {
-    await _channel.invokeMethod('enableAnonymousTracking', [status]);
-  }
-
-  static Future<void> enableAnonymousTrackingWithParameters(
-      List<String> suppressedParameters) async {
-    await _channel.invokeMethod(
-        'enableAnonymousTrackingWithParameters', [suppressedParameters]);
-  }
-
-  static Future<bool> isAnonymousTrackingEnabled() async {
-    return _channel
-        .invokeMethod<bool>('isAnonymousTrackingEnabled')
-        .then<bool>((bool? value) => value ?? false);
-  }
-
   static Future<void> trackPage(String customName,
       [Map<String, String>? trackingParameters]) async {
     if (trackingParameters == null) {
@@ -104,7 +88,7 @@ class PluginMappintelligence {
 
   static Future<void> trackUrl(String urlString, String? mediaCode) async {
     if (mediaCode == null) {
-      await _channel.invokeMethod('trackUrlWitouthMediaCode', [urlString]);
+      await _channel.invokeMethod('trackUrlWithoutMediaCode', [urlString]);
     } else {
       await _channel.invokeMethod('trackUrl', [urlString, mediaCode]);
     }
