@@ -89,11 +89,16 @@ class PluginMappintelligence {
     }
   }
 
-  static Future<void> trackPageWithCustomData(
-      PageViewEvent pageViewEvent) async {
-    debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
-    await _channel.invokeMethod(
-        'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
+  static Future<void> trackPageWithCustomData(PageViewEvent? pageViewEvent,
+      [String? customName]) async {
+    if (customName != null) {
+      await _channel.invokeMethod(
+          'trackPageWithCustomNameAndPageViewEvent', [customName]);
+    } else if (pageViewEvent != null) {
+      debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
+      await _channel.invokeMethod(
+          'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
+    }
   }
 
   static Future<void> trackAction(ActionEvent actionEvent) async {

@@ -27,6 +27,8 @@ class Campaign extends StatelessWidget {
         var urlString =
             "https://testurl.com/?wt_mc=email.newsletter.nov2020.thursday&wt_cc45=parameter45";
         PluginMappintelligence.trackUrl(urlString, null);
+        String className = this.runtimeType.toString();
+        PluginMappintelligence.trackPageWithCustomData(null, className);
       },
       child: Text('Test Link1'),
       style:
@@ -35,8 +37,10 @@ class Campaign extends StatelessWidget {
     buttons.add(ElevatedButton(
       onPressed: () async {
         var urlString =
-            "https://testurl.com/?wt_mc=email.newsletter.nov2020.thursday&wt_cc45=parameter45";
+            "https://testurl.com/?abc=email.newsletter.nov2020.thursday&wt_cc12=parameter12";
         PluginMappintelligence.trackUrl(urlString, "abc");
+        String className = this.runtimeType.toString();
+        PluginMappintelligence.trackPageWithCustomData(null, className);
       },
       child: Text('Test Link2'),
       style:

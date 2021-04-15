@@ -74,6 +74,11 @@
     NSString* pageName = call.arguments[0];
     NSDictionary* pageParameters = call.arguments[1];
     [[MappIntelligence shared] trackCustomPage:pageName trackingParams:pageParameters];
+  } else if ([@"trackPageWithCustomNameAndPageViewEvent" isEqualToString: call.method]) {
+    NSString* pageName = call.arguments[0];
+    MIPageViewEvent* event = [[MIPageViewEvent alloc] init];
+    event.pageName = pageName;
+    [[MappIntelligence shared] trackPage:event];
   } else if ([@"trackPageWithCustomData" isEqualToString: call.method]) {
 
     NSString* jsonString = call.arguments[0];

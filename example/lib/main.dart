@@ -101,7 +101,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   ListView _buildListView(BuildContext context) {
-    print('broj ekrana je: $_screens.length');
     PluginMappintelligence.initialize(
         [794940687426749], 'http://tracker-int-01.webtrekk.net');
     PluginMappintelligence.setLogLevel(LogLevel.all);
