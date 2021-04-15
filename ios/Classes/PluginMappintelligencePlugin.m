@@ -109,6 +109,7 @@
             dict[@"products"] = [self nullCheckedProducts:products];
         }
         MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
+        ecommerceActionProperties.status = [self getStatus:@([dict[@"status"] longValue])];
         [event setEcommerceParameters:ecommerceActionProperties];
     }
     NSLog(@"\nevent:%@", event);
@@ -147,6 +148,7 @@
             dict[@"products"] = [self nullCheckedProducts:products];
         }
         MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
+        ecommerceActionProperties.status = [self getStatus:@([dict[@"status"] longValue])];
         [actionEvent setEcommerceParameters:ecommerceActionProperties];
     }
     
@@ -191,6 +193,7 @@
             dict[@"products"] = [self nullCheckedProducts:products];
         }
         MIEcommerceParameters* ecommerceActionProperties = [[MIEcommerceParameters alloc] initWithDictionary:dict];
+        ecommerceActionProperties.status = [self getStatus:@([dict[@"status"] longValue])];
         [mediaEvent setEcommerceParameters:ecommerceActionProperties];
     }
     
@@ -263,6 +266,28 @@
         [nullCheckedProducts addObject:nullCheckedProduct];
     }
     return nullCheckedProducts;
+}
+
+-(MIStatus)getStatus: (NSNumber*)status {
+    switch ([status intValue]) {
+        case 0:
+            return noneStatus;
+            break;
+        case 1:
+            return addedToBasket;
+            break;
+        case 2:
+            return purchased;
+            break;
+        case 3:
+            return viewed;
+            break;
+            
+        default:
+            return viewed;
+            break;
+    }
+    return viewed;
 }
 
 @end
