@@ -29,13 +29,12 @@
     NSLog(@"iOS native: logLevel: %@", call.arguments[0]);
     NSNumber* logLevelNumber = call.arguments[0];
     [[MappIntelligence shared] setLogLevel:[logLevelNumber intValue]];
-  } else if ([@"setBatchSupportEnabled" isEqualToString: call.method]) {
+  } else if ([@"setBatchSupportEnabledWithSize" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
+    NSNumber* size = call.arguments[1];
     NSLog(@"Flutter set batch support: %@", isEnabled);
-    [[MappIntelligence shared] setBatchSupportEnabled:[isEnabled boolValue]];
-  } else if ([@"setBatchSupportSize" isEqualToString: call.method]) {
-    NSNumber* size = call.arguments[0];
     NSLog(@"Flutter batch support size: %@", size);
+    [[MappIntelligence shared] setBatchSupportEnabled:[isEnabled boolValue]];
     [[MappIntelligence shared] setBatchSupportSize:[size intValue]];
   } else if ([@"setRequestInterval" isEqualToString: call.method]) {
     NSNumber* interval = call.arguments[0];

@@ -27,15 +27,10 @@ class PluginMappintelligence {
     return '$version';
   }
 
-  static Future<String?> setBatchSupportEnabled(bool isEnabled) async {
-    final String? version =
-        await _channel.invokeMethod('setBatchSupportEnabled', [isEnabled]);
-    return 'successfull $version';
-  }
-
-  static Future<String?> setBatchSupportSize(int size) async {
-    final String? version =
-        await _channel.invokeMethod('setBatchSupportSize', [size]);
+  static Future<String?> setBatchSupportEnabledWithSize(
+      bool isEnabled, int size) async {
+    final String? version = await _channel
+        .invokeMethod('setBatchSupportEnabledWithSize', [isEnabled, size]);
     return 'successfull $version';
   }
 
