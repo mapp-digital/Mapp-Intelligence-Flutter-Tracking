@@ -115,4 +115,9 @@ class PluginMappintelligence {
   static Future<void> disposeWebview() async {
     await _channel.invokeMethod('disposeWebview');
   }
+
+  //This method is only for android
+  static Future<void> build() async {
+    await _channel.invokeMethod('build');
+  }
 }

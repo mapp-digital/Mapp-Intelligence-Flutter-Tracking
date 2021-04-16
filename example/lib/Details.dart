@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
+import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 
 // ignore: must_be_immutable
 class DetailsView extends StatelessWidget {
   int index;
+
   DetailsView(this.index);
 
   List<Widget> _buildButtons(BuildContext context) {
@@ -21,6 +23,20 @@ class DetailsView extends StatelessWidget {
         await PluginMappintelligence.optIn();
       },
       child: Text('Opt in'),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+    buttons.add(ElevatedButton(
+      onPressed: () {
+        PluginMappintelligence.initialize(
+            [794940687426749], 'http://tracker-int-01.webtrekk.net');
+        PluginMappintelligence.setLogLevel(LogLevel.all);
+        PluginMappintelligence.setBatchSupportEnabledWithSize(true, 150);
+        PluginMappintelligence.setRequestInterval(1);
+        PluginMappintelligence.setRequestPerQueue(300);
+        PluginMappintelligence.build();
+      },
+      child: Text('Test setup'),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));

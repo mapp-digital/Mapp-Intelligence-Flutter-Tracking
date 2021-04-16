@@ -111,6 +111,7 @@ class _HomePageState extends State<HomePage> {
     PluginMappintelligence.setBatchSupportEnabledWithSize(true, 150);
     PluginMappintelligence.setRequestInterval(1);
     PluginMappintelligence.setRequestPerQueue(300);
+    PluginMappintelligence.build();
 
     return ListView.builder(
       itemCount: _screens.length,
