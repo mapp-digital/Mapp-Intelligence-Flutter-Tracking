@@ -19,9 +19,12 @@ class WebviewForAndroid extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: WebView(
-        initialUrl: 'http://demoshop.webtrekk.com/web2app/index.html',
-        javascriptMode: JavascriptMode.unrestricted,
-      ),
+          initialUrl: 'http://demoshop.webtrekk.com/web2app/index.html',
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) async {
+//            NOT WORKING HERE:
+//             await webViewController.evaluateJavascript(injectScript);
+          }),
     );
   }
 }
