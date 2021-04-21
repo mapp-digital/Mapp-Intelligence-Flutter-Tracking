@@ -22,7 +22,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('build MyApp');
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -77,7 +76,6 @@ class _HomePageState extends State<HomePage> {
         "WebviewForAndroid",
         "Media"
       ];
-      print('set state: $_screens');
     });
   }
 
@@ -124,8 +122,6 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.center,
             ),
             onTap: () {
-              print('On tap is pressed');
-              print('this is $context and $index');
               Navigator.push(
                 context,
                 MaterialPageRoute(

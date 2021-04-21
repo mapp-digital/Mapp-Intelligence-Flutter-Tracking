@@ -65,8 +65,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       mediaProperties.position = _controller.value.position.inSeconds;
       mediaProperties.duration = _controller.value.duration.inSeconds;
       mediaProperties.soundVolume = _controller.value.volume * 255.0;
-      print('volume: ');
-      print(_controller.value.volume * 255.0);
       mediaProperties.soundIsMuted =
           _controller.value.volume == 0.0 ? true : false;
 
