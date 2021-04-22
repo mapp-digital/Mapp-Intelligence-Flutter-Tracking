@@ -46,7 +46,7 @@ class UserCategories {
   String? street;
   String? streetNumber;
   String? zipCode;
-  Map<int, String>? ustomCategories;
+  Map<int, String>? customCategories;
 
   Map<String, dynamic> toJson() => {
         'birthday': birthday?.toJson(),
@@ -63,7 +63,7 @@ class UserCategories {
         'street': street,
         'streetNumber': streetNumber,
         'zipCode': zipCode,
-        'ustomCategories': ustomCategories
+        'customCategories': customCategories
             ?.map((key, value) => MapEntry(key.toString(), value))
       };
 }

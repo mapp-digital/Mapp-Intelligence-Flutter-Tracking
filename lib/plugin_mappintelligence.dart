@@ -46,8 +46,8 @@ class PluginMappintelligence {
     return 'successfull $version';
   }
 
-  static Future<void> optIn() async {
-    await _channel.invokeMethod('OptIn');
+  static Future<void> optIn()  async {
+     await _channel.invokeMethod('OptIn');
   }
 
   static Future<void> optOutAndSendCurrentData(bool value) async {

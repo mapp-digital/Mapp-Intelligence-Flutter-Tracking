@@ -47,7 +47,7 @@ class PageTracking extends StatelessWidget {
         userCategorises.phoneNumber = "83203298320923";
         userCategorises.street = "Jovana Ristica";
         userCategorises.streetNumber = "2A";
-        userCategorises.ustomCategories = {111: 'usercat1', 222: 'usercat2'};
+        userCategorises.customCategories = {111: 'usercat1', 222: 'usercat2'};
         userCategorises.zipCode = "780s00";
 
         var ecommerceProperties = EcommerceParameters();

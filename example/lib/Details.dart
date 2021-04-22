@@ -19,8 +19,8 @@ class DetailsView extends StatelessWidget {
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
-      onPressed: () async {
-        await PluginMappintelligence.optIn();
+      onPressed: ()  {
+         PluginMappintelligence.optIn();
       },
       child: Text('Opt in'),
       style:
