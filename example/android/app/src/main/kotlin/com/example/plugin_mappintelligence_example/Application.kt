@@ -17,6 +17,7 @@ class Application : FlutterApplication() {
             listOf("794940687426749"),
             "http://tracker-int-01.webtrekk.net"
         ).logLevel(Logger.Level.BASIC)
+            .setBatchSupport(true,150)
 
 
         Webtrekk.getInstance().init(this, webtrekkConfigurations.build())
