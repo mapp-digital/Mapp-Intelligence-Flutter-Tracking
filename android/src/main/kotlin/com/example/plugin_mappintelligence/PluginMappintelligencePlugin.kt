@@ -3,11 +3,14 @@ package com.example.plugin_mappintelligence
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.NonNull
+import com.example.plugin_mappintelligence.webviewflutter.FlutterCookieManager
+import com.example.plugin_mappintelligence.webviewflutter.WebViewFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.PluginRegistry
 import org.json.JSONObject
 import webtrekk.android.sdk.Logger
 import webtrekk.android.sdk.MediaParam
@@ -33,18 +36,28 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
     private lateinit var mContext: Context
-
+    private var flutterCookieManager: FlutterCookieManager? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "plugin_mappintelligence")
         channel.setMethodCallHandler(this)
         mContext = flutterPluginBinding.applicationContext
+        val messenger = flutterPluginBinding.binaryMessenger
+        flutterPluginBinding
+            .platformViewRegistry
+            .registerViewFactory(
+                "plugin_mappintelligence/webview",
+                WebViewFactory(messenger,  /*containerView=*/null)
+            )
+        flutterCookieManager = FlutterCookieManager(messenger)
     }
 
     var webtrekkConfigurations = WebtrekkConfiguration.Builder(
         listOf("1"),
         "1"
     )
+
+
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
@@ -166,6 +179,11 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
+        if (flutterCookieManager == null) {
+            return
+        }
+        flutterCookieManager!!.dispose()
+        flutterCookieManager = null
     }
 
     private fun objectTrackingPage(data: String) {
@@ -202,6 +220,26 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         Webtrekk.getInstance().trackAction(pageViewEvent)
     }
 
+    companion object {
+        /**
+         * Registers a plugin implementation that uses the stable `io.flutter.plugin.common`
+         * package.
+         *
+         *
+         * Calling this automatically initializes the plugin. However plugins initialized this way
+         * won't react to changes in activity or context, unlike [CameraPlugin].
+         */
+        fun registerWith(registrar: PluginRegistry.Registrar) {
+            registrar
+                .platformViewRegistry()
+                .registerViewFactory(
+                    "plugin_mappintelligence/webview",
+                    WebViewFactory(registrar.messenger(), registrar.view())
+                )
+            FlutterCookieManager(registrar.messenger())
+        }
+    }
+
     private fun objectMedia(data: String) {
         val jsonObject = JSONObject(data)
         val name: String = jsonObject.getString("name")
@@ -229,12 +267,18 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             val action: String = jsonOb.optString("action")
             val position: Number = jsonOb.optDouble("position")
             val duration: Number = jsonOb.optDouble("duration")
-            pageParameters = MediaParameters(name, action, position, duration)
-            pageParameters.bandwith = jsonOb.optDouble("name")
-            pageParameters.soundIsMuted = jsonOb.optBoolean("soundIsMuted")
-            pageParameters.soundVolume = jsonOb.optInt("soundVolume")
-            val category: Map<Int, String> = jsonOb.optJSONObject("customCategories").toMap()
-            pageParameters.customCategories = category
+            if (jsonOb.has("name") && jsonOb.has("action") && jsonOb.has("position") && jsonOb.has("duration")) {
+                pageParameters = MediaParameters(name, action, position, duration)
+                if (jsonOb.has("bandwith")) pageParameters.bandwith = jsonOb.optDouble("bandwith")
+                if (jsonOb.has("soundIsMuted")) pageParameters.soundIsMuted =
+                    jsonOb.optBoolean("soundIsMuted")
+                if (jsonOb.has("soundVolume")) pageParameters.soundVolume =
+                    jsonOb.optInt("soundVolume")
+                val category: Map<Int, String> = jsonOb.optJSONObject("customCategories").toMap()
+                pageParameters.customCategories = category
+            } else {
+                return null
+            }
             pageParameters
         }
     }
@@ -250,7 +294,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             val search: String = jsonOb.optString("searchTerm")
             val pageCategory: Map<Int, String> = jsonOb.optJSONObject("categories").toMap()
             pageParameters.parameters = parameters
-            pageParameters.search = search
+            if (jsonOb.has("searchTerm")) pageParameters.search = search
             pageParameters.pageCategory = pageCategory
             pageParameters
         }
@@ -289,21 +333,25 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             null
         } else {
             param = UserCategories()
-            param.gender = UserCategories.Gender.values()[jsonOb.optInt("gender")]
+            if (jsonOb.has("gender"))
+                param.gender = UserCategories.Gender.values()[jsonOb.optInt("gender")]
             param.birthday = toBirthday(jsonOb)
-            param.city = jsonOb.optString("city")
-            param.country = jsonOb.optString("country")
-            param.emailAddress = jsonOb.optString("emailAddress")
-            param.emailReceiverId = jsonOb.optString("emailReceiverId")
-            param.firstName = jsonOb.optString("firstName")
-            param.customerId = jsonOb.optString("customerId")
-            param.lastName = jsonOb.optString("lastName")
-            param.phoneNumber = jsonOb.optString("phoneNumber")
-            param.street = jsonOb.optString("street")
-            param.streetNumber = jsonOb.optString("streetNumber")
-            param.zipCode = jsonOb.optString("zipCode")
-            param.newsletterSubscribed = jsonOb.optBoolean("newsletterSubscribed")
-            param.customCategories = jsonOb.optJSONObject("customCategories").toMap()
+            if (jsonOb.has("city")) param.city = jsonOb.optString("city")
+            if (jsonOb.has("country")) param.country = jsonOb.optString("country")
+            if (jsonOb.has("emailAddress")) param.emailAddress = jsonOb.optString("emailAddress")
+            if (jsonOb.has("emailReceiverId")) param.emailReceiverId =
+                jsonOb.optString("emailReceiverId")
+            if (jsonOb.has("firstName")) param.firstName = jsonOb.optString("firstName")
+            if (jsonOb.has("customerId")) param.customerId = jsonOb.optString("customerId")
+            if (jsonOb.has("lastName")) param.lastName = jsonOb.optString("lastName")
+            if (jsonOb.has("phoneNumber")) param.phoneNumber = jsonOb.optString("phoneNumber")
+            if (jsonOb.has("street")) param.street = jsonOb.optString("street")
+            if (jsonOb.has("streetNumber")) param.streetNumber = jsonOb.optString("streetNumber")
+            if (jsonOb.has("zipCode")) param.zipCode = jsonOb.optString("zipCode")
+            if (jsonOb.has("newsletterSubscribed")) param.newsletterSubscribed =
+                jsonOb.optBoolean("newsletterSubscribed")
+            if (jsonOb.has("customCategories")) param.customCategories =
+                jsonOb.optJSONObject("customCategories").toMap()
             param
         }
 
@@ -315,11 +363,14 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         return if (jsonOb == null) {
             null
         } else {
-            param = UserCategories.Birthday(
-                jsonOb.optInt("day"),
-                jsonOb.optInt("month"),
-                jsonOb.optInt("year")
-            )
+            if (jsonOb.has("day") && jsonOb.has("month") && jsonOb.has("year"))
+                param = UserCategories.Birthday(
+                    jsonOb.optInt("day"),
+                    jsonOb.optInt("month"),
+                    jsonOb.optInt("year")
+                ) else {
+                return null
+            }
             param
         }
 
@@ -335,8 +386,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
                 val product = ProductParameters()
                 val objectInArray: JSONObject = jsonOb.getJSONObject(i)
                 product.name = objectInArray.optString("name")
-                product.cost = objectInArray.optDouble("cost")
-                product.quantity = objectInArray.optInt("quantity")
+                if (objectInArray.has("cost")) product.cost = objectInArray.optDouble("cost")
+                if (objectInArray.has("quantity")) product.quantity =
+                    objectInArray.optInt("quantity")
                 product.categories = objectInArray.optJSONObject("categories").toMap()
                 param.add(product)
             }
@@ -353,21 +405,29 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         } else {
             param = ECommerceParameters()
             param.products = toProduct(jsonOb)
-            param.status = ECommerceParameters.Status.values()[jsonOb.optInt("status")]
-            param.orderID = jsonOb.optString("status")
-            param.orderValue = jsonOb.optInt("orderValue")
-            param.returningOrNewCustomer = jsonOb.optString("returningOrNewCustomer")
-            param.returnValue = jsonOb.optDouble("returnValue")
-            param.cancellationValue = jsonOb.optDouble("cancellationValue")
-            param.couponValue = jsonOb.optDouble("couponValue")
-            param.productAdvertiseID = jsonOb.optDouble("productAdvertiseID")
-            param.productSoldOut = jsonOb.optDouble("productSoldOut")
-            param.paymentMethod = jsonOb.optString("paymentMethod")
-            param.shippingServiceProvider = jsonOb.optString("shippingServiceProvider")
-            param.shippingSpeed = jsonOb.optString("shippingSpeed")
-            param.shippingCost = jsonOb.optDouble("shippingCost")
-            param.productVariant = jsonOb.optString("productVariant")
-            param.customParameters = jsonOb.optJSONObject("customParameters").toMap()
+            if (jsonOb.has("status")) param.status =
+                ECommerceParameters.Status.values()[jsonOb.optInt("status")]
+            if (jsonOb.has("orderID")) param.orderID = jsonOb.optString("orderID")
+            if (jsonOb.has("orderValue")) param.orderValue = jsonOb.optInt("orderValue")
+            if (jsonOb.has("returningOrNewCustomer")) param.returningOrNewCustomer =
+                jsonOb.optString("returningOrNewCustomer")
+            if (jsonOb.has("returnValue")) param.returnValue = jsonOb.optDouble("returnValue")
+            if (jsonOb.has("cancellationValue")) param.cancellationValue =
+                jsonOb.optDouble("cancellationValue")
+            if (jsonOb.has("couponValue")) param.couponValue = jsonOb.optDouble("couponValue")
+            if (jsonOb.has("productAdvertiseID")) param.productAdvertiseID =
+                jsonOb.optDouble("productAdvertiseID")
+            if (jsonOb.has("productSoldOut")) param.productSoldOut =
+                jsonOb.optDouble("productSoldOut")
+            if (jsonOb.has("paymentMethod")) param.paymentMethod = jsonOb.optString("paymentMethod")
+            if (jsonOb.has("shippingServiceProvider")) param.shippingServiceProvider =
+                jsonOb.optString("shippingServiceProvider")
+            if (jsonOb.has("shippingSpeed")) param.shippingSpeed = jsonOb.optString("shippingSpeed")
+            if (jsonOb.has("shippingCost")) param.shippingCost = jsonOb.optDouble("shippingCost")
+            if (jsonOb.has("productVariant")) param.productVariant =
+                jsonOb.optString("productVariant")
+            if (jsonOb.has("customParameters")) param.customParameters =
+                jsonOb.optJSONObject("customParameters").toMap()
             param
         }
     }
@@ -380,10 +440,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             null
         } else {
             param = CampaignParameters()
-            param.campaignId = jsonOb.optString("campaignId")
-            param.action = CampaignParameters.CampaignAction.values()[jsonOb.optInt("action")]
+            if (jsonOb.has("campaignId")) param.campaignId = jsonOb.optString("campaignId")
+            if (jsonOb.has("action")) param.action =
+                CampaignParameters.CampaignAction.values()[jsonOb.optInt("action")]
             param.mediaCode = jsonOb.optString("mediaCode", "wt_mc")
-            param.oncePerSession = jsonOb.optBoolean("oncePerSession")
+            if (jsonOb.has("oncePerSession")) param.oncePerSession =
+                jsonOb.optBoolean("oncePerSession")
             param.customParameters = jsonOb.optJSONObject("campaignId").toMap()
             param
         }

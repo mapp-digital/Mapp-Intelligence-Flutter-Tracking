@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:plugin_mappintelligence/webview_flutter.dart';
 
 class WebviewForAndroid extends StatelessWidget {
   void initState() {
@@ -23,8 +23,10 @@ class WebviewForAndroid extends StatelessWidget {
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) async {
 //            NOT WORKING HERE:
-//             await webViewController.evaluateJavascript(injectScript);
+//              await webViewController.evaluateJavascript(injectScript);
           }),
     );
   }
+
+
 }
