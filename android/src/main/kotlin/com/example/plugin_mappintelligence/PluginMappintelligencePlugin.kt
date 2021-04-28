@@ -58,7 +58,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
     )
 
 
-
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
             FlutterFunctions.GET_PLATFORM_VERSION -> {
@@ -267,12 +266,19 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             val action: String = jsonOb.optString("action")
             val position: Number = jsonOb.optDouble("position")
             val duration: Number = jsonOb.optDouble("duration")
-            if (jsonOb.has("name") && jsonOb.has("action") && jsonOb.has("position") && jsonOb.has("duration")) {
+            if (jsonOb.isNotNull("name") && jsonOb.isNotNull("action") && jsonOb.isNotNull("position") && jsonOb.isNotNull(
+                    "duration"
+                ) && !jsonOb.getDouble(
+                    "duration"
+                ).isNaN() && !jsonOb.optDouble("position").isNaN()
+            ) {
                 pageParameters = MediaParameters(name, action, position, duration)
-                if (jsonOb.has("bandwith")) pageParameters.bandwith = jsonOb.optDouble("bandwith")
-                if (jsonOb.has("soundIsMuted")) pageParameters.soundIsMuted =
+                if (jsonOb.isNotNull("bandwith") && !jsonOb.optDouble("bandwith")
+                        .isNaN()
+                ) pageParameters.bandwith = jsonOb.optDouble("bandwith")
+                if (jsonOb.isNotNull("soundIsMuted")) pageParameters.soundIsMuted =
                     jsonOb.optBoolean("soundIsMuted")
-                if (jsonOb.has("soundVolume")) pageParameters.soundVolume =
+                if (jsonOb.isNotNull("soundVolume")) pageParameters.soundVolume =
                     jsonOb.optInt("soundVolume")
                 val category: Map<Int, String> = jsonOb.optJSONObject("customCategories").toMap()
                 pageParameters.customCategories = category
@@ -294,7 +300,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             val search: String = jsonOb.optString("searchTerm")
             val pageCategory: Map<Int, String> = jsonOb.optJSONObject("categories").toMap()
             pageParameters.parameters = parameters
-            if (jsonOb.has("searchTerm")) pageParameters.search = search
+            if (jsonOb.isNotNull("searchTerm")) pageParameters.search = search
             pageParameters.pageCategory = pageCategory
             pageParameters
         }
@@ -326,6 +332,10 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         }
     }
 
+    private fun JSONObject.isNotNull(key: String): Boolean {
+        return this.has(key) && !this.optString(key).equals("null") && this.opt(key)!=null
+    }
+
     private fun toUserCategories(json: JSONObject): UserCategories? {
         val param: UserCategories
         val jsonOb = json.optJSONObject("userCategories")
@@ -333,24 +343,26 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             null
         } else {
             param = UserCategories()
-            if (jsonOb.has("gender"))
+            if (jsonOb.isNotNull("gender"))
                 param.gender = UserCategories.Gender.values()[jsonOb.optInt("gender")]
             param.birthday = toBirthday(jsonOb)
-            if (jsonOb.has("city")) param.city = jsonOb.optString("city")
-            if (jsonOb.has("country")) param.country = jsonOb.optString("country")
-            if (jsonOb.has("emailAddress")) param.emailAddress = jsonOb.optString("emailAddress")
-            if (jsonOb.has("emailReceiverId")) param.emailReceiverId =
+            if (jsonOb.isNotNull("city")) param.city = jsonOb.optString("city")
+            if (jsonOb.isNotNull("country")) param.country = jsonOb.optString("country")
+            if (jsonOb.isNotNull("emailAddress")) param.emailAddress =
+                jsonOb.optString("emailAddress")
+            if (jsonOb.isNotNull("emailReceiverId")) param.emailReceiverId =
                 jsonOb.optString("emailReceiverId")
-            if (jsonOb.has("firstName")) param.firstName = jsonOb.optString("firstName")
-            if (jsonOb.has("customerId")) param.customerId = jsonOb.optString("customerId")
-            if (jsonOb.has("lastName")) param.lastName = jsonOb.optString("lastName")
-            if (jsonOb.has("phoneNumber")) param.phoneNumber = jsonOb.optString("phoneNumber")
-            if (jsonOb.has("street")) param.street = jsonOb.optString("street")
-            if (jsonOb.has("streetNumber")) param.streetNumber = jsonOb.optString("streetNumber")
-            if (jsonOb.has("zipCode")) param.zipCode = jsonOb.optString("zipCode")
-            if (jsonOb.has("newsletterSubscribed")) param.newsletterSubscribed =
+            if (jsonOb.isNotNull("firstName")) param.firstName = jsonOb.optString("firstName")
+            if (jsonOb.isNotNull("customerId")) param.customerId = jsonOb.optString("customerId")
+            if (jsonOb.isNotNull("lastName")) param.lastName = jsonOb.optString("lastName")
+            if (jsonOb.isNotNull("phoneNumber")) param.phoneNumber = jsonOb.optString("phoneNumber")
+            if (jsonOb.isNotNull("street")) param.street = jsonOb.optString("street")
+            if (jsonOb.isNotNull("streetNumber")) param.streetNumber =
+                jsonOb.optString("streetNumber")
+            if (jsonOb.isNotNull("zipCode")) param.zipCode = jsonOb.optString("zipCode")
+            if (jsonOb.isNotNull("newsletterSubscribed")) param.newsletterSubscribed =
                 jsonOb.optBoolean("newsletterSubscribed")
-            if (jsonOb.has("customCategories")) param.customCategories =
+            if (jsonOb.isNotNull("customCategories")) param.customCategories =
                 jsonOb.optJSONObject("customCategories").toMap()
             param
         }
@@ -363,7 +375,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         return if (jsonOb == null) {
             null
         } else {
-            if (jsonOb.has("day") && jsonOb.has("month") && jsonOb.has("year"))
+            if (jsonOb.isNotNull("day") && jsonOb.isNotNull("month") && jsonOb.isNotNull("year"))
                 param = UserCategories.Birthday(
                     jsonOb.optInt("day"),
                     jsonOb.optInt("month"),
@@ -386,8 +398,10 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
                 val product = ProductParameters()
                 val objectInArray: JSONObject = jsonOb.getJSONObject(i)
                 product.name = objectInArray.optString("name")
-                if (objectInArray.has("cost")) product.cost = objectInArray.optDouble("cost")
-                if (objectInArray.has("quantity")) product.quantity =
+                if (objectInArray.isNotNull("cost") && !objectInArray.optDouble("cost")
+                        .isNaN()
+                ) product.cost = objectInArray.optDouble("cost")
+                if (objectInArray.isNotNull("quantity")) product.quantity =
                     objectInArray.optInt("quantity")
                 product.categories = objectInArray.optJSONObject("categories").toMap()
                 param.add(product)
@@ -405,28 +419,38 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         } else {
             param = ECommerceParameters()
             param.products = toProduct(jsonOb)
-            if (jsonOb.has("status")) param.status =
+            if (jsonOb.isNotNull("status")) param.status =
                 ECommerceParameters.Status.values()[jsonOb.optInt("status")]
-            if (jsonOb.has("orderID")) param.orderID = jsonOb.optString("orderID")
-            if (jsonOb.has("orderValue")) param.orderValue = jsonOb.optInt("orderValue")
-            if (jsonOb.has("returningOrNewCustomer")) param.returningOrNewCustomer =
+            if (jsonOb.isNotNull("orderID")) param.orderID = jsonOb.optString("orderID")
+            if (jsonOb.isNotNull("orderValue")) param.orderValue = jsonOb.optInt("orderValue")
+            if (jsonOb.isNotNull("returningOrNewCustomer")) param.returningOrNewCustomer =
                 jsonOb.optString("returningOrNewCustomer")
-            if (jsonOb.has("returnValue")) param.returnValue = jsonOb.optDouble("returnValue")
-            if (jsonOb.has("cancellationValue")) param.cancellationValue =
+            if (jsonOb.isNotNull("returnValue") && !jsonOb.optDouble("returnValue")
+                    .isNaN()
+            ) param.returnValue = jsonOb.optDouble("returnValue")
+            if (jsonOb.isNotNull("cancellationValue")) param.cancellationValue =
                 jsonOb.optDouble("cancellationValue")
-            if (jsonOb.has("couponValue")) param.couponValue = jsonOb.optDouble("couponValue")
-            if (jsonOb.has("productAdvertiseID")) param.productAdvertiseID =
+            if (jsonOb.isNotNull("couponValue") && !jsonOb.optDouble("couponValue")
+                    .isNaN()
+            ) param.couponValue = jsonOb.optDouble("couponValue")
+            if (jsonOb.isNotNull("productAdvertiseID") ) param.productAdvertiseID =
                 jsonOb.optDouble("productAdvertiseID")
-            if (jsonOb.has("productSoldOut")) param.productSoldOut =
+            if (jsonOb.isNotNull("productSoldOut") && !jsonOb.optDouble("productSoldOut")
+                    .isNaN()
+            ) param.productSoldOut =
                 jsonOb.optDouble("productSoldOut")
-            if (jsonOb.has("paymentMethod")) param.paymentMethod = jsonOb.optString("paymentMethod")
-            if (jsonOb.has("shippingServiceProvider")) param.shippingServiceProvider =
+            if (jsonOb.isNotNull("paymentMethod")) param.paymentMethod =
+                jsonOb.optString("paymentMethod")
+            if (jsonOb.isNotNull("shippingServiceProvider")) param.shippingServiceProvider =
                 jsonOb.optString("shippingServiceProvider")
-            if (jsonOb.has("shippingSpeed")) param.shippingSpeed = jsonOb.optString("shippingSpeed")
-            if (jsonOb.has("shippingCost")) param.shippingCost = jsonOb.optDouble("shippingCost")
-            if (jsonOb.has("productVariant")) param.productVariant =
+            if (jsonOb.isNotNull("shippingSpeed")) param.shippingSpeed =
+                jsonOb.optString("shippingSpeed")
+            if (jsonOb.isNotNull("shippingCost") && !jsonOb.optDouble("shippingCost")
+                    .isNaN()
+            ) param.shippingCost = jsonOb.optDouble("shippingCost")
+            if (jsonOb.isNotNull("productVariant")) param.productVariant =
                 jsonOb.optString("productVariant")
-            if (jsonOb.has("customParameters")) param.customParameters =
+            if (jsonOb.isNotNull("customParameters")) param.customParameters =
                 jsonOb.optJSONObject("customParameters").toMap()
             param
         }
@@ -440,11 +464,11 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             null
         } else {
             param = CampaignParameters()
-            if (jsonOb.has("campaignId")) param.campaignId = jsonOb.optString("campaignId")
-            if (jsonOb.has("action")) param.action =
+            if (jsonOb.isNotNull("campaignId")) param.campaignId = jsonOb.optString("campaignId")
+            if (jsonOb.isNotNull("action")) param.action =
                 CampaignParameters.CampaignAction.values()[jsonOb.optInt("action")]
             param.mediaCode = jsonOb.optString("mediaCode", "wt_mc")
-            if (jsonOb.has("oncePerSession")) param.oncePerSession =
+            if (jsonOb.isNotNull("oncePerSession")) param.oncePerSession =
                 jsonOb.optBoolean("oncePerSession")
             param.customParameters = jsonOb.optJSONObject("campaignId").toMap()
             param
