@@ -26,7 +26,7 @@
     result(@"Succesfull initialize");
   } else if ([@"setLogLevel" isEqualToString: call.method]) {
     NSNumber* logLevelNumber = call.arguments[0];
-    [[MappIntelligence shared] setLogLevel:[logLevelNumber intValue]];
+    [[MappIntelligence shared] setLogLevel:[self getLogLevel:@([logLevelNumber longValue])]];
   } else if ([@"setBatchSupportEnabledWithSize" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
     NSNumber* size = call.arguments[1];
@@ -82,6 +82,7 @@
     if(s[@"campaignParameters"]) {
         NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"campaignParameters"]];
         MICampaignParameters* campaignActionParameters = [[MICampaignParameters alloc] initWithDictionary:dict];
+        [campaignActionParameters setAction:[self getCampaignAction:@([dict[@"action"] longValue])]];
         [event setCampaignParameters:campaignActionParameters];
     }
     if (s[@"sessionParameters"]) {
@@ -92,6 +93,7 @@
     if(s[@"userCategories"]) {
         NSMutableDictionary* dict = [self removeNullsFromDictionary:s[@"userCategories"]];
         MIUserCategories* userActionCategories = [[MIUserCategories alloc] initWithDictionary:dict];
+        [userActionCategories setGender:[self getGender:@([dict[@"gender"] longValue])]];
         [event setUserCategories:userActionCategories];
     }
     if (s[@"ecommerceParameters"]) {
@@ -120,6 +122,7 @@
     if(actionS[@"campaignParameters"]) {
         NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"campaignParameters"]];
         MICampaignParameters* campaignActionParameters = [[MICampaignParameters alloc] initWithDictionary:dict];
+        [campaignActionParameters setAction:[self getCampaignAction:@([dict[@"action"] longValue])]];
         [actionEvent setCampaignParameters:campaignActionParameters];
     }
     if (actionS[@"sessionParameters"]) {
@@ -130,6 +133,7 @@
     if(actionS[@"userCategories"]) {
         NSMutableDictionary* dict = [self removeNullsFromDictionary:actionS[@"userCategories"]];
         MIUserCategories* userActionCategories = [[MIUserCategories alloc] initWithDictionary:dict];
+        [userActionCategories setGender:[self getGender:@([dict[@"gender"] longValue])]];
         [actionEvent setUserCategories:userActionCategories];
     }
     if (actionS[@"ecommerceParameters"]) {
@@ -279,6 +283,69 @@
             break;
     }
     return viewed;
+}
+
+-(MIGender)getGender: (NSNumber*)gender {
+    switch ([gender intValue]) {
+        case 0:
+            return unknown;
+            break;
+        case 1:
+            return male;
+            break;
+        case 2:
+            return female;
+            break;
+        default:
+            return unknown;
+            break;
+    }
+    return unknown;
+}
+
+-(MICampaignAction)getCampaignAction: (NSNumber*)campaignAction {
+    switch ([campaignAction intValue]) {
+        case 0:
+            return click;
+            break;
+        case 1:
+            return view;
+            break;
+        default:
+            return view;
+            break;
+    }
+    return view;
+}
+
+-(logLevel)getLogLevel: (NSNumber*)logLevel {
+    switch ([logLevel intValue]) {
+        case 0:
+            return all;
+            break;
+        case 1:
+            return debug;
+            break;
+        case 2:
+            return warning;
+            break;
+        case 3:
+            return error;
+            break;
+        case 4:
+            return fault;
+            break;
+        case 5:
+            return info;
+            break;
+        case 6:
+            return none;
+            break;
+        default:
+            return none;
+            break;
+    }
+    return all;
 }
 
 @end
