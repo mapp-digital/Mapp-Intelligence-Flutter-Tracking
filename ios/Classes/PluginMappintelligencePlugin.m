@@ -28,7 +28,7 @@
     result(@"Succesfull initialize");
   } else if ([@"setLogLevel" isEqualToString: call.method]) {
     NSNumber* logLevelNumber = call.arguments[0];
-    [[MappIntelligence shared] setLogLevel:[self getLogLevel:@([logLevelNumber longValue])]];
+    [[MappIntelligence shared] setLogLevel:[logLevelNumber intValue]];
   } else if ([@"setBatchSupportEnabledWithSize" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
     NSNumber* size = call.arguments[1];
@@ -288,7 +288,11 @@
 }
 
 -(MIGender)getGender: (NSNumber*)gender {
-    switch ([gender intValue]) {
+  int genderValue = [gender intValue];
+  if (!genderValue) {
+    return unknown;
+  }
+    switch (genderValue) {
         case 0:
             return unknown;
             break;
@@ -318,36 +322,6 @@
             break;
     }
     return view;
-}
-
--(logLevel)getLogLevel: (NSNumber*)logLevel {
-    switch ([logLevel intValue]) {
-        case 0:
-            return all;
-            break;
-        case 1:
-            return debug;
-            break;
-        case 2:
-            return warning;
-            break;
-        case 3:
-            return error;
-            break;
-        case 4:
-            return fault;
-            break;
-        case 5:
-            return info;
-            break;
-        case 6:
-            return none;
-            break;
-        default:
-            return none;
-            break;
-    }
-    return all;
 }
 
 @end

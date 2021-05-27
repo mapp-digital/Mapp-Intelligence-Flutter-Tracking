@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
   ListView _buildListView(BuildContext context) {
     PluginMappintelligence.initialize(
         [794940687426749], 'http://tracker-int-01.webtrekk.net');
-    PluginMappintelligence.setLogLevel(LogLevel.all);
+    PluginMappintelligence.setLogLevel(LogLevel.info);
     PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
     PluginMappintelligence.setRequestInterval(1);
     PluginMappintelligence.setRequestPerQueue(300);
