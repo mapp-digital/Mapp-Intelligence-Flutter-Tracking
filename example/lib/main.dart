@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
     PluginMappintelligence.initialize(
         [794940687426749], 'http://tracker-int-01.webtrekk.net');
     PluginMappintelligence.setLogLevel(LogLevel.all);
-    PluginMappintelligence.setBatchSupportEnabledWithSize(true, 150);
+    PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
     PluginMappintelligence.setRequestInterval(1);
     PluginMappintelligence.setRequestPerQueue(300);
     PluginMappintelligence.build();

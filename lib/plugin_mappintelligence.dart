@@ -46,8 +46,8 @@ class PluginMappintelligence {
     return 'successfull $version';
   }
 
-  static Future<void> optIn()  async {
-     await _channel.invokeMethod('OptIn');
+  static Future<void> optIn() async {
+    await _channel.invokeMethod('OptIn');
   }
 
   static Future<void> optOutAndSendCurrentData(bool value) async {
@@ -74,7 +74,7 @@ class PluginMappintelligence {
       await _channel.invokeMethod(
           'trackPageWithCustomNameAndPageViewEvent', [customName]);
     } else if (pageViewEvent != null) {
-      debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
+      //debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
       await _channel.invokeMethod(
           'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
     }

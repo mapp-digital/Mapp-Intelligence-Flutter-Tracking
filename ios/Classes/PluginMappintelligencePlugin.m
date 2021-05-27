@@ -19,6 +19,8 @@
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([@"getPlatformVersion" isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+  }else if ([@"build" isEqualToString:call.method]) {
+//do nothing, that method is only used for Android
   } else if ([@"initialize" isEqualToString:call.method]) {
     NSArray<NSNumber *>* array = call.arguments[@"trackIds"];
     NSString *domain = call.arguments[@"trackDomain"];

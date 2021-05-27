@@ -41,7 +41,7 @@ class PageTracking extends StatelessWidget {
         userCategorises.emailAddress = "stefan.stevanovic@mapp.com";
         userCategorises.emailReceiverId = "8743798";
         userCategorises.firstName = "Stefan";
-        userCategorises.gender = Gender.male;
+        userCategorises.gender = Gender.female;
         userCategorises.lastName = "Stevanovic";
         userCategorises.newsletterSubscribed = true;
         userCategorises.phoneNumber = "83203298320923";
