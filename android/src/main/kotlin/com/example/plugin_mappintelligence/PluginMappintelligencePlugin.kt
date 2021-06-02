@@ -172,6 +172,13 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             FlutterFunctions.IS_ANONYMOUS_TRACKING_ENABLE -> {
                 result.success(iOS)
             }
+            FlutterFunctions.GET_EVER_ID -> {
+                result.success(Webtrekk.getInstance().getEverId())
+            }
+            FlutterFunctions.GET_USER_AGENT -> {
+                result.success(Webtrekk.getInstance().getUserAgent())
+            }
+
             else -> result.notImplemented()
         }
     }
@@ -333,7 +340,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun JSONObject.isNotNull(key: String): Boolean {
-        return this.has(key) && !this.optString(key).equals("null") && this.opt(key)!=null
+        return this.has(key) && !this.optString(key).equals("null") && this.opt(key) != null
     }
 
     private fun toUserCategories(json: JSONObject): UserCategories? {
@@ -433,7 +440,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             if (jsonOb.isNotNull("couponValue") && !jsonOb.optDouble("couponValue")
                     .isNaN()
             ) param.couponValue = jsonOb.optDouble("couponValue")
-            if (jsonOb.isNotNull("productAdvertiseID") ) param.productAdvertiseID =
+            if (jsonOb.isNotNull("productAdvertiseID")) param.productAdvertiseID =
                 jsonOb.optDouble("productAdvertiseID")
             if (jsonOb.isNotNull("productSoldOut") && !jsonOb.optDouble("productSoldOut")
                     .isNaN()
@@ -510,6 +517,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         const val TRACK_WEB_VIEW = "trackWebview"
         const val DISPOSE_WEB_VIEW = "disposeWebview"
         const val BUILD = "build"
+        const val GET_EVER_ID = "getEverId"
+        const val GET_USER_AGENT = "getUserAgent"
 
         //Only iOS
         const val SET_REQUEST_PER_QUEUE = "setRequestPerQueue"

@@ -120,4 +120,14 @@ class PluginMappintelligence {
   static Future<void> build() async {
     await _channel.invokeMethod('build');
   }
+
+  static Future<String> getEverID() async {
+    final String everId = await _channel.invokeMethod('getEverId');
+    return everId;
+  }
+
+  static Future<String> getUserAgent() async {
+    final String userAgent = await _channel.invokeMethod('getUserAgent');
+    return userAgent;
+  }
 }

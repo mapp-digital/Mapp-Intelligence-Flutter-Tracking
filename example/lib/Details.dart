@@ -27,6 +27,28 @@ class DetailsView extends StatelessWidget {
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
+      onPressed: ()  {
+        PluginMappintelligence.getEverID().then((String value) => {
+          showAlertDialog(context,value)
+        });
+
+      },
+      child: Text('Get Ever ID'),
+      style:
+      ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+
+    buttons.add(ElevatedButton(
+      onPressed: ()  {
+        PluginMappintelligence.getUserAgent().then((String value) => {
+          showAlertDialog(context,value)
+        });
+      },
+      child: Text('Get User Agent'),
+      style:
+      ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+    buttons.add(ElevatedButton(
       onPressed: () {
         PluginMappintelligence.initialize(
             [794940687426749], 'http://tracker-int-01.webtrekk.net');
@@ -43,6 +65,7 @@ class DetailsView extends StatelessWidget {
     return buttons;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,4 +79,35 @@ class DetailsView extends StatelessWidget {
       ),
     );
   }
+
+  showAlertDialog(BuildContext context,String title) {
+
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
+
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  // show the dialog
+
 }
