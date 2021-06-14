@@ -221,6 +221,8 @@
         self.webView.removeFromSuperview;
     }
     self.webView = NULL;
+  } else if ([@"getEverId" isEqualToString: call.method]) {
+    result([[MappIntelligence shared] getEverId]);
   }
   else { 
     result(FlutterMethodNotImplemented);

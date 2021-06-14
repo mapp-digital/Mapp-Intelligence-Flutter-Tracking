@@ -12,6 +12,7 @@ class Campaign extends StatelessWidget {
         campaignProperties.mediaCode = "abc";
         campaignProperties.oncePerSession = true;
         campaignProperties.action = CampaignAction.view;
+        campaignProperties.campaignId = "testCampaignID";
         campaignProperties.customParameters = {12: "camParam1"};
 
         var event = PageViewEvent("TestCampaign");

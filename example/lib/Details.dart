@@ -19,35 +19,23 @@ class DetailsView extends StatelessWidget {
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
-      onPressed: ()  {
-         PluginMappintelligence.optIn();
+      onPressed: () {
+        PluginMappintelligence.optIn();
       },
       child: Text('Opt in'),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
-      onPressed: ()  {
-        PluginMappintelligence.getEverID().then((String value) => {
-          showAlertDialog(context,value)
-        });
-
+      onPressed: () {
+        PluginMappintelligence.getEverID()
+            .then((String value) => {showAlertDialog(context, value)});
       },
       child: Text('Get Ever ID'),
       style:
-      ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
 
-    buttons.add(ElevatedButton(
-      onPressed: ()  {
-        PluginMappintelligence.getUserAgent().then((String value) => {
-          showAlertDialog(context,value)
-        });
-      },
-      child: Text('Get User Agent'),
-      style:
-      ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
-    ));
     buttons.add(ElevatedButton(
       onPressed: () {
         PluginMappintelligence.initialize(
@@ -65,7 +53,6 @@ class DetailsView extends StatelessWidget {
     return buttons;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,14 +67,12 @@ class DetailsView extends StatelessWidget {
     );
   }
 
-  showAlertDialog(BuildContext context,String title) {
-
+  showAlertDialog(BuildContext context, String title) {
     // set up the button
     Widget okButton = TextButton(
       child: Text("OK"),
       onPressed: () {
         Navigator.of(context, rootNavigator: true).pop();
-
       },
     );
 

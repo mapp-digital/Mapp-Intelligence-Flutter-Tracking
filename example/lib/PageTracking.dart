@@ -41,7 +41,7 @@ class PageTracking extends StatelessWidget {
         userCategorises.emailAddress = "stefan.stevanovic@mapp.com";
         userCategorises.emailReceiverId = "8743798";
         userCategorises.firstName = "Stefan";
-        userCategorises.gender = Gender.unknown;
+        userCategorises.gender = Gender.female;
         userCategorises.lastName = "Stevanovic";
         userCategorises.newsletterSubscribed = true;
         userCategorises.phoneNumber = "83203298320923";
@@ -60,9 +60,6 @@ class PageTracking extends StatelessWidget {
         ecommerceProperties.orderStatus = "payed";
         ecommerceProperties.orderValue = 4445.8;
         ecommerceProperties.paymentMethod = "credit card";
-        ecommerceProperties.productAdvertiseID = 99099;
-        ecommerceProperties.productSoldOut = 13;
-        ecommerceProperties.productVariant = "varient";
         ecommerceProperties.returnValue = 23.7;
         ecommerceProperties.returningOrNewCustomer = "new one";
         ecommerceProperties.shippingCost = 22.3;
@@ -73,6 +70,9 @@ class PageTracking extends StatelessWidget {
         product1.name = "T-Shirt";
         product1.quantity = 10;
         product1.cost = 33.2;
+        product1.productAdvertiseID = 99099;
+        product1.productSoldOut = 13;
+        product1.productVariant = "varient";
         product1.categories = {44: "product1Cat"};
         ecommerceProperties.products = [product1];
 

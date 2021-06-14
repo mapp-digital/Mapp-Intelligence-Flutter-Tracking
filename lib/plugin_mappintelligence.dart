@@ -125,9 +125,4 @@ class PluginMappintelligence {
     final String everId = await _channel.invokeMethod('getEverId');
     return everId;
   }
-
-  static Future<String> getUserAgent() async {
-    final String userAgent = await _channel.invokeMethod('getUserAgent');
-    return userAgent;
-  }
 }

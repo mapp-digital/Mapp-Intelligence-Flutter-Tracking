@@ -74,12 +74,18 @@ class Product {
   String? name;
   double? cost;
   int? quantity;
+  double? productAdvertiseID;
+  int? productSoldOut;
+  String? productVariant;
   Map<int, String>? categories;
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'cost': cost,
         'quantity': quantity,
+        'productAdvertiseID': productAdvertiseID,
+        'productSoldOut': productSoldOut,
+        'productVariant': productVariant,
         'categories':
             categories?.map((key, value) => MapEntry(key.toString(), value))
       };
@@ -96,15 +102,12 @@ class EcommerceParameters {
   double? returnValue;
   double? cancellationValue;
   double? couponValue;
-  double? productAdvertiseID;
-  int? productSoldOut;
   String? paymentMethod;
   String? shippingServiceProvider;
   String? shippingSpeed;
   double? shippingCost;
   double? markUp;
   String? orderStatus;
-  String? productVariant;
 
   Map<int, String>? customParameters;
 
@@ -118,15 +121,12 @@ class EcommerceParameters {
         'returnValue': returnValue,
         'cancellationValue': cancellationValue,
         'couponValue': couponValue,
-        'productAdvertiseID': productAdvertiseID,
-        'productSoldOut': productSoldOut,
         'paymentMethod': paymentMethod,
         'shippingServiceProvider': shippingServiceProvider,
         'shippingSpeed': shippingSpeed,
         'shippingCost': shippingCost,
         'markUp': markUp,
         'orderStatus': orderStatus,
-        'productVariant': productVariant,
         'customParameters': customParameters
             ?.map((key, value) => MapEntry(key.toString(), value))
       };
