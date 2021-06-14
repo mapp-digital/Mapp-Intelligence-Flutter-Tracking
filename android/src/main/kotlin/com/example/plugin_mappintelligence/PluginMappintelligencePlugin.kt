@@ -411,6 +411,21 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
                 if (objectInArray.isNotNull("quantity")) product.quantity =
                     objectInArray.optInt("quantity")
                 product.categories = objectInArray.optJSONObject("categories").toMap()
+
+                if (objectInArray.isNotNull("productAdvertiseID")) product.productAdvertiseID =
+                    objectInArray.optDouble("productAdvertiseID")
+                if (objectInArray.isNotNull("productSoldOut") && !objectInArray.optDouble("productSoldOut")
+                        .isNaN()
+                ) {
+                    if (objectInArray.optInt("productSoldOut") == 0)
+                        product.productSoldOut = false
+                    else {
+                        product.productSoldOut = true
+                    }
+
+                }
+                if (objectInArray.isNotNull("productVariant")) product.productVariant =
+                    objectInArray.optString("productVariant")
                 param.add(product)
             }
             param
@@ -440,12 +455,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             if (jsonOb.isNotNull("couponValue") && !jsonOb.optDouble("couponValue")
                     .isNaN()
             ) param.couponValue = jsonOb.optDouble("couponValue")
-            if (jsonOb.isNotNull("productAdvertiseID")) param.productAdvertiseID =
-                jsonOb.optDouble("productAdvertiseID")
-            if (jsonOb.isNotNull("productSoldOut") && !jsonOb.optDouble("productSoldOut")
-                    .isNaN()
-            ) param.productSoldOut =
-                jsonOb.optDouble("productSoldOut")
+
             if (jsonOb.isNotNull("paymentMethod")) param.paymentMethod =
                 jsonOb.optString("paymentMethod")
             if (jsonOb.isNotNull("shippingServiceProvider")) param.shippingServiceProvider =
@@ -455,14 +465,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             if (jsonOb.isNotNull("shippingCost") && !jsonOb.optDouble("shippingCost")
                     .isNaN()
             ) param.shippingCost = jsonOb.optDouble("shippingCost")
-            if (jsonOb.isNotNull("productVariant")) param.productVariant =
-                jsonOb.optString("productVariant")
+//
             if (jsonOb.isNotNull("customParameters")) param.customParameters =
                 jsonOb.optJSONObject("customParameters").toMap()
             param
         }
     }
-
 
     private fun toCampaignParameters(json: JSONObject): CampaignParameters? {
         val param: CampaignParameters
