@@ -411,18 +411,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
                 if (objectInArray.isNotNull("quantity")) product.quantity =
                     objectInArray.optInt("quantity")
                 product.categories = objectInArray.optJSONObject("categories").toMap()
-
+                product.ecommerceParameters = objectInArray.optJSONObject("ecommerceParameters").toMap()
                 if (objectInArray.isNotNull("productAdvertiseID")) product.productAdvertiseID =
                     objectInArray.optDouble("productAdvertiseID")
-                if (objectInArray.isNotNull("productSoldOut") && !objectInArray.optDouble("productSoldOut")
-                        .isNaN()
+                if (objectInArray.isNotNull("productSoldOut")
                 ) {
-                    if (objectInArray.optInt("productSoldOut") == 0)
-                        product.productSoldOut = false
-                    else {
-                        product.productSoldOut = true
-                    }
-
+                    product.productSoldOut=objectInArray.optBoolean("productSoldOut")
                 }
                 if (objectInArray.isNotNull("productVariant")) product.productVariant =
                     objectInArray.optString("productVariant")

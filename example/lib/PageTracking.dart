@@ -71,9 +71,10 @@ class PageTracking extends StatelessWidget {
         product1.quantity = 10;
         product1.cost = 33.2;
         product1.productAdvertiseID = 99099;
-        product1.productSoldOut = 13;
+        product1.productSoldOut = true;
         product1.productVariant = "varient";
         product1.categories = {44: "product1Cat"};
+        product1.ecommerceParameters={22:"dada"};
         ecommerceProperties.products = [product1];
 
         var campaignProperties = CampaignParameters(null);

@@ -75,9 +75,10 @@ class Product {
   double? cost;
   int? quantity;
   double? productAdvertiseID;
-  int? productSoldOut;
+  bool? productSoldOut;
   String? productVariant;
   Map<int, String>? categories;
+  Map<int, String>? ecommerceParameters;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -87,7 +88,9 @@ class Product {
         'productSoldOut': productSoldOut,
         'productVariant': productVariant,
         'categories':
-            categories?.map((key, value) => MapEntry(key.toString(), value))
+            categories?.map((key, value) => MapEntry(key.toString(), value)),
+        'ecommerceParameters':
+            ecommerceParameters?.map((key, value) => MapEntry(key.toString(), value))
       };
 }
 

@@ -8,17 +8,19 @@ class Ecommerce extends StatelessWidget {
     Product product1 = Product();
     product1.name = "Product1";
     product1.categories = {1: "ProductCat1", 2: "ProductCat2"};
+    product1.ecommerceParameters={22:"ecommerceParameter"};
     product1.cost = 13;
     product1.productAdvertiseID = 56291;
-    product1.productSoldOut = 0;
+    product1.productSoldOut = false;
     product1.quantity = 4;
 
     Product product2 = Product();
     product2.name = "Product2";
     product2.categories = {2: "ProductCat2"};
+    product1.ecommerceParameters={22:"ecommerceParameter"};
     product2.cost = 50;
     product2.productAdvertiseID = 562918888888888;
-    product2.productSoldOut = 1;
+    product2.productSoldOut = true;
     product2.productVariant = "testVariant";
     return [product1, product2];
   }
