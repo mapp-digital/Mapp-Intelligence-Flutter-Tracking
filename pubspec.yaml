@@ -1,7 +1,7 @@
 name: plugin_mappintelligence
-description: Mappintelligence flutter plugin. Based on the tracking data from apps different indicators can be measured, which are already known from the web analytics, such as page impressions, events, screen size, operating system, e-commerce tracking, etc..
-version: 0.0.2
-author: Stefan Stevanovic <stefan.stevanovic@mapp.com.com>, Aleksandar Marinkovic <aleksandar.marinkovic@mapp.com>, Aleksandar Marinkovic <acamarinkovic93@gmail.com>
+description: The MappIntelligence SDK allows you to track user activities, screen flow and media usage for an App. All data is send to the MappIntelligence tracking system for further analysis.
+version: 0.0.1
+author: Stefan Stevanovic <stefan.stevanovic@mapp.com.com>, Aleksandar Marinkovic <aleksandar.marinkovic@mapp.com>
 homepage: https://github.com/mapp-digital/Mapp-Intelligence-Flutter-Tracking
 
 environment:
