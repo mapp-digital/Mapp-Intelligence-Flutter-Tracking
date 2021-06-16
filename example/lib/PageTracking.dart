@@ -47,7 +47,7 @@ class PageTracking extends StatelessWidget {
         userCategorises.phoneNumber = "83203298320923";
         userCategorises.street = "Jovana Ristica";
         userCategorises.streetNumber = "2A";
-        userCategorises.customCategories = {111: 'usercat1', 222: 'usercat2'};
+        userCategorises.customCategories = {17: 'usercat1', 22: 'usercat2'};
         userCategorises.zipCode = "780s00";
 
         var ecommerceProperties = EcommerceParameters();
@@ -74,7 +74,7 @@ class PageTracking extends StatelessWidget {
         product1.productSoldOut = true;
         product1.productVariant = "varient";
         product1.categories = {44: "product1Cat"};
-        product1.ecommerceParameters={22:"dada"};
+        product1.ecommerceParameters = {22: "dada"};
         ecommerceProperties.products = [product1];
 
         var campaignProperties = CampaignParameters(null);
