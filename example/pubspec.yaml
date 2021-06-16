@@ -12,14 +12,14 @@ dependencies:
   flutter:
     sdk: flutter
 
-  plugin_mappintelligence:
-    # When depending on this package from a real application you should use:
-    #   plugin_mappintelligence: ^x.y.z
-    # See https://dart.dev/tools/pub/dependencies#version-constraints
-    # The example app is bundled with the plugin so we use a path dependency on
-    # the parent directory to use the current plugin's version.
-    path: ../
-
+#  plugin_mappintelligence:
+#    # When depending on this package from a real application you should use:
+#    #   plugin_mappintelligence: ^x.y.z
+#    # See https://dart.dev/tools/pub/dependencies#version-constraints
+#    # The example app is bundled with the plugin so we use a path dependency on
+#    # the parent directory to use the current plugin's version.
+#    path: ../
+  plugin_mappintelligence: ^5.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
