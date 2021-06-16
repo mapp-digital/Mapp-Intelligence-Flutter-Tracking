@@ -1,3 +1,5 @@
+## 5.0.0
+First public version
 ## 0.0.5
 Deleted unnecessary setup from the README.md
 ## 0.0.4
