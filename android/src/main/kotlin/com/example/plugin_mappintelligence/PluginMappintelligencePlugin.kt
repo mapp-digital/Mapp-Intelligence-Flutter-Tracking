@@ -111,9 +111,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
 
             }
             FlutterFunctions.BUILD -> {
-//                val configBuild = webtrekkConfigurations.build()
-//                Webtrekk.getInstance().init(mContext.applicationContext, configBuild)
-//                result.success("Ok")
+               val configBuild = webtrekkConfigurations.build()
+               Webtrekk.getInstance().init(mContext.applicationContext, configBuild)
+               result.success("Ok")
 
             }
             FlutterFunctions.TRACK_PAGE -> {

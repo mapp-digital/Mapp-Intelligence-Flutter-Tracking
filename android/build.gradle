@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:4.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -42,11 +42,16 @@ android {
             targetCompatibility 1.8
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildToolsVersion '30.0.3'
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "com.mapp.sdk:intelligence-android:5.0.9"
+    implementation "com.mapp.sdk:intelligence-android:5.1.1"
     implementation "androidx.work:work-runtime-ktx:2.2.0"
     implementation 'androidx.annotation:annotation:1.0.0'
     implementation 'androidx.webkit:webkit:1.0.0'
