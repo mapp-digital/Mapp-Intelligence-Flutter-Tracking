@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+
 import 'object_tracking_classes.dart';
 
 class PluginMappintelligence {
@@ -81,7 +81,7 @@ class PluginMappintelligence {
   }
 
   static Future<void> trackAction(ActionEvent actionEvent) async {
-    debugPrint(jsonEncode(actionEvent.toJson()), wrapWidth: 1024);
+    //debugPrint(jsonEncode(actionEvent.toJson()), wrapWidth: 1024);
     await _channel
         .invokeMethod('trackAction', [jsonEncode(actionEvent.toJson())]);
   }
@@ -95,14 +95,14 @@ class PluginMappintelligence {
   }
 
   static Future<void> trackMedia(MediaEvent mediaEvent) async {
-    debugPrint(jsonEncode(mediaEvent.toJson()), wrapWidth: 1024);
+    //print(jsonEncode(mediaEvent.toJson()), wrapWidth: 1024);
     await _channel
         .invokeMethod('trackMedia', [jsonEncode(mediaEvent.toJson())]);
   }
 
   static Future<void> trackWebview(double? x, double? y, double? width,
       double? height, String urlString) async {
-    debugPrint("trackWebview is pressed");
+    //print("trackWebview is pressed");
     if (x != null && y != null && width != null && height != null) {
       await _channel
           .invokeMethod('trackWebview', [x, y, width, height, urlString]);
