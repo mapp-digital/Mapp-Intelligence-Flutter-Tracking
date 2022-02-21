@@ -1,4 +1,4 @@
-## 5.1.2
+## 5.0.1
 Changed a way how plugin can be initializes for Android. There is no need to initialize plugin from native Java or Kotlin code anymore.  This all can be done from the flutter side.
 ## 5.0.0
 First public version
