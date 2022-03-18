@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
 
 import 'object_tracking_classes.dart';
@@ -15,7 +14,7 @@ class PluginMappintelligence {
   }
 
   static Future<String?> initialize(
-      List<int> trackIds, String trackDomain) async {
+      List<String> trackIds, String trackDomain) async {
     final String? version = await _channel.invokeMethod('initialize',
         <dynamic, dynamic>{'trackIds': trackIds, 'trackDomain': trackDomain});
     return 'successfull $version';
@@ -54,8 +53,8 @@ class PluginMappintelligence {
     await _channel.invokeMethod('optOutAndSendCurrentData', [value]);
   }
 
-  static Future<void> reset() async {
-    await _channel.invokeMethod('reset');
+  static Future<String> reset(Map<String, dynamic> map) async {
+    return await _channel.invokeMethod('resetConfig',map);
   }
 
   static Future<void> trackPage(String customName,
@@ -124,5 +123,18 @@ class PluginMappintelligence {
   static Future<String> getEverID() async {
     final String everId = await _channel.invokeMethod('getEverId');
     return everId;
+  }
+
+  static Future<void> setEverId(String everId) async {
+    await _channel.invokeMethod("setEverId", [everId]);
+  }
+
+  static Future<void> setAnonymousTracking(bool anonymousTracking,
+      Set<String> params, bool generateNewEverId) async {
+    var map = Map();
+    map.putIfAbsent("anonymousTracking", () => anonymousTracking);
+    map.putIfAbsent("params", () => params);
+    map.putIfAbsent("generateNewEverId", () => generateNewEverId);
+    await _channel.invokeMapMethod("enableAnonymousTracking", map);
   }
 }

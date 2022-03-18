@@ -1,19 +1,23 @@
 package com.example.plugin_mappintelligence
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.NonNull
 import com.example.plugin_mappintelligence.webviewflutter.FlutterCookieManager
 import com.example.plugin_mappintelligence.webviewflutter.WebViewFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
+import java.util.*
+import java.util.concurrent.TimeUnit
 import org.json.JSONObject
+import webtrekk.android.sdk.Config
 import webtrekk.android.sdk.Logger
-import webtrekk.android.sdk.MediaParam
 import webtrekk.android.sdk.Webtrekk
 import webtrekk.android.sdk.WebtrekkConfiguration
 import webtrekk.android.sdk.events.ActionEvent
@@ -29,13 +33,14 @@ import webtrekk.android.sdk.events.eventParams.SessionParameters
 import webtrekk.android.sdk.events.eventParams.UserCategories
 
 /** PluginMappintelligencePlugin */
-class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
+class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
-    private lateinit var mContext: Context
+    private var mContext: Context? = null
+    private var activity: Activity? = null
     private var flutterCookieManager: FlutterCookieManager? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -52,13 +57,10 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         flutterCookieManager = FlutterCookieManager(messenger)
     }
 
-    var webtrekkConfigurations = WebtrekkConfiguration.Builder(
-        listOf("1"),
-        "1"
-    )
+    var webtrekkConfigurations: WebtrekkConfiguration.Builder?=null
+    var config: Config?=null
 
-
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         when (call.method) {
             FlutterFunctions.GET_PLATFORM_VERSION -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
@@ -68,20 +70,19 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
                 val trackDomain: String? = call.arguments<HashMap<String, String>>()["trackDomain"]
                 if (trackIds != null && trackDomain != null) {
                     webtrekkConfigurations = WebtrekkConfiguration.Builder(
-                        trackIds.toList(),
+                        trackIds,
                         trackDomain
-                    )
+                    ).disableAutoTracking()
                 }
-                webtrekkConfigurations.disableAutoTracking()
                 result.success("Ok")
 
             }
             FlutterFunctions.SET_LOG_LEVEL -> {
                 val logLevel = call.arguments<ArrayList<Int>>()[0]
                 if (logLevel == 7) {
-                    webtrekkConfigurations.logLevel(Logger.Level.NONE)
+                    webtrekkConfigurations?.logLevel(Logger.Level.NONE)
                 } else {
-                    webtrekkConfigurations.logLevel(Logger.Level.BASIC)
+                    webtrekkConfigurations?.logLevel(Logger.Level.BASIC)
                 }
                 result.success("Ok")
 
@@ -89,13 +90,13 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             FlutterFunctions.BATCH_SUPPORT -> {
                 val enable = call.arguments<ArrayList<Boolean>>()[0]
                 val interval = call.arguments<ArrayList<Int>>()[1]
-                webtrekkConfigurations.setBatchSupport(enable, interval)
+                webtrekkConfigurations?.setBatchSupport(enable, interval)
                 result.success("Ok")
 
             }
             FlutterFunctions.SET_REQUEST_INTERVAL -> {
                 val requestInterval = call.arguments<ArrayList<Int>>()[0]
-                webtrekkConfigurations.requestsInterval(interval = requestInterval.toLong())
+                webtrekkConfigurations?.requestsInterval(interval = requestInterval.toLong())
                 result.success("Ok")
 
             }
@@ -111,9 +112,14 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
 
             }
             FlutterFunctions.BUILD -> {
-               val configBuild = webtrekkConfigurations.build()
-               Webtrekk.getInstance().init(mContext.applicationContext, configBuild)
-               result.success("Ok")
+                webtrekkConfigurations?.let {
+                    config=it.build()
+                    mContext?.let {
+                        Webtrekk.getInstance().init(it.applicationContext, config!!)
+                    }
+                }
+
+                result.success("Ok")
             }
             FlutterFunctions.TRACK_PAGE -> {
                 val name = call.arguments<ArrayList<String>>()[0]
@@ -159,11 +165,52 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             FlutterFunctions.SET_REQUEST_PER_QUEUE -> {
                 result.success(iOS)
             }
-            FlutterFunctions.RESET -> {
-                result.success(iOS)
+            FlutterFunctions.RESET_CONFIG -> {
+                 val map = call.arguments<Map<String, Any>>()
+                 if (map.containsKey("trackIds") && map.containsKey("domain")) {
+                     val trackIds = map["trackIds"] as List<String>
+                     val domain = map["domain"] as String
+                     webtrekkConfigurations=WebtrekkConfiguration.Builder(
+                         trackIds = trackIds,
+                         trackDomain = domain
+                     ).disableAutoTracking()
+                 }
+                if (map.containsKey("batchSupportEnabled") && map.containsKey("batchSupportSize")) {
+                    val batchSupportEnabled = map["batchSupportEnabled"] as Boolean
+                    val batchSupportSize = map["batchSupportSize"] as Int
+                    webtrekkConfigurations?.setBatchSupport(batchSupportEnabled, batchSupportSize)
+                }
+                // For some reason, exception is thrown on Android if requestInterval is set
+                if (map.containsKey("requestInterval")) {
+                    val requestInterval = map["requestInterval"] as Int?
+                    webtrekkConfigurations?.requestsInterval(
+                        TimeUnit.MINUTES,
+                        requestInterval?.toLong() ?: 15L
+                    )
+                }
+                 if (map.containsKey("everId")) {
+                     (map["everId"] as String?)?.let {
+                         webtrekkConfigurations?.setEverId(it)
+                     }
+                 }
+
+                  config = webtrekkConfigurations?.build()
+
+                mContext?.let {
+                    Webtrekk.reset(it,config)
+                }
+                result.success("Ok")
             }
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING -> {
-                result.success(iOS)
+                val anonymousTracking = call.arguments<List<Boolean>>()[0]
+                val params = call.arguments<List<Set<String>>>()[1] ?: emptySet<String>()
+                val generateNewEverId = call.arguments<List<Boolean>>()[2]
+                Webtrekk.getInstance().anonymousTracking(
+                    enabled = anonymousTracking,
+                    suppressParams = params,
+                    generateNewEverId = generateNewEverId,
+                )
+                result.success(anonymousTracking)
             }
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING_WITH_PARAMETERS -> {
                 result.success(iOS)
@@ -177,7 +224,13 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
             FlutterFunctions.GET_USER_AGENT -> {
                 result.success(Webtrekk.getInstance().getUserAgent())
             }
-
+            FlutterFunctions.SET_EVER_ID -> {
+                val everId = call.arguments<List<String>>()[0]
+                webtrekkConfigurations?.setEverId(everId)
+            }
+            FlutterFunctions.SEND_AND_CLEAN_DATA -> {
+                Webtrekk.getInstance().sendRequestsNowAndClean()
+            }
             else -> result.notImplemented()
         }
     }
@@ -410,12 +463,13 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
                 if (objectInArray.isNotNull("quantity")) product.quantity =
                     objectInArray.optInt("quantity")
                 product.categories = objectInArray.optJSONObject("categories").toMap()
-                product.ecommerceParameters = objectInArray.optJSONObject("ecommerceParameters").toMap()
+                product.ecommerceParameters =
+                    objectInArray.optJSONObject("ecommerceParameters").toMap()
                 if (objectInArray.isNotNull("productAdvertiseID")) product.productAdvertiseID =
                     objectInArray.optDouble("productAdvertiseID")
                 if (objectInArray.isNotNull("productSoldOut")
                 ) {
-                    product.productSoldOut=objectInArray.optBoolean("productSoldOut")
+                    product.productSoldOut = objectInArray.optBoolean("productSoldOut")
                 }
                 if (objectInArray.isNotNull("productVariant")) product.productVariant =
                     objectInArray.optString("productVariant")
@@ -521,6 +575,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         const val GET_EVER_ID = "getEverId"
         const val GET_USER_AGENT = "getUserAgent"
 
+        const val SET_EVER_ID = "setEverId"
+        const val RESET_CONFIG = "resetConfig"
+        const val SEND_AND_CLEAN_DATA = "sendAndCleanData"
+        const val SET_DOMAIN = "setDomain";
+        const val SET_TRACK_IDS = "setTrackIds";
+
         //Only iOS
         const val SET_REQUEST_PER_QUEUE = "setRequestPerQueue"
         const val RESET = "reset"
@@ -528,5 +588,22 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler {
         const val ENABLE_ANONYMOUS_TRACKING_WITH_PARAMETERS =
             "enableAnonymousTrackingWithParameters"
         const val IS_ANONYMOUS_TRACKING_ENABLE = "isAnonymousTrackingEnabled"
+
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        activity = null
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivity() {
+        activity = null
     }
 }

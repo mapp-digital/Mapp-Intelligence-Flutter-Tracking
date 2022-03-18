@@ -39,7 +39,7 @@ class DetailsView extends StatelessWidget {
     buttons.add(ElevatedButton(
       onPressed: () {
         PluginMappintelligence.initialize(
-            [794940687426749], 'http://tracker-int-01.webtrekk.net');
+            ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
         PluginMappintelligence.setLogLevel(LogLevel.all);
         PluginMappintelligence.setBatchSupportEnabledWithSize(true, 150);
         PluginMappintelligence.setRequestInterval(1);
@@ -50,6 +50,20 @@ class DetailsView extends StatelessWidget {
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
+
+    buttons.add(ElevatedButton(
+        onPressed: () {
+          var map = Map<String, dynamic>();
+          map.putIfAbsent("trackIds", () => ["794940687426749"]); // required
+          map.putIfAbsent("domain", () => "http://tracker-int-01.webtrekk.net"); // required
+          map.putIfAbsent("batchSupportEnabled", () => true);
+          map.putIfAbsent("batchSupportSize", () => 150);
+          map.putIfAbsent("requestInterval", () => 15);
+          map.putIfAbsent("requestPerQueue", () => 300);
+          map.putIfAbsent("everId", () => "1111111111");
+          PluginMappintelligence.reset(map);
+        },
+        child: Text("Reset")));
     return buttons;
   }
 
