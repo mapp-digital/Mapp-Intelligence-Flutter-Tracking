@@ -15,7 +15,7 @@ import 'package:plugin_mappintelligence_example/WebviewForAndroid.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-      PluginMappintelligence.initialize(
+  PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
   PluginMappintelligence.setLogLevel(LogLevel.info);
   PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
@@ -110,7 +110,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   ListView _buildListView(BuildContext context) {
-
     return ListView.builder(
       itemCount: _screens.length,
       itemBuilder: (context, index) {

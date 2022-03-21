@@ -8,6 +8,10 @@
 @property WKWebView* webView;
 @end
 
+static NSString *domainString = nil;
+static NSArray<NSNumber *>* trackIDs = nil;
+static NSNumber* logLevelGlobal = nil;
+
 @implementation PluginMappintelligencePlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -24,12 +28,21 @@
   }else if ([@"build" isEqualToString:call.method]) {
 //do nothing, that method is only used for Android
   } else if ([@"initialize" isEqualToString:call.method]) {
-    NSArray<NSNumber *>* array = call.arguments[@"trackIds"];
+    NSArray<NSString *>* array = call.arguments[@"trackIds"];
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    f.numberStyle = NSNumberFormatterDecimalStyle;
+    NSMutableArray<NSNumber*>* newArray = [[NSMutableArray alloc] init];
+    for (NSString* object in trackIDs ) {
+      [newArray addObject:[f numberFromString:object]];
+    }
     NSString *domain = call.arguments[@"trackDomain"];
+    domainString = domain;
+    trackIDs = newArray;
     [[MappIntelligence shared] initWithConfiguration:array onTrackdomain:domain];
     result(@"Succesfull initialize");
   } else if ([@"setLogLevel" isEqualToString: call.method]) {
     NSNumber* logLevelNumber = call.arguments[0];
+    logLevelGlobal = logLevelNumber;
     [[MappIntelligence shared] setLogLevel:[logLevelNumber intValue]];
   } else if ([@"setBatchSupportEnabledWithSize" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
@@ -225,6 +238,16 @@
     self.webView = NULL;
   } else if ([@"getEverId" isEqualToString: call.method]) {
     result([[MappIntelligence shared] getEverId]);
+  } else if ([@"setEverId" isEqualToString: call.method]) {
+    NSString* everID = call.arguments[0];
+    if (trackIDs && domainString) {
+      ([[MappIntelligence shared] initWithConfiguration:trackIDs onTrackdomain:domainString andWithEverID:everID]);
+    } else {
+      NSLog(@"Domain and track id must be setup before set ever ID method!");
+    }
+    if (logLevelGlobal) {
+      [[MappIntelligence shared] setLogLevel:[logLevelGlobal intValue]];
+    }
   }
   else { 
     result(FlutterMethodNotImplemented);

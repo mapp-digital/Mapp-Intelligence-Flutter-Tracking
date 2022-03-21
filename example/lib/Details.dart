@@ -52,18 +52,30 @@ class DetailsView extends StatelessWidget {
     ));
 
     buttons.add(ElevatedButton(
-        onPressed: () {
-          var map = Map<String, dynamic>();
-          map.putIfAbsent("trackIds", () => ["794940687426749"]); // required
-          map.putIfAbsent("domain", () => "http://tracker-int-01.webtrekk.net"); // required
-          map.putIfAbsent("batchSupportEnabled", () => true);
-          map.putIfAbsent("batchSupportSize", () => 150);
-          map.putIfAbsent("requestInterval", () => 15);
-          map.putIfAbsent("requestPerQueue", () => 300);
-          map.putIfAbsent("everId", () => "1111111111");
-          PluginMappintelligence.reset(map);
-        },
-        child: Text("Reset")));
+      onPressed: () {
+        var map = Map<String, dynamic>();
+        map.putIfAbsent("trackIds", () => ["794940687426749"]); // required
+        map.putIfAbsent(
+            "domain", () => "http://tracker-int-01.webtrekk.net"); // required
+        map.putIfAbsent("batchSupportEnabled", () => true);
+        map.putIfAbsent("batchSupportSize", () => 150);
+        map.putIfAbsent("requestInterval", () => 15);
+        map.putIfAbsent("requestPerQueue", () => 300);
+        map.putIfAbsent("everId", () => "1111111111");
+        PluginMappintelligence.reset(map);
+      },
+      child: Text("Reset"),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+    buttons.add(ElevatedButton(
+      onPressed: () {
+        PluginMappintelligence.setEverId("123456789");
+      },
+      child: Text("Set Ever ID"),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
     return buttons;
   }
 
