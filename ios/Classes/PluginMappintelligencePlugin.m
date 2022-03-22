@@ -32,7 +32,7 @@ static NSNumber* logLevelGlobal = nil;
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
     f.numberStyle = NSNumberFormatterDecimalStyle;
     NSMutableArray<NSNumber*>* newArray = [[NSMutableArray alloc] init];
-    for (NSString* object in trackIDs ) {
+    for (NSString* object in array ) {
       [newArray addObject:[f numberFromString:object]];
     }
     NSString *domain = call.arguments[@"trackDomain"];
@@ -250,6 +250,18 @@ static NSNumber* logLevelGlobal = nil;
     }
   } else if ([@"resetConfig" isEqualToString: call.method]) {
     [[MappIntelligence shared] reset];
+  } else if ([@"setIdsAndDomain" isEqualToString: call.method]) {
+    NSArray<NSString *>* array = call.arguments[@"trackIds"];
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    f.numberStyle = NSNumberFormatterDecimalStyle;
+    NSMutableArray<NSNumber*>* newArray = [[NSMutableArray alloc] init];
+    for (NSString* object in array ) {
+      [newArray addObject:[f numberFromString:object]];
+    }
+    NSString *domain = call.arguments[@"trackDomain"];
+    domainString = domain;
+    trackIDs = newArray;
+    [[MappIntelligence shared] setIdsAndDomain:newArray onTrackdomain:domain];
   }
   else { 
     result(FlutterMethodNotImplemented);

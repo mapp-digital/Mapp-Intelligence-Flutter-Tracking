@@ -86,6 +86,14 @@ class DetailsView extends StatelessWidget {
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
+    buttons.add(ElevatedButton(
+      onPressed: () {
+        PluginMappintelligence.setIdsAndDomain(["222222"], "wwww.runtime.com");
+      },
+      child: Text("Set new track IDs and domain during runtime"),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
     return buttons;
   }
 

@@ -54,7 +54,7 @@ class PluginMappintelligence {
   }
 
   static Future<String> reset(Map<String, dynamic> map) async {
-    return await _channel.invokeMethod('resetConfig',map);
+    return await _channel.invokeMethod('resetConfig', map);
   }
 
   static Future<void> trackPage(String customName,
@@ -127,6 +127,12 @@ class PluginMappintelligence {
 
   static Future<void> setEverId(String everId) async {
     await _channel.invokeMethod("setEverId", [everId]);
+  }
+
+  static Future<void> setIdsAndDomain(
+      List<String> trackIds, String trackDomain) async {
+    await _channel.invokeMethod("setIdsAndDomain",
+        <dynamic, dynamic>{'trackIds': trackIds, 'trackDomain': trackDomain});
   }
 
   static Future<void> setAnonymousTracking(bool anonymousTracking,
