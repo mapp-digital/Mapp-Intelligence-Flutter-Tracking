@@ -262,6 +262,9 @@ static NSNumber* logLevelGlobal = nil;
     domainString = domain;
     trackIDs = newArray;
     [[MappIntelligence shared] setIdsAndDomain:newArray onTrackdomain:domain];
+  } else if ([@"setSendAppVersionInEveryRequest" isEqualToString: call.method]) {
+    NSNumber* isEnabled = call.arguments[0];
+    [[MappIntelligence shared] setSendAppVersionInEveryRequest:[isEnabled boolValue]];
   }
   else { 
     result(FlutterMethodNotImplemented);

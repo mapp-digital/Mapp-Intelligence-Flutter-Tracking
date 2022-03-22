@@ -45,6 +45,12 @@ class PluginMappintelligence {
     return 'successfull $version';
   }
 
+  static Future<String?> setSendAppVersionInEveryRequest(bool value) async {
+    final String? version =
+        await _channel.invokeMethod('setSendAppVersionInEveryRequest', [value]);
+    return 'successfull $version';
+  }
+
   static Future<void> optIn() async {
     await _channel.invokeMethod('OptIn');
   }

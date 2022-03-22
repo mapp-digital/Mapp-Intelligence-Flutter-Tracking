@@ -22,6 +22,7 @@ void main() {
   PluginMappintelligence.setRequestInterval(1);
   PluginMappintelligence.setRequestPerQueue(300);
   PluginMappintelligence.setEverId("111111111");
+  PluginMappintelligence.setSendAppVersionInEveryRequest(true);
   PluginMappintelligence.build();
   runApp(MyApp());
 }
