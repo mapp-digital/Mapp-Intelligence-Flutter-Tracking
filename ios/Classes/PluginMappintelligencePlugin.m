@@ -248,6 +248,8 @@ static NSNumber* logLevelGlobal = nil;
     if (logLevelGlobal) {
       [[MappIntelligence shared] setLogLevel:[logLevelGlobal intValue]];
     }
+  } else if ([@"resetConfig" isEqualToString: call.method]) {
+    [[MappIntelligence shared] reset];
   }
   else { 
     result(FlutterMethodNotImplemented);

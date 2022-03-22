@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
+import 'dart:io' show Platform;
 
 // ignore: must_be_immutable
 class DetailsView extends StatelessWidget {
@@ -54,15 +55,24 @@ class DetailsView extends StatelessWidget {
     buttons.add(ElevatedButton(
       onPressed: () {
         var map = Map<String, dynamic>();
-        map.putIfAbsent("trackIds", () => ["794940687426749"]); // required
-        map.putIfAbsent(
-            "domain", () => "http://tracker-int-01.webtrekk.net"); // required
-        map.putIfAbsent("batchSupportEnabled", () => true);
-        map.putIfAbsent("batchSupportSize", () => 150);
-        map.putIfAbsent("requestInterval", () => 15);
-        map.putIfAbsent("requestPerQueue", () => 300);
-        map.putIfAbsent("everId", () => "1111111111");
-        PluginMappintelligence.reset(map);
+        if (Platform.isAndroid) {
+          map.putIfAbsent("trackIds", () => ["794940687426749"]); // required
+          map.putIfAbsent(
+              "domain", () => "http://tracker-int-01.webtrekk.net"); // required
+          map.putIfAbsent("batchSupportEnabled", () => true);
+          map.putIfAbsent("batchSupportSize", () => 150);
+          map.putIfAbsent("requestInterval", () => 15);
+          map.putIfAbsent("requestPerQueue", () => 300);
+          map.putIfAbsent("everId", () => "1111111111");
+          PluginMappintelligence.reset(map);
+        } else if (Platform.isIOS) {
+          PluginMappintelligence.reset(map);
+          PluginMappintelligence.setLogLevel(LogLevel.info);
+          PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
+          PluginMappintelligence.setRequestInterval(1);
+          PluginMappintelligence.setRequestPerQueue(300);
+          PluginMappintelligence.setEverId("111111111");
+        }
       },
       child: Text("Reset"),
       style:
