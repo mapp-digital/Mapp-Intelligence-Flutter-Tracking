@@ -8,6 +8,7 @@ import 'package:plugin_mappintelligence_example/ActionTracking.dart';
 import 'package:plugin_mappintelligence_example/Campaign.dart';
 import 'package:plugin_mappintelligence_example/Details.dart';
 import 'package:plugin_mappintelligence_example/Ecommerce.dart';
+import 'package:plugin_mappintelligence_example/FormTracking.dart';
 import 'package:plugin_mappintelligence_example/Media.dart';
 import 'package:plugin_mappintelligence_example/PageTracking.dart';
 import 'package:plugin_mappintelligence_example/Webview.dart';
@@ -86,7 +87,8 @@ class _HomePageState extends State<HomePage> {
         "Webview",
         "WebviewForAndroid",
         "Media",
-        "Exception"
+        "Exception",
+        "Form"
       ];
     });
   }
@@ -111,6 +113,8 @@ class _HomePageState extends State<HomePage> {
         return Media();
       case 8:
         return ExceptionTracking();
+      case 9:
+        return FormTracking();
       default:
         return DetailsView(index);
     }

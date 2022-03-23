@@ -28,6 +28,7 @@ static NSNumber* logLevelGlobal = nil;
   }else if ([@"build" isEqualToString:call.method]) {
 //do nothing, that method is only used for Android
   } else if ([@"initialize" isEqualToString:call.method]) {
+    NSArray<NSString *>* array = call.arguments[@"trackIds"];
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
     f.numberStyle = NSNumberFormatterDecimalStyle;
     NSMutableArray<NSNumber*>* newArray = [[NSMutableArray alloc] init];
