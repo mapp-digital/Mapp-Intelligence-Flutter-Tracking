@@ -89,8 +89,8 @@ class Product {
         'productVariant': productVariant,
         'categories':
             categories?.map((key, value) => MapEntry(key.toString(), value)),
-        'ecommerceParameters':
-            ecommerceParameters?.map((key, value) => MapEntry(key.toString(), value))
+        'ecommerceParameters': ecommerceParameters
+            ?.map((key, value) => MapEntry(key.toString(), value))
       };
 }
 
@@ -245,3 +245,19 @@ class MediaEvent {
 }
 
 enum LogLevel { all, debug, warning, error, fault, info, none }
+
+enum ExceptionType {
+  noneOfExceptionTypes,
+  uncaught,
+  caught,
+  custom,
+  allExceptionTypes,
+  uncaught_and_custom,
+  uncaught_and_caught,
+  custom_and_caught
+}
+
+class ErrorUserInfo {
+  static String failureReason = "failureReason";
+  static String description = "description";
+}

@@ -28,7 +28,6 @@ static NSNumber* logLevelGlobal = nil;
   }else if ([@"build" isEqualToString:call.method]) {
 //do nothing, that method is only used for Android
   } else if ([@"initialize" isEqualToString:call.method]) {
-    NSArray<NSString *>* array = call.arguments[@"trackIds"];
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
     f.numberStyle = NSNumberFormatterDecimalStyle;
     NSMutableArray<NSNumber*>* newArray = [[NSMutableArray alloc] init];
@@ -38,7 +37,7 @@ static NSNumber* logLevelGlobal = nil;
     NSString *domain = call.arguments[@"trackDomain"];
     domainString = domain;
     trackIDs = newArray;
-    [[MappIntelligence shared] initWithConfiguration:array onTrackdomain:domain];
+    [[MappIntelligence shared] initWithConfiguration:newArray onTrackdomain:domain];
     result(@"Succesfull initialize");
   } else if ([@"setLogLevel" isEqualToString: call.method]) {
     NSNumber* logLevelNumber = call.arguments[0];
@@ -265,6 +264,26 @@ static NSNumber* logLevelGlobal = nil;
   } else if ([@"setSendAppVersionInEveryRequest" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
     [[MappIntelligence shared] setSendAppVersionInEveryRequest:[isEnabled boolValue]];
+  } else if ([@"enableCrashTracking" isEqualToString: call.method]) {
+    NSNumber* isEnabled = call.arguments[0];
+    NSLog(@"crash level is %@", isEnabled);
+    [[MappIntelligence shared] enableCrashTracking:[isEnabled intValue] + 1];
+  } else if ([@"trackExceptionWithNameAndMessage" isEqualToString: call.method]) {
+    NSString* exceptionName = call.arguments[@"name"];
+    NSString* exceptionMessage = call.arguments[@"message"];
+    [[MappIntelligence shared] trackExceptionWithName:exceptionName andWithMessage:exceptionMessage];
+  } else if ([@"raiseUncaughtException" isEqualToString: call.method]) {
+    NSException *exception = [NSException exceptionWithName:@"Custom Exception" reason:@"Custom Reason" userInfo:@{@"Localized key": @"Unexpected Input"}];
+    [exception raise];
+  } else if ([@"trackError" isEqualToString: call.method]) {
+    NSDictionary* userInfoDict = call.arguments[@"userInfo"];
+    NSNumber* code = call.arguments[@"code"];
+    NSString* domain = call.arguments[@"domain"];
+
+    NSError *error = [[NSError alloc] initWithDomain:domain code:code userInfo:@{ NSLocalizedFailureReasonErrorKey:userInfoDict[@"fauilureReason"] ? userInfoDict[@"fauilureReason"] : @"",
+            NSLocalizedDescriptionKey:userInfoDict[@"description"] ? userInfoDict[@"description"] : @""
+    }];
+    [[MappIntelligence shared] trackExceptionWith:error];
   }
   else { 
     result(FlutterMethodNotImplemented);

@@ -13,6 +13,8 @@ import 'package:plugin_mappintelligence_example/PageTracking.dart';
 import 'package:plugin_mappintelligence_example/Webview.dart';
 import 'package:plugin_mappintelligence_example/WebviewForAndroid.dart';
 
+import 'ExceptionTracking.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   PluginMappintelligence.initialize(
@@ -23,6 +25,7 @@ void main() {
   PluginMappintelligence.setRequestPerQueue(300);
   PluginMappintelligence.setEverId("111111111");
   PluginMappintelligence.setSendAppVersionInEveryRequest(true);
+  PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
   PluginMappintelligence.build();
   runApp(MyApp());
 }
@@ -82,7 +85,8 @@ class _HomePageState extends State<HomePage> {
         "Ecommerce",
         "Webview",
         "WebviewForAndroid",
-        "Media"
+        "Media",
+        "Exception"
       ];
     });
   }
@@ -105,6 +109,8 @@ class _HomePageState extends State<HomePage> {
         return WebviewForAndroid();
       case 7:
         return Media();
+      case 8:
+        return ExceptionTracking();
       default:
         return DetailsView(index);
     }

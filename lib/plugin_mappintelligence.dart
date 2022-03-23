@@ -51,6 +51,12 @@ class PluginMappintelligence {
     return 'successfull $version';
   }
 
+  static Future<String?> enableCrashTracking(ExceptionType value) async {
+    final String? version =
+        await _channel.invokeMethod('enableCrashTracking', [value.index]);
+    return 'successfull $version';
+  }
+
   static Future<void> optIn() async {
     await _channel.invokeMethod('OptIn');
   }
@@ -83,6 +89,24 @@ class PluginMappintelligence {
       await _channel.invokeMethod(
           'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
     }
+  }
+
+  static Future<void> trackExceptionWithNameAndMessage(
+      String exceptionName, String exceptionMessage) async {
+    await _channel.invokeMethod('trackExceptionWithNameAndMessage',
+        <dynamic, dynamic>{"name": exceptionName, "message": exceptionMessage});
+  }
+
+  //This feature is iOS specific
+  static Future<void> trackError(
+      Map<String, String> userInfo, String domain, int code) async {
+    await _channel.invokeMethod(
+        'trackError', {"userInfo": userInfo, "domain": domain, "code": code});
+  }
+
+  //This feature is only for testing purpose. It produce exception which will crash the application on purpose.
+  static Future<void> raiseUncaughtException() async {
+    await _channel.invokeMethod('raiseUncaughtException', []);
   }
 
   static Future<void> trackAction(ActionEvent actionEvent) async {
