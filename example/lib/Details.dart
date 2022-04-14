@@ -27,15 +27,6 @@ class DetailsView extends StatelessWidget {
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
-    buttons.add(ElevatedButton(
-      onPressed: () {
-        PluginMappintelligence.getEverID()
-            .then((String value) => {showAlertDialog(context, value)});
-      },
-      child: Text('Get Ever ID'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
-    ));
 
     buttons.add(ElevatedButton(
       onPressed: () {
@@ -54,25 +45,12 @@ class DetailsView extends StatelessWidget {
 
     buttons.add(ElevatedButton(
       onPressed: () {
-        var map = Map<String, dynamic>();
-        if (Platform.isAndroid) {
-          map.putIfAbsent("trackIds", () => ["794940687426749"]); // required
-          map.putIfAbsent(
-              "domain", () => "http://tracker-int-01.webtrekk.net"); // required
-          map.putIfAbsent("batchSupportEnabled", () => true);
-          map.putIfAbsent("batchSupportSize", () => 150);
-          map.putIfAbsent("requestInterval", () => 15);
-          map.putIfAbsent("requestPerQueue", () => 300);
-          map.putIfAbsent("everId", () => "1111111111");
-          PluginMappintelligence.reset(map);
-        } else if (Platform.isIOS) {
-          PluginMappintelligence.reset(map);
-          PluginMappintelligence.setLogLevel(LogLevel.info);
-          PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
-          PluginMappintelligence.setRequestInterval(1);
-          PluginMappintelligence.setRequestPerQueue(300);
-          PluginMappintelligence.setEverId("111111111");
-        }
+        PluginMappintelligence.reset();
+        PluginMappintelligence.setLogLevel(LogLevel.info);
+        PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
+        PluginMappintelligence.setRequestInterval(1);
+        PluginMappintelligence.setRequestPerQueue(300);
+        //PluginMappintelligence.setEverId("111111111");
       },
       child: Text("Reset"),
       style:
@@ -86,6 +64,17 @@ class DetailsView extends StatelessWidget {
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
+
+    buttons.add(ElevatedButton(
+      onPressed: () {
+        PluginMappintelligence.getEverID()
+            .then((String value) => {showAlertDialog(context, value)});
+      },
+      child: Text('Get Ever ID'),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+
     buttons.add(ElevatedButton(
       onPressed: () {
         PluginMappintelligence.setIdsAndDomain(["222222"], "wwww.runtime.com");
@@ -94,6 +83,28 @@ class DetailsView extends StatelessWidget {
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          Map<dynamic, dynamic>? data =
+              await PluginMappintelligence.getTrackIdsAndDomain();
+          if (data != null) {
+            showDialog(
+                context: context,
+                builder: (ctx) {
+                  return AlertDialog(
+                    title: Text("Track Ids & Track Domain"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(data["trackIds"].toString()),
+                        Text(data["trackDomain"])
+                      ],
+                    ),
+                  );
+                });
+          }
+        },
+        child: Text("Get trackId and trackDomain")));
     return buttons;
   }
 

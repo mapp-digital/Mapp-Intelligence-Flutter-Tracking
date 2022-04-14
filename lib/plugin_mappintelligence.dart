@@ -65,8 +65,8 @@ class PluginMappintelligence {
     await _channel.invokeMethod('optOutAndSendCurrentData', [value]);
   }
 
-  static Future<String> reset(Map<String, dynamic> map) async {
-    return await _channel.invokeMethod('resetConfig', map);
+  static Future<String> reset() async {
+    return await _channel.invokeMethod('resetConfig');
   }
 
   static Future<void> trackPage(String customName,
@@ -163,6 +163,11 @@ class PluginMappintelligence {
       List<String> trackIds, String trackDomain) async {
     await _channel.invokeMethod("setIdsAndDomain",
         <dynamic, dynamic>{'trackIds': trackIds, 'trackDomain': trackDomain});
+  }
+
+  static Future<Map<dynamic, dynamic>?> getTrackIdsAndDomain() async {
+    var data = await _channel.invokeMapMethod("getIdsAndDomain");
+    return data;
   }
 
   static Future<void> setAnonymousTracking(bool anonymousTracking,
