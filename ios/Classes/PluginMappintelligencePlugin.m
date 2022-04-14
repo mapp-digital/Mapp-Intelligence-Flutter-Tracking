@@ -3,6 +3,7 @@
 #import <UIKit/UIKit.h>
 #import "MappIntelligence.h"
 #import "MIWebViewTracker.h"
+#import "MIDefaultTracker.h"
 
 @interface PluginMappintelligencePlugin ()
 @property WKWebView* webView;
@@ -68,6 +69,15 @@ static NSNumber* logLevelGlobal = nil;
   } else if ([@"enableAnonymousTrackingWithParameters" isEqualToString: call.method]) {
     NSArray<NSString *>* supressedParameters = call.arguments[0];
     [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
+  } else if ([@"setAnonymousTracking" isEqualToString: call.method]) {
+    NSNumber* isEnabled = call.arguments[0];  
+    [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
+    NSArray<NSString *>* supressedParameters = call.arguments[1];
+    [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
+    NSNumber* generateNewEverID = call.arguments[2];
+    if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
+      [[MIDefaultTracker sharedInstance] generateEverId];
+    } 
   } else if ([@"isAnonymousTrackingEnabled" isEqualToString: call.method]) {
     NSNumber* isEnabled = [NSNumber numberWithBool:[[MappIntelligence shared] anonymousTracking]];
     result(isEnabled);
