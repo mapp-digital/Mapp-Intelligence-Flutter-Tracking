@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
@@ -84,27 +86,46 @@ class DetailsView extends StatelessWidget {
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
-        onPressed: () async {
-          Map<dynamic, dynamic>? data =
-              await PluginMappintelligence.getTrackIdsAndDomain();
-          if (data != null) {
-            showDialog(
-                context: context,
-                builder: (ctx) {
-                  return AlertDialog(
-                    title: Text("Track Ids & Track Domain"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(data["trackIds"].toString()),
-                        Text(data["trackDomain"])
-                      ],
-                    ),
-                  );
-                });
-          }
-        },
-        child: Text("Get trackId and trackDomain")));
+      onPressed: () async {
+        Map<dynamic, dynamic>? data =
+            await PluginMappintelligence.getTrackIdsAndDomain();
+        if (data != null) {
+          showDialog(
+              context: context,
+              builder: (ctx) {
+                return AlertDialog(
+                  title: Text("Track Ids & Track Domain"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(data["trackIds"].toString()),
+                      Text(data["trackDomain"])
+                    ],
+                  ),
+                );
+              });
+        }
+      },
+      child: Text("Get trackId and trackDomain"),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+    buttons.add(ElevatedButton(
+      onPressed: () async {
+        PluginMappintelligence.setAnonymousTracking(true, Set(), false);
+      },
+      child: Text("Set Anonymous tracking fields \n generate everID -> false"),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+    buttons.add(ElevatedButton(
+      onPressed: () async {
+        PluginMappintelligence.setAnonymousTracking(false, Set(), true);
+      },
+      child: Text("Set Anonymous tracking fields \n generate everID -> true"),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
     return buttons;
   }
 
