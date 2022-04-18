@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
-import 'dart:io' show Platform;
 
 // ignore: must_be_immutable
 class DetailsView extends StatelessWidget {

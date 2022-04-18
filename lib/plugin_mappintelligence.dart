@@ -173,9 +173,18 @@ class PluginMappintelligence {
   static Future<void> setAnonymousTracking(bool anonymousTracking,
       Set<String> params, bool generateNewEverId) async {
     var map = Map();
-    map.putIfAbsent("anonymousTracking", () => anonymousTracking);
-    map.putIfAbsent("params", () => params);
-    map.putIfAbsent("generateNewEverId", () => generateNewEverId);
-    await _channel.invokeMapMethod("enableAnonymousTracking", map);
+
+    // map["anonymousTracking"] = anonymousTracking;
+    // map["params"] = params.isNotEmpty ? params : null;
+    // map["generateNewEverId"] = generateNewEverId;
+    // map.putIfAbsent("anonymousTracking", () => anonymousTracking);
+    // map.putIfAbsent("params", () => params.isNotEmpty ? params : null);
+    // map.putIfAbsent("generateNewEverId", () => generateNewEverId);
+    // await _channel.invokeMapMethod("enableAnonymousTracking", map);
+    await _channel.invokeMethod('enableAnonymousTracking', <dynamic, dynamic>{
+      'anonymousTracking': anonymousTracking,
+      'params': params.isNotEmpty ?  params : null,
+      'generateNewEverId': generateNewEverId
+    });
   }
 }
