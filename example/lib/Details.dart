@@ -117,7 +117,7 @@ class DetailsView extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
-        PluginMappintelligence.setAnonymousTracking(false, Set(), true);
+        PluginMappintelligence.setAnonymousTracking(false, {'cs801'}, true);
       },
       child: Text("Set Anonymous tracking fields \n generate everID -> true"),
       style:

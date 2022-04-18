@@ -63,18 +63,24 @@ static NSNumber* logLevelGlobal = nil;
     [[MappIntelligence shared] optOutAndSendCurrentData:[isEnabled boolValue]];
   } else if ([@"reset" isEqualToString: call.method]) {
     [[MappIntelligence shared] reset];
-  } else if ([@"enableAnonymousTracking" isEqualToString: call.method]) {
-    NSNumber* isEnabled = call.arguments[0];  
+  } 
+  // else if ([@"enableAnonymousTracking" isEqualToString: call.method]) {
+  //   NSNumber* isEnabled = call.arguments[0];  
+  //   [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
+  // } else if ([@"enableAnonymousTrackingWithParameters" isEqualToString: call.method]) {
+  //   NSArray<NSString *>* supressedParameters = call.arguments[0];
+  //   [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
+  // } 
+  else if ([@"enableAnonymousTracking" isEqualToString: call.method]) {
+    NSLog(@"I am here at set anonymous tracking");
+    NSNumber* isEnabled = call.arguments[@"anonymousTracking"];  
+    NSLog(@"is enabled: %@", isEnabled);
     [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
-  } else if ([@"enableAnonymousTrackingWithParameters" isEqualToString: call.method]) {
-    NSArray<NSString *>* supressedParameters = call.arguments[0];
+    NSArray<NSString *>* supressedParameters = call.arguments[@"params"];
+    NSLog(@"supress params: %@", supressedParameters);
     [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
-  } else if ([@"setAnonymousTracking" isEqualToString: call.method]) {
-    NSNumber* isEnabled = call.arguments[0];  
-    [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
-    NSArray<NSString *>* supressedParameters = call.arguments[1];
-    [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
-    NSNumber* generateNewEverID = call.arguments[2];
+    NSNumber* generateNewEverID = call.arguments[@"generateNewEverId"];
+    NSLog(@"generate new id: %@", generateNewEverID);
     if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
       [[MIDefaultTracker sharedInstance] generateEverId];
     } 
