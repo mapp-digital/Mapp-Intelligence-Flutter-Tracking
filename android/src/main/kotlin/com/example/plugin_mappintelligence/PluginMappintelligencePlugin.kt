@@ -195,12 +195,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING -> {
                 val anonymousTracking : Boolean? = call.arguments<HashMap<String,Boolean>>()["anonymousTracking"]
-                val params = call.arguments<HashMap<String, Set<String>>>()["params"] ?: emptySet<String>()
+                val params = call.arguments<HashMap<String, List<String>>>()["params"] ?: emptyList()
                 val generateNewEverId : Boolean? = call.arguments<HashMap<String,Boolean>>()["generateNewEverId"]
-                
+
                 Webtrekk.getInstance().anonymousTracking(
                     enabled = anonymousTracking!!,
-                    suppressParams = params,
+                    suppressParams = params.toSet(),
                     generateNewEverId = generateNewEverId!!,
                 )
                 Log.d(this::class.java.name,"Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: ${params}, generateNewEverId:${generateNewEverId}")

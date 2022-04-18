@@ -171,7 +171,7 @@ class PluginMappintelligence {
   }
 
   static Future<void> setAnonymousTracking(bool anonymousTracking,
-      Set<String> params, bool generateNewEverId) async {
+      List<String> params, bool generateNewEverId) async {
     var map = Map();
 
     // map["anonymousTracking"] = anonymousTracking;
