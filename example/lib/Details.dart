@@ -123,6 +123,11 @@ class DetailsView extends StatelessWidget {
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          PluginMappintelligence.sendAndCleanData();
+        },
+        child: Text("Send data and clean")));
     return buttons;
   }
 

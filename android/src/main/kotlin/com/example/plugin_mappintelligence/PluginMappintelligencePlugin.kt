@@ -74,6 +74,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                         trackIds,
                         trackDomain
                     ).disableAutoTracking()
+
                     mContext?.let {
                         Webtrekk.getInstance().init(context = it, webtrekkConfigurations!!.build())
                     }
@@ -85,8 +86,10 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 val logLevel = call.arguments<ArrayList<Int>>()[0]
                 if (logLevel == 7) {
                     webtrekkConfigurations?.logLevel(Logger.Level.NONE)
+                    Webtrekk.getInstance().setLogLevel(Logger.Level.NONE)
                 } else {
                     webtrekkConfigurations?.logLevel(Logger.Level.BASIC)
+                    Webtrekk.getInstance().setLogLevel(Logger.Level.BASIC)
                 }
                 result.success("Ok")
 
@@ -102,6 +105,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             FlutterFunctions.SET_REQUEST_INTERVAL -> {
                 val requestInterval = call.arguments<ArrayList<Int>>()[0]
                 webtrekkConfigurations?.requestsInterval(interval = requestInterval.toLong())
+                Webtrekk.getInstance().setRequestInterval(requestInterval.toLong())
                 result.success("Ok")
 
             }
@@ -126,6 +130,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
                 result.success("Ok")
             }
+
             FlutterFunctions.TRACK_PAGE -> {
                 val name = call.arguments<ArrayList<String>>()[0]
                 // val param = call.arguments<ArrayList<HashMap<String,String>>>()[1]
@@ -224,6 +229,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
             FlutterFunctions.SEND_AND_CLEAN_DATA -> {
                 Webtrekk.getInstance().sendRequestsNowAndClean()
+                result.success("Ok")
             }
             FlutterFunctions.SET_SEND_APP_VERSION_IN_EVERY_REQUEST -> {
                 val sendAppVersion = call.arguments<ArrayList<Boolean>>()[0]
