@@ -9,16 +9,16 @@ class Ecommerce extends StatelessWidget {
     product1.name = "Product1";
     product1.categories = {1: "ProductCat1", 2: "ProductCat2"};
     product1.ecommerceParameters={22:"ecommerceParameter"};
-    product1.cost = 13;
+    product1.cost = 10.33;
     product1.productAdvertiseID = 56291;
     product1.productSoldOut = false;
-    product1.quantity = 4;
+    product1.quantity = 2;
 
     Product product2 = Product();
     product2.name = "Product2";
     product2.categories = {2: "ProductCat2"};
     product1.ecommerceParameters={22:"ecommerceParameter"};
-    product2.cost = 50;
+    product2.cost = 5.17;
     product2.productAdvertiseID = 562918888888888;
     product2.productSoldOut = true;
     product2.productVariant = "testVariant";
@@ -37,11 +37,11 @@ class Ecommerce extends StatelessWidget {
   double calculateOrderValue(EcommerceParameters ecommerceParameters) {
     var totalCost = 0.0;
     ecommerceParameters.products?.forEach((product) {
-      totalCost = totalCost + (product.cost ?? 0) * (product.quantity ?? 1);
+      totalCost = totalCost + (product.cost ?? 0.00) * (product.quantity ?? 1.00);
     });
     totalCost = totalCost +
-        (ecommerceParameters.shippingCost ?? 0) -
-        (ecommerceParameters.couponValue ?? 0);
+        (ecommerceParameters.shippingCost ?? 0.00) -
+        (ecommerceParameters.couponValue ?? 0.00);
     return totalCost;
   }
 
@@ -58,16 +58,16 @@ class Ecommerce extends StatelessWidget {
         ecommerceParameters1.products = [prepareProducts()[0]];
         ecommerceParameters1.status = Status.viewed;
         ecommerceParameters1.cancellationValue = 2;
-        ecommerceParameters1.couponValue = 33;
+        ecommerceParameters1.couponValue = 33.67;
         ecommerceParameters1.currency = "EUR";
         ecommerceParameters1.markUp = 1;
         ecommerceParameters1.orderStatus = "order received";
         ecommerceParameters1.orderID = "ud679adn";
-        ecommerceParameters1.orderValue = 456;
+        ecommerceParameters1.orderValue = 45.33;
         ecommerceParameters1.paymentMethod = "credit card";
         ecommerceParameters1.returnValue = 3;
         ecommerceParameters1.returningOrNewCustomer = "new customer";
-        ecommerceParameters1.shippingCost = 35;
+        ecommerceParameters1.shippingCost = 35.27;
         ecommerceParameters1.shippingSpeed = "highest";
         ecommerceParameters1.shippingServiceProvider = "DHL";
 
@@ -114,8 +114,8 @@ class Ecommerce extends StatelessWidget {
       onPressed: () async {
         var product1 = prepareProducts()[0];
         var product2 = prepareProducts()[1];
-        product1.quantity = 3;
-        product2.quantity = 2;
+        //product1.quantity = 3;
+        //product2.quantity = 2;
 
         var ecommerceParameters = getBaseEcommerce();
 
@@ -125,8 +125,8 @@ class Ecommerce extends StatelessWidget {
         ecommerceParameters.paymentMethod = "Credit Card";
         ecommerceParameters.shippingServiceProvider = "DHL";
         ecommerceParameters.shippingSpeed = "express";
-        ecommerceParameters.shippingCost = 20;
-        ecommerceParameters.couponValue = 10;
+        ecommerceParameters.shippingCost = 20.89;
+        ecommerceParameters.couponValue = 10.18;
         ecommerceParameters.orderValue =
             calculateOrderValue(ecommerceParameters);
         ecommerceParameters.status = Status.purchased;

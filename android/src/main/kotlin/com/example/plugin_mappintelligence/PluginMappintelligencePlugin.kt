@@ -80,8 +80,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     }
                 }
                 result.success("Ok")
-
             }
+
             FlutterFunctions.SET_LOG_LEVEL -> {
                 val logLevel = call.arguments<ArrayList<Int>>()[0]
                 if (logLevel == 7) {
@@ -92,8 +92,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     Webtrekk.getInstance().setLogLevel(Logger.Level.BASIC)
                 }
                 result.success("Ok")
-
             }
+
             FlutterFunctions.BATCH_SUPPORT -> {
                 val enable = call.arguments<ArrayList<Boolean>>()[0]
                 val interval = call.arguments<ArrayList<Int>>()[1]
@@ -118,8 +118,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 val enable = call.arguments<ArrayList<Boolean>>()[0]
                 Webtrekk.getInstance().optOut(true, enable)
                 result.success("Ok")
-
             }
+
             FlutterFunctions.BUILD -> {
                 webtrekkConfigurations?.let {
                     config = it.build()
@@ -226,6 +226,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             FlutterFunctions.SET_EVER_ID -> {
                 val everId = call.arguments<List<String>>()[0]
                 Webtrekk.getInstance().setEverId(everId)
+                result.success("Ok")
             }
             FlutterFunctions.SEND_AND_CLEAN_DATA -> {
                 Webtrekk.getInstance().sendRequestsNowAndClean()
@@ -234,7 +235,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             FlutterFunctions.SET_SEND_APP_VERSION_IN_EVERY_REQUEST -> {
                 val sendAppVersion = call.arguments<ArrayList<Boolean>>()[0]
                 Webtrekk.getInstance().setVersionInEachRequest(sendAppVersion)
-                result.success("")
+                result.success("Ok")
             }
             FlutterFunctions.ENABLE_CRASH_TRACKING -> {
                 val logLevelIndex = call.arguments<List<Int>>()[0]
@@ -243,7 +244,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 val logLevel =
                     if (validLogLevel) ExceptionType.values()[logLevelIndex] else ExceptionType.ALL
                 Webtrekk.getInstance().setExceptionLogLevel(logLevel)
-                result.success("")
+                result.success("Ok")
             }
             else -> result.notImplemented()
         }
@@ -505,7 +506,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             if (jsonOb.isNotNull("status")) param.status =
                 ECommerceParameters.Status.values()[jsonOb.optInt("status")]
             if (jsonOb.isNotNull("orderID")) param.orderID = jsonOb.optString("orderID")
-            if (jsonOb.isNotNull("orderValue")) param.orderValue = jsonOb.optInt("orderValue")
+            if (jsonOb.isNotNull("orderValue")) param.orderValue = jsonOb.optDouble("orderValue")
             if (jsonOb.isNotNull("returningOrNewCustomer")) param.returningOrNewCustomer =
                 jsonOb.optString("returningOrNewCustomer")
             if (jsonOb.isNotNull("returnValue") && !jsonOb.optDouble("returnValue")

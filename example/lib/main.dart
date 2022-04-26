@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence_example/ActionTracking.dart';
@@ -16,19 +14,24 @@ import 'package:plugin_mappintelligence_example/WebviewForAndroid.dart';
 
 import 'ExceptionTracking.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  PluginMappintelligence.initialize(
-      ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
-  PluginMappintelligence.setLogLevel(LogLevel.all);
-  PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
-  PluginMappintelligence.setRequestInterval(1);
-  PluginMappintelligence.setRequestPerQueue(300);
-  PluginMappintelligence.setEverId("111111111");
-  PluginMappintelligence.setSendAppVersionInEveryRequest(true);
-  PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
-  PluginMappintelligence.build();
+  await _initNative();
   runApp(MyApp());
+}
+
+Future _initNative() async {
+  await PluginMappintelligence.initialize(
+      ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
+  await PluginMappintelligence.setLogLevel(LogLevel.all);
+  await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
+  await PluginMappintelligence.setRequestInterval(1);
+  await PluginMappintelligence.setRequestPerQueue(300);
+  await PluginMappintelligence.setEverId("111111111");
+  await PluginMappintelligence.setSendAppVersionInEveryRequest(true);
+  await PluginMappintelligence.enableCrashTracking(
+      ExceptionType.allExceptionTypes);
+  await PluginMappintelligence.build();
 }
 
 class MyApp extends StatelessWidget {
@@ -46,52 +49,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  String? _platformVersion = 'Unknown';
-  List<String> _screens = [];
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String? platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await PluginMappintelligence.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-      _screens = [
-        "Configuration",
-        "Page Tracking",
-        "Action",
-        "Campaign",
-        "Ecommerce",
-        "Webview",
-        "WebviewForAndroid",
-        "Media",
-        "Exception",
-        "Form"
-      ];
-    });
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+  final List<String> _screens = const [
+    "Configuration",
+    "Page Tracking",
+    "Action",
+    "Campaign",
+    "Ecommerce",
+    "Webview",
+    "WebviewForAndroid",
+    "Media",
+    "Exception",
+    "Form"
+  ];
 
   StatelessWidget _determineWidget(int index) {
     switch (index) {

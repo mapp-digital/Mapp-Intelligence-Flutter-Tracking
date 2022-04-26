@@ -155,8 +155,9 @@ class PluginMappintelligence {
     return everId;
   }
 
-  static Future<void> setEverId(String everId) async {
-    await _channel.invokeMethod("setEverId", [everId]);
+  static Future<String> setEverId(String everId) async {
+    String result = await _channel.invokeMethod("setEverId", [everId]);
+    return result;
   }
 
   static Future<void> setIdsAndDomain(
