@@ -76,7 +76,7 @@ class DetailsView extends StatelessWidget {
 
     buttons.add(ElevatedButton(
       onPressed: () {
-        PluginMappintelligence.setIdsAndDomain(["222222"], "wwww.runtime.com");
+        PluginMappintelligence.setIdsAndDomain(["826582930668809"], "http://vdestellaaccount01.wt-eu02.net");
       },
       child: Text("Set new track IDs and domain during runtime"),
       style:
