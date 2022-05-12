@@ -106,7 +106,7 @@ class PluginMappintelligence {
 
   //This feature is only for testing purpose. It produce exception which will crash the application on purpose.
   static Future<void> raiseUncaughtException() async {
-    await _channel.invokeMethod('raiseUncaughtException', []);
+    _channel.invokeMethod('raiseUncaughtException', []);
   }
 
   static Future<void> trackAction(ActionEvent actionEvent) async {

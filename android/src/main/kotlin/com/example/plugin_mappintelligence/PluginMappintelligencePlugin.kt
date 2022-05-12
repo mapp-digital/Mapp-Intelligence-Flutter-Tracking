@@ -61,19 +61,21 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     var webtrekkConfigurations: WebtrekkConfiguration.Builder? = null
     var config: Config? = null
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             FlutterFunctions.GET_PLATFORM_VERSION -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
             }
             FlutterFunctions.INITIALIZE -> {
-                val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()["trackIds"]
-                val trackDomain: String? = call.arguments<HashMap<String, String>>()["trackDomain"]
+                val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()!!["trackIds"]
+                val trackDomain: String? =
+                    call.arguments<HashMap<String, String>>()!!["trackDomain"]
                 if (trackIds != null && trackDomain != null) {
                     webtrekkConfigurations = WebtrekkConfiguration.Builder(
                         trackIds,
                         trackDomain
                     ).disableAutoTracking()
+                        .enableCrashTracking(ExceptionType.NONE)
 
                     mContext?.let {
                         Webtrekk.getInstance().init(context = it, webtrekkConfigurations!!.build())
@@ -83,7 +85,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.SET_LOG_LEVEL -> {
-                val logLevel = call.arguments<ArrayList<Int>>()[0]
+                val logLevel = call.arguments<ArrayList<Int>>()!![0]
                 if (logLevel == 7) {
                     webtrekkConfigurations?.logLevel(Logger.Level.NONE)
                     Webtrekk.getInstance().setLogLevel(Logger.Level.NONE)
@@ -95,15 +97,15 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.BATCH_SUPPORT -> {
-                val enable = call.arguments<ArrayList<Boolean>>()[0]
-                val interval = call.arguments<ArrayList<Int>>()[1]
+                val enable = call.arguments<ArrayList<Boolean>>()!![0]
+                val interval = call.arguments<ArrayList<Int>>()!![1]
                 webtrekkConfigurations?.setBatchSupport(enable, interval)
                 Webtrekk.getInstance().setBatchEnabled(enable)
                 result.success("Ok")
 
             }
             FlutterFunctions.SET_REQUEST_INTERVAL -> {
-                val requestInterval = call.arguments<ArrayList<Int>>()[0]
+                val requestInterval = call.arguments<ArrayList<Int>>()!![0]
                 webtrekkConfigurations?.requestsInterval(interval = requestInterval.toLong())
                 Webtrekk.getInstance().setRequestInterval(requestInterval.toLong())
                 result.success("Ok")
@@ -115,7 +117,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
             }
             FlutterFunctions.OPT_OUT_WITH_DATA -> {
-                val enable = call.arguments<ArrayList<Boolean>>()[0]
+                val enable = call.arguments<ArrayList<Boolean>>()!![0]
                 Webtrekk.getInstance().optOut(true, enable)
                 result.success("Ok")
             }
@@ -132,39 +134,39 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.TRACK_PAGE -> {
-                val name = call.arguments<ArrayList<String>>()[0]
+                val name = call.arguments<ArrayList<String>>()!![0]
                 // val param = call.arguments<ArrayList<HashMap<String,String>>>()[1]
                 Webtrekk.getInstance().trackCustomPage(name)
             }
             FlutterFunctions.TRACK_CUSTOM_PAGE -> {
-                val name = call.arguments<ArrayList<String>>()[0]
-                val param = call.arguments<ArrayList<HashMap<String, String>>>()[1]
+                val name = call.arguments<ArrayList<String>>()!![0]
+                val param = call.arguments<ArrayList<HashMap<String, String>>>()!![1]
                 Webtrekk.getInstance().trackCustomPage(name, param)
             }
             FlutterFunctions.TRACK_OBJECT_PAGE_WITHOUT_DATA -> {
-                val name = call.arguments<ArrayList<String>>()[0]
+                val name = call.arguments<ArrayList<String>>()!![0]
                 Webtrekk.getInstance().trackPage(PageViewEvent(name))
 
             }
             FlutterFunctions.TRACK_OBJECT_PAGE_WITH_DATA -> {
-                val json = call.arguments<ArrayList<String>>()[0]
+                val json = call.arguments<ArrayList<String>>()!![0]
                 objectTrackingPage(json)
             }
             FlutterFunctions.TRACK_ACTION -> {
-                val json = call.arguments<ArrayList<String>>()[0]
+                val json = call.arguments<ArrayList<String>>()!![0]
                 objectAction(json)
             }
             FlutterFunctions.TRACK_WITHOUT_MEDIA_CODE -> {
-                val url = call.arguments<ArrayList<String>>()[0]
+                val url = call.arguments<ArrayList<String>>()!![0]
                 Webtrekk.getInstance().trackUrl(Uri.parse(url))
             }
             FlutterFunctions.TRACK_URL -> {
-                val mediaCode = call.arguments<ArrayList<String>>()[1]
-                val url = call.arguments<ArrayList<String>>()[0]
+                val mediaCode = call.arguments<ArrayList<String>>()!![1]
+                val url = call.arguments<ArrayList<String>>()!![0]
                 Webtrekk.getInstance().trackUrl(Uri.parse(url), mediaCode)
             }
             FlutterFunctions.TRACK_MEDIA -> {
-                val json = call.arguments<ArrayList<String>>()[0]
+                val json = call.arguments<ArrayList<String>>()!![0]
                 objectMedia(json)
             }
             FlutterFunctions.TRACK_WEB_VIEW -> {
@@ -184,8 +186,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.SET_TRACK_IDS_AND_DOMAIN -> {
-                val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()["trackIds"]
-                val trackDomain: String? = call.arguments<HashMap<String, String>>()["trackDomain"]
+                val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()!!["trackIds"]
+                val trackDomain: String? =
+                    call.arguments<HashMap<String, String>>()!!["trackDomain"]
                 if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrBlank())
                     Webtrekk.getInstance().setIdsAndDomain(trackIds, trackDomain)
                 result.success("Ok")
@@ -199,16 +202,22 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 result.success(map)
             }
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING -> {
-                val anonymousTracking : Boolean? = call.arguments<HashMap<String,Boolean>>()["anonymousTracking"]
-                val params = call.arguments<HashMap<String, List<String>>>()["params"] ?: emptyList()
-                val generateNewEverId : Boolean? = call.arguments<HashMap<String,Boolean>>()["generateNewEverId"]
+                val anonymousTracking: Boolean? =
+                    call.arguments<HashMap<String, Boolean>>()!!["anonymousTracking"]
+                val params =
+                    call.arguments<HashMap<String, List<String>>>()!!["params"] ?: emptyList()
+                val generateNewEverId: Boolean? =
+                    call.arguments<HashMap<String, Boolean>>()!!["generateNewEverId"]
 
                 Webtrekk.getInstance().anonymousTracking(
                     enabled = anonymousTracking!!,
                     suppressParams = params.toSet(),
                     generateNewEverId = generateNewEverId!!,
                 )
-                Log.d(this::class.java.name,"Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: ${params}, generateNewEverId:${generateNewEverId}")
+                Log.d(
+                    this::class.java.name,
+                    "Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: ${params}, generateNewEverId:${generateNewEverId}"
+                )
                 result.success(anonymousTracking)
             }
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING_WITH_PARAMETERS -> {
@@ -224,7 +233,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 result.success(Webtrekk.getInstance().getUserAgent())
             }
             FlutterFunctions.SET_EVER_ID -> {
-                val everId = call.arguments<List<String>>()[0]
+                val everId = call.arguments<List<String>>()!![0]
                 Webtrekk.getInstance().setEverId(everId)
                 result.success("Ok")
             }
@@ -233,12 +242,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 result.success("Ok")
             }
             FlutterFunctions.SET_SEND_APP_VERSION_IN_EVERY_REQUEST -> {
-                val sendAppVersion = call.arguments<ArrayList<Boolean>>()[0]
+                val sendAppVersion = call.arguments<ArrayList<Boolean>>()!![0]
                 Webtrekk.getInstance().setVersionInEachRequest(sendAppVersion)
                 result.success("Ok")
             }
             FlutterFunctions.ENABLE_CRASH_TRACKING -> {
-                val logLevelIndex = call.arguments<List<Int>>()[0]
+                val logLevelIndex = call.arguments<List<Int>>()!![0]
                 val validLogLevel =
                     ExceptionType.values().map { it.ordinal }.contains(logLevelIndex)
                 val logLevel =
@@ -246,7 +255,18 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 Webtrekk.getInstance().setExceptionLogLevel(logLevel)
                 result.success("Ok")
             }
-            else -> result.notImplemented()
+            FlutterFunctions.TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE -> {
+                val name = call.arguments<HashMap<String, String>>()!!["name"] ?: ""
+                val message: String = call.arguments<HashMap<String, String>>()!!["message"] ?: ""
+                if (name.isNotEmpty() && message.isNotEmpty()) {
+                    Webtrekk.getInstance()
+                        .trackException(name, message)
+                }
+            }
+            FlutterFunctions.RAISE_UNCAUGHT_EXCEPTION -> {
+                Integer.parseInt("$$#@")
+            }
+            //else -> result.notImplemented()
         }
     }
 
@@ -598,6 +618,10 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val SET_SEND_APP_VERSION_IN_EVERY_REQUEST = "setSendAppVersionInEveryRequest"
         const val ENABLE_CRASH_TRACKING = "enableCrashTracking"
         const val ENABLE_ANONYMOUS_TRACKING = "enableAnonymousTracking"
+
+        const val TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE = "trackExceptionWithNameAndMessage"
+        const val TRACK_ERROR = "trackError"
+        const val RAISE_UNCAUGHT_EXCEPTION = "raiseUncaughtException"
 
         //Only iOS
         const val SET_REQUEST_PER_QUEUE = "setRequestPerQueue"

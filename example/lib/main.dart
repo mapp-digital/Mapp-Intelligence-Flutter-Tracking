@@ -1,23 +1,34 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
-import 'package:plugin_mappintelligence_example/ActionTracking.dart';
-import 'package:plugin_mappintelligence_example/Campaign.dart';
-import 'package:plugin_mappintelligence_example/Details.dart';
-import 'package:plugin_mappintelligence_example/Ecommerce.dart';
-import 'package:plugin_mappintelligence_example/FormTracking.dart';
-import 'package:plugin_mappintelligence_example/Media.dart';
-import 'package:plugin_mappintelligence_example/PageTracking.dart';
-import 'package:plugin_mappintelligence_example/Webview.dart';
-import 'package:plugin_mappintelligence_example/WebviewForAndroid.dart';
+import 'ActionTracking.dart';
+import 'Campaign.dart';
+import 'Details.dart';
+import 'Ecommerce.dart';
+import 'FormTracking.dart';
+import 'Media.dart';
+import 'PageTracking.dart';
+import 'Webview.dart';
+import 'WebviewForAndroid.dart';
 
 import 'ExceptionTracking.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await _initNative();
-  runApp(MyApp());
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await _initNative();
+    runApp(MyApp());
+  }, (Object error, StackTrace stack) {
+    if (error is PlatformException) {
+      var exception = error as PlatformException;
+      PluginMappintelligence.trackExceptionWithNameAndMessage(
+          "PLATFORM EXCEPTION",
+          exception.message ?? "Unknown exception details");
+      print("PLATFORM EXCEPTION: " + exception.message!);
+    }
+  });
 }
 
 Future _initNative() async {
@@ -42,8 +53,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primaryColor: Color(0xFF00BAFF),
           primaryColorDark: Color(0xFF0592D7),
-          accentColor: Color(0xFF58585A),
-          cardColor: Color(0xFF888888)),
+          cardColor: Color(0xFF888888),
+          colorScheme:
+              ColorScheme.fromSwatch().copyWith(secondary: Color(0xFF58585A))),
       home: HomePage(),
     );
   }
