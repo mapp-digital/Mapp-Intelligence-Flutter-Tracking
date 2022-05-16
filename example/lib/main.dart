@@ -31,7 +31,7 @@ Future _initNative() async {
   await PluginMappintelligence.setSendAppVersionInEveryRequest(true);
   await PluginMappintelligence.enableCrashTracking(
       ExceptionType.allExceptionTypes);
-  await PluginMappintelligence.build();
+  PluginMappintelligence.build();
 }
 
 class MyApp extends StatelessWidget {

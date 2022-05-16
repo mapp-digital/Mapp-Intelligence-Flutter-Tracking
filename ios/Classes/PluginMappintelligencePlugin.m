@@ -27,6 +27,7 @@ static NSNumber* logLevelGlobal = nil;
   if ([@"getPlatformVersion" isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
   }else if ([@"build" isEqualToString:call.method]) {
+    result(@"success");
 //do nothing, that method is only used for Android
   } else if ([@"initialize" isEqualToString:call.method]) {
     NSArray<NSString *>* array = call.arguments[@"trackIds"];
@@ -45,24 +46,31 @@ static NSNumber* logLevelGlobal = nil;
     NSNumber* logLevelNumber = call.arguments[0];
     logLevelGlobal = logLevelNumber;
     [[MappIntelligence shared] setLogLevel:[logLevelNumber intValue]];
+    result(@"log level set successfull");
   } else if ([@"setBatchSupportEnabledWithSize" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
     NSNumber* size = call.arguments[1];
     [[MappIntelligence shared] setBatchSupportEnabled:[isEnabled boolValue]];
     [[MappIntelligence shared] setBatchSupportSize:[size intValue]];
+    result(@"batch support set successfull");
   } else if ([@"setRequestInterval" isEqualToString: call.method]) {
     NSNumber* interval = call.arguments[0];
     [[MappIntelligence shared] setRequestInterval:[interval intValue]*60];
+    result(@"request interval set successfull");
   } else if ([@"setRequestPerQueue" isEqualToString: call.method]) {
     NSNumber* requestsNumber = call.arguments[0];
     [[MappIntelligence shared] setRequestPerQueue:[requestsNumber intValue]];
+    result(@"requests per queue set successfull");
   } else if ([@"OptIn" isEqualToString: call.method]) {
     [[MappIntelligence shared] optIn];
+    result(@"success");
   } else if ([@"optOutAndSendCurrentData" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];  
     [[MappIntelligence shared] optOutAndSendCurrentData:[isEnabled boolValue]];
+    result(@"success");
   } else if ([@"reset" isEqualToString: call.method]) {
     [[MappIntelligence shared] reset];
+    result(@"success");
   } 
   // else if ([@"enableAnonymousTracking" isEqualToString: call.method]) {
   //   NSNumber* isEnabled = call.arguments[0];  
@@ -84,21 +92,25 @@ static NSNumber* logLevelGlobal = nil;
     if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
       [[MIDefaultTracker sharedInstance] generateEverId];
     } 
+    result(@"success");
   } else if ([@"isAnonymousTrackingEnabled" isEqualToString: call.method]) {
     NSNumber* isEnabled = [NSNumber numberWithBool:[[MappIntelligence shared] anonymousTracking]];
     result(isEnabled);
   } else if ([@"trackPage" isEqualToString: call.method]) {
     NSString* pageName = call.arguments[0];
     [[MappIntelligence shared] trackCustomPage:pageName trackingParams:nil];
+    result(@"success");
   } else if ([@"trackCustomPage" isEqualToString: call.method]) {
     NSString* pageName = call.arguments[0];
     NSDictionary* pageParameters = call.arguments[1];
     [[MappIntelligence shared] trackCustomPage:pageName trackingParams:pageParameters];
+    result(@"success");
   } else if ([@"trackPageWithCustomNameAndPageViewEvent" isEqualToString: call.method]) {
     NSString* pageName = call.arguments[0];
     MIPageViewEvent* event = [[MIPageViewEvent alloc] init];
     event.pageName = pageName;
     [[MappIntelligence shared] trackPage:event];
+    result(@"success");
   } else if ([@"trackPageWithCustomData" isEqualToString: call.method]) {
 
     NSString* jsonString = call.arguments[0];
@@ -140,6 +152,7 @@ static NSNumber* logLevelGlobal = nil;
         [event setEcommerceParameters:ecommerceActionProperties];
     }
     [[MappIntelligence shared] trackPage: event];
+    result(@"success");
   } else if ([@"trackAction" isEqualToString: call.method]) {
     NSString* jsonString = call.arguments[0];
     NSData* actionData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -181,18 +194,18 @@ static NSNumber* logLevelGlobal = nil;
     }
     
     [[MappIntelligence shared] trackAction:actionEvent];
-
+    result(@"success");
   } else if ([@"trackUrl" isEqualToString: call.method]) {
     NSString* urlString = call.arguments[0];
     NSString* mediaCode = call.arguments[1];
     NSURL* url = [[NSURL alloc] initWithString:urlString];
     [[MappIntelligence shared] trackUrl:url withMediaCode:mediaCode];
-
+    result(@"success");
   } else if ([@"trackUrlWithoutMediaCode" isEqualToString: call.method]) {
     NSString* urlString = call.arguments[0];
     NSURL* url = [[NSURL alloc] initWithString:urlString];
     [[MappIntelligence shared] trackUrl:url withMediaCode:NULL];
-
+    result(@"success");
   } else if ([@"trackMedia" isEqualToString: call.method]) {
     NSString* jsonString = call.arguments[0];
     NSData* mediaData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -226,7 +239,7 @@ static NSNumber* logLevelGlobal = nil;
     }
     
     [[MappIntelligence shared] trackMedia:mediaEvent];
-
+    result(@"success");
   } else if ([@"trackWebview" isEqualToString: call.method]) {
     NSNumber* x =  call.arguments[0];
     NSNumber* y = call.arguments[1];
@@ -247,11 +260,13 @@ static NSNumber* logLevelGlobal = nil;
             [self.webView loadRequest:request];
         }
     });
+    result(@"success");
   } else if ([@"disposeWebview" isEqualToString: call.method]) {
     if (self.webView) {
         self.webView.removeFromSuperview;
     }
     self.webView = NULL;
+    result(@"success");
   } else if ([@"getEverId" isEqualToString: call.method]) {
     result([[MappIntelligence shared] getEverId]);
   } else if ([@"setEverId" isEqualToString: call.method]) {
@@ -264,8 +279,10 @@ static NSNumber* logLevelGlobal = nil;
     if (logLevelGlobal) {
       [[MappIntelligence shared] setLogLevel:[logLevelGlobal intValue]];
     }
+    result(@"success");
   } else if ([@"resetConfig" isEqualToString: call.method]) {
     [[MappIntelligence shared] reset];
+    result(@"success");
   } else if ([@"setIdsAndDomain" isEqualToString: call.method]) {
     NSArray<NSString *>* array = call.arguments[@"trackIds"];
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
@@ -278,20 +295,25 @@ static NSNumber* logLevelGlobal = nil;
     domainString = domain;
     trackIDs = newArray;
     [[MappIntelligence shared] setIdsAndDomain:newArray onTrackdomain:domain];
+    result(@"success");
   } else if ([@"setSendAppVersionInEveryRequest" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
     [[MappIntelligence shared] setSendAppVersionInEveryRequest:[isEnabled boolValue]];
+    result(@"success");
   } else if ([@"enableCrashTracking" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
     NSLog(@"crash level is %@", isEnabled);
     [[MappIntelligence shared] enableCrashTracking:[isEnabled intValue] + 1];
+    result(@"success");
   } else if ([@"trackExceptionWithNameAndMessage" isEqualToString: call.method]) {
     NSString* exceptionName = call.arguments[@"name"];
     NSString* exceptionMessage = call.arguments[@"message"];
     [[MappIntelligence shared] trackExceptionWithName:exceptionName andWithMessage:exceptionMessage];
+    result(@"success");
   } else if ([@"raiseUncaughtException" isEqualToString: call.method]) {
     NSException *exception = [NSException exceptionWithName:@"Custom Exception" reason:@"Custom Reason" userInfo:@{@"Localized key": @"Unexpected Input"}];
     [exception raise];
+    result(@"success");
   } else if ([@"trackError" isEqualToString: call.method]) {
     NSDictionary* userInfoDict = call.arguments[@"userInfo"];
     NSNumber* code = call.arguments[@"code"];
@@ -301,6 +323,7 @@ static NSNumber* logLevelGlobal = nil;
             NSLocalizedDescriptionKey:userInfoDict[@"description"] ? userInfoDict[@"description"] : @""
     }];
     [[MappIntelligence shared] trackExceptionWith:error];
+    result(@"success");
   }
   else { 
     result(FlutterMethodNotImplemented);
