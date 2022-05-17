@@ -16,7 +16,13 @@ class PageTracking extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
-        var pageParameters = {'Usrname': 'tom', 'Password': 'pass@123'};
+        var pageParameters = {
+          'uc703': 'tom',
+          'uc709': 'Zivorad',
+          'ck90': 'stefan'
+        };
+        await PluginMappintelligence.setAnonymousTracking(
+            true, ['uc703', 'uc709'], true);
         PluginMappintelligence.trackPage("customName", pageParameters);
       },
       child: Text('Track Custom Page'),

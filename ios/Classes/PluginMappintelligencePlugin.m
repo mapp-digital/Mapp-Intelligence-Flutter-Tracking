@@ -80,13 +80,13 @@ static NSNumber* logLevelGlobal = nil;
   //   [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
   // } 
   else if ([@"enableAnonymousTracking" isEqualToString: call.method]) {
-    NSLog(@"I am here at set anonymous tracking");
     NSNumber* isEnabled = call.arguments[@"anonymousTracking"];  
-    NSLog(@"is enabled: %@", isEnabled);
-    [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
     NSArray<NSString *>* supressedParameters = call.arguments[@"params"];
-    NSLog(@"supress params: %@", supressedParameters);
-    [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
+    if([isEnabled boolValue]) {
+      [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
+    } else {
+      [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
+    }
     NSNumber* generateNewEverID = call.arguments[@"generateNewEverId"];
     NSLog(@"generate new id: %@", generateNewEverID);
     if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
