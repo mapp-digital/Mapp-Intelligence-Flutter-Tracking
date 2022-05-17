@@ -6,8 +6,8 @@ class ExceptionTracking extends StatelessWidget {
   List<Widget> _buildButtons(BuildContext context) {
     List<Widget> buttons = [];
     buttons.add(ElevatedButton(
-      onPressed: () async {
-        await PluginMappintelligence.trackExceptionWithNameAndMessage(
+      onPressed: () {
+        PluginMappintelligence.trackExceptionWithNameAndMessage(
             "exceptionName", "exceptionMessage");
       },
       child: Text('Track Exception With Name And Message'),
