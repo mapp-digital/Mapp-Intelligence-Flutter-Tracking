@@ -14,6 +14,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.PluginRegistry
+import java.lang.Exception
 import java.util.*
 import org.json.JSONObject
 import webtrekk.android.sdk.Config
@@ -264,9 +265,11 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 }
             }
             FlutterFunctions.RAISE_UNCAUGHT_EXCEPTION -> {
-                Integer.parseInt("$$#@")
+                //Integer.parseInt("$$#@")
+                throw Exception("CUSTOM UNCAUGHT EXCEPTION")
+                result.success("ok")
             }
-            //else -> result.notImplemented()
+            else -> result.notImplemented()
         }
     }
 
@@ -403,7 +406,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
     private fun toEvenParam(json: JSONObject): EventParameters? {
         val pageParameters: EventParameters
-        val jsonOb = json.optJSONObject("")
+        val jsonOb = json.optJSONObject("eventParameters")
         return if (jsonOb == null) {
             null
         } else {
