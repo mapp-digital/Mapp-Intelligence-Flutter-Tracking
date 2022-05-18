@@ -92,8 +92,8 @@ class PluginMappintelligence {
   }
 
   static Future<void> trackExceptionWithNameAndMessage(
-      String exceptionName, String exceptionMessage) async {
-    await _channel.invokeMethod('trackExceptionWithNameAndMessage',
+      String exceptionName, String exceptionMessage) {
+    return _channel.invokeMethod('trackExceptionWithNameAndMessage',
         <dynamic, dynamic>{"name": exceptionName, "message": exceptionMessage});
   }
 

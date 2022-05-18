@@ -42,7 +42,7 @@ Future _initNative() async {
   await PluginMappintelligence.setSendAppVersionInEveryRequest(true);
   await PluginMappintelligence.enableCrashTracking(
       ExceptionType.allExceptionTypes);
-  await PluginMappintelligence.build();
+  PluginMappintelligence.build();
 }
 
 class MyApp extends StatelessWidget {
@@ -72,8 +72,7 @@ class HomePage extends StatelessWidget {
     "Webview",
     "WebviewForAndroid",
     "Media",
-    "Exception",
-    "Form"
+    "Exception"
   ];
 
   StatelessWidget _determineWidget(int index) {
@@ -96,8 +95,6 @@ class HomePage extends StatelessWidget {
         return Media();
       case 8:
         return ExceptionTracking();
-      case 9:
-        return FormTrackingScreen();
       default:
         return DetailsView(index);
     }
