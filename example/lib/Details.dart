@@ -49,6 +49,7 @@ class DetailsView extends StatelessWidget {
         PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
         PluginMappintelligence.setRequestInterval(1);
         PluginMappintelligence.setRequestPerQueue(300);
+        PluginMappintelligence.setSendAppVersionInEveryRequest(true);
         //PluginMappintelligence.setEverId("111111111");
       },
       child: Text("Reset"),
@@ -76,7 +77,8 @@ class DetailsView extends StatelessWidget {
 
     buttons.add(ElevatedButton(
       onPressed: () {
-        PluginMappintelligence.setIdsAndDomain(["826582930668809"], "http://vdestellaaccount01.wt-eu02.net");
+        PluginMappintelligence.setIdsAndDomain(
+            ["826582930668809"], "http://vdestellaaccount01.wt-eu02.net");
       },
       child: Text("Set new track IDs and domain during runtime"),
       style:
@@ -112,6 +114,14 @@ class DetailsView extends StatelessWidget {
         PluginMappintelligence.setAnonymousTracking(true, [], false);
       },
       child: Text("Set Anonymous tracking fields \n generate everID -> false"),
+      style:
+          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
+    ));
+    buttons.add(ElevatedButton(
+      onPressed: () async {
+        PluginMappintelligence.setAnonymousTracking(true, ['uc703','uc709'], true);
+      },
+      child: Text("Set Anonymous tracking fields \n true, ['uc703','uc709'], true"),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));

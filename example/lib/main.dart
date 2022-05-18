@@ -22,11 +22,10 @@ void main() async {
     runApp(MyApp());
   }, (Object error, StackTrace stack) {
     if (error is PlatformException) {
-      var exception = error as PlatformException;
       PluginMappintelligence.trackExceptionWithNameAndMessage(
           "PLATFORM EXCEPTION",
-          exception.message ?? "Unknown exception details");
-      print("PLATFORM EXCEPTION: " + exception.message!);
+          error.message ?? "Unknown exception details");
+      print("PLATFORM EXCEPTION: " + error.message!);
     }
   });
 }
