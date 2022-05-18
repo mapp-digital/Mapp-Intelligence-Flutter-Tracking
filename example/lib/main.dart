@@ -7,7 +7,6 @@ import 'ActionTracking.dart';
 import 'Campaign.dart';
 import 'Details.dart';
 import 'Ecommerce.dart';
-import 'FormTracking.dart';
 import 'Media.dart';
 import 'PageTracking.dart';
 import 'Webview.dart';
@@ -26,6 +25,8 @@ void main() {
           "PLATFORM EXCEPTION", error.message ?? "Unknown exception details");
       print("PLATFORM EXCEPTION: " + error.message!);
     } else if(error is MissingPluginException) {
+      PluginMappintelligence.trackExceptionWithNameAndMessage(
+          "PLUGIN EXCEPTION", error.message ?? "Unknown exception details");
       print("PLUGIN EXCEPTION: " + error.message!);
     }
   });
