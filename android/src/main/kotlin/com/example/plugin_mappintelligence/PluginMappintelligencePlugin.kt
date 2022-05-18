@@ -215,6 +215,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     suppressParams = params.toSet(),
                     generateNewEverId = generateNewEverId!!,
                 )
+
                 Log.d(
                     this::class.java.name,
                     "Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: ${params}, generateNewEverId:${generateNewEverId}"

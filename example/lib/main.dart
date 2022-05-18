@@ -15,7 +15,7 @@ import 'WebviewForAndroid.dart';
 
 import 'ExceptionTracking.dart';
 
-void main() async {
+void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await _initNative();
@@ -23,9 +23,10 @@ void main() async {
   }, (Object error, StackTrace stack) {
     if (error is PlatformException) {
       PluginMappintelligence.trackExceptionWithNameAndMessage(
-          "PLATFORM EXCEPTION",
-          error.message ?? "Unknown exception details");
+          "PLATFORM EXCEPTION", error.message ?? "Unknown exception details");
       print("PLATFORM EXCEPTION: " + error.message!);
+    } else if(error is MissingPluginException) {
+      print("PLUGIN EXCEPTION: " + error.message!);
     }
   });
 }

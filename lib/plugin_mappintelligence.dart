@@ -180,6 +180,7 @@ class PluginMappintelligence {
     });
   }
 
+  // This method is only for Android
   static Future<String> sendAndCleanData() async {
     return await _channel.invokeMethod("sendAndCleanData");
   }
