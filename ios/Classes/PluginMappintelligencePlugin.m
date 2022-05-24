@@ -92,6 +92,7 @@ static NSNumber* logLevelGlobal = nil;
     if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
       [[MIDefaultTracker sharedDefaults] removeObjectForKey:@"everId"];
       [[MIDefaultTracker sharedInstance] generateEverId];
+      [self updateInit: [[MIDefaultTracker sharedDefaults] stringForKey:@"everId"]];
     } 
     result(@"success");
   } else if ([@"isAnonymousTrackingEnabled" isEqualToString: call.method]) {
@@ -272,14 +273,7 @@ static NSNumber* logLevelGlobal = nil;
     result([[MappIntelligence shared] getEverId]);
   } else if ([@"setEverId" isEqualToString: call.method]) {
     NSString* everID = call.arguments[0];
-    if (trackIDs && domainString) {
-      ([[MappIntelligence shared] initWithConfiguration:trackIDs onTrackdomain:domainString andWithEverID:everID]);
-    } else {
-      NSLog(@"Domain and track id must be setup before set ever ID method!");
-    }
-    if (logLevelGlobal) {
-      [[MappIntelligence shared] setLogLevel:[logLevelGlobal intValue]];
-    }
+    [self updateInit: everID];
     result(@"success");
   } else if ([@"resetConfig" isEqualToString: call.method]) {
     [[MappIntelligence shared] reset];
@@ -358,6 +352,17 @@ static NSNumber* logLevelGlobal = nil;
             [prunedDictionary setObject:[dict objectForKey:key] forKey:key];
     }
     return prunedDictionary;
+}
+
+-(void)updateInit: (NSString* ) everID {
+    if (trackIDs && domainString) {
+      ([[MappIntelligence shared] initWithConfiguration:trackIDs onTrackdomain:domainString andWithEverID:everID]);
+    } else {
+      NSLog(@"Domain and track id must be setup before set ever ID method!");
+    }
+    if (logLevelGlobal) {
+      [[MappIntelligence shared] setLogLevel:[logLevelGlobal intValue]];
+    }
 }
 
 -(NSMutableArray<NSDictionary*>*)nullCheckedProducts: (NSArray<NSDictionary*>*) products {
