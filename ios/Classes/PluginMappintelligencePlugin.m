@@ -90,6 +90,7 @@ static NSNumber* logLevelGlobal = nil;
     NSNumber* generateNewEverID = call.arguments[@"generateNewEverId"];
     NSLog(@"generate new id: %@", generateNewEverID);
     if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
+      [[MIDefaultTracker sharedDefaults] removeObjectForKey:@"everId"];
       [[MIDefaultTracker sharedInstance] generateEverId];
     } 
     result(@"success");
