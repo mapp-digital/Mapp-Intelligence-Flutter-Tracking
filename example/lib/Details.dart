@@ -121,7 +121,7 @@ class DetailsView extends StatelessWidget {
       onPressed: () async {
         PluginMappintelligence.setAnonymousTracking(true, ['uc703','uc709'], true);
       },
-      child: Text("Set anonymous tracking true \n suppress parameters uc703, uc709']"),
+      child: Text("Set anonymous tracking true \n suppress parameters uc703, uc709"),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
