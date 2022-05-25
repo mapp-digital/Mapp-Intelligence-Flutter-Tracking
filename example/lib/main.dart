@@ -28,7 +28,7 @@ void main() {
       PluginMappintelligence.trackExceptionWithNameAndMessage(
           "PLUGIN EXCEPTION", error.message ?? "Unknown exception details");
       print("PLUGIN EXCEPTION: " + error.message!);
-    } else if (error is Exception) {
+    } else {
       PluginMappintelligence.trackExceptionWithNameAndMessage(
           "CUSTOM EXCEPTION", stack.toString());
       print("CUSTOM EXCEPTION: " + stack.toString());
