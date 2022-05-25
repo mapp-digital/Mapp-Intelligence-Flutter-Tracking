@@ -24,10 +24,14 @@ void main() {
       PluginMappintelligence.trackExceptionWithNameAndMessage(
           "PLATFORM EXCEPTION", error.message ?? "Unknown exception details");
       print("PLATFORM EXCEPTION: " + error.message!);
-    } else if(error is MissingPluginException) {
+    } else if (error is MissingPluginException) {
       PluginMappintelligence.trackExceptionWithNameAndMessage(
           "PLUGIN EXCEPTION", error.message ?? "Unknown exception details");
       print("PLUGIN EXCEPTION: " + error.message!);
+    } else {
+      PluginMappintelligence.trackExceptionWithNameAndMessage(
+          "CUSTOM EXCEPTION", stack.toString());
+      print("CUSTOM EXCEPTION: " + stack.toString());
     }
   });
 }
