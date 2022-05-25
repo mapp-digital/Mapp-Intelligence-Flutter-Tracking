@@ -113,7 +113,7 @@ class DetailsView extends StatelessWidget {
       onPressed: () async {
         PluginMappintelligence.setAnonymousTracking(true, [], false);
       },
-      child: Text("Set Anonymous tracking fields \n generate everID -> false"),
+      child: Text("Set anonymous tracking true \n no suppressed parameters"),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
@@ -121,7 +121,7 @@ class DetailsView extends StatelessWidget {
       onPressed: () async {
         PluginMappintelligence.setAnonymousTracking(true, ['uc703','uc709'], true);
       },
-      child: Text("Set Anonymous tracking fields \n true, ['uc703','uc709'], true"),
+      child: Text("Set anonymous tracking true \n suppress parameters uc703, uc709']"),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
@@ -129,7 +129,7 @@ class DetailsView extends StatelessWidget {
       onPressed: () async {
         PluginMappintelligence.setAnonymousTracking(false, ['cs801'], true);
       },
-      child: Text("Set Anonymous tracking fields \n generate everID -> true"),
+      child: Text("Set anonymous tracking false \n generate new everID true"),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
