@@ -38,15 +38,10 @@ class PageTracking extends StatelessWidget {
         userCategorises.city = "Nis";
         userCategorises.country = "Serbia";
         userCategorises.customerId = "99898390";
-        userCategorises.emailAddress = "stefan.stevanovic@mapp.com";
         userCategorises.emailReceiverId = "8743798";
-        userCategorises.firstName = "Stefan";
         userCategorises.gender = Gender.female;
-        userCategorises.lastName = "Stevanovic";
         userCategorises.newsletterSubscribed = true;
-        userCategorises.phoneNumber = "83203298320923";
         userCategorises.street = "Jovana Ristica";
-        userCategorises.streetNumber = "2A";
         userCategorises.customCategories = {17: 'usercat1', 22: 'usercat2'};
         userCategorises.zipCode = "780s00";
 
