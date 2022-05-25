@@ -16,7 +16,8 @@ class ExceptionTracking extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
-        PluginMappintelligence.raiseUncaughtException();
+        throw Exception("Some custom exception on flutter level");
+        //PluginMappintelligence.raiseUncaughtException();
       },
       child: Text('Track Uncaught exception'),
       style:
