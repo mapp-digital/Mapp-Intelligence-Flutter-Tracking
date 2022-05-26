@@ -33,7 +33,7 @@ class ExceptionTracking extends StatelessWidget {
         PluginMappintelligence.trackError(
             userInfo, "www.mapp.test.intelligence.com", 200);
       },
-      child: Text('Track Error (iOS Only)'),
+      child: Text('Track Error'),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
