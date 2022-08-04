@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'object_tracking_classes.dart';
@@ -110,7 +111,7 @@ class PluginMappintelligence {
   }
 
   static Future<void> trackAction(ActionEvent actionEvent) async {
-    //debugPrint(jsonEncode(actionEvent.toJson()), wrapWidth: 1024);
+    debugPrint(jsonEncode(actionEvent.toJson()), wrapWidth: 1024);
     await _channel
         .invokeMethod('trackAction', [jsonEncode(actionEvent.toJson())]);
   }

@@ -8,7 +8,7 @@ class ActionTracking extends StatelessWidget {
     buttons.add(ElevatedButton(
       onPressed: () async {
         var eventParameters = EventParameters();
-        eventParameters.parameters = {20: "ck20Param1"};
+        eventParameters.parameters = {20: "ck20Param1", 21: "ck21Param1"};
 
         var event = ActionEvent("TestAction");
         event.eventParameters = eventParameters;
