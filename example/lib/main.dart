@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
+import 'package:plugin_mappintelligence_example/DeutcheBank.dart';
 import 'ActionTracking.dart';
 import 'Campaign.dart';
 import 'Details.dart';
@@ -14,40 +15,16 @@ import 'WebviewForAndroid.dart';
 
 import 'ExceptionTracking.dart';
 
-void main() {
-  runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await _initNative();
-    runApp(MyApp());
-  }, (Object error, StackTrace stack) {
-    if (error is PlatformException) {
-      PluginMappintelligence.trackExceptionWithNameAndMessage(
-          "PLATFORM EXCEPTION", error.message ?? "Unknown exception details");
-      print("PLATFORM EXCEPTION: " + error.message!);
-    } else if (error is MissingPluginException) {
-      PluginMappintelligence.trackExceptionWithNameAndMessage(
-          "PLUGIN EXCEPTION", error.message ?? "Unknown exception details");
-      print("PLUGIN EXCEPTION: " + error.message!);
-    } else {
-      PluginMappintelligence.trackExceptionWithNameAndMessage(
-          "CUSTOM EXCEPTION", stack.toString());
-      print("CUSTOM EXCEPTION: " + stack.toString());
-    }
-  });
-}
-
-Future _initNative() async {
-  await PluginMappintelligence.initialize(
-      ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
-  await PluginMappintelligence.setLogLevel(LogLevel.all);
-  await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
-  await PluginMappintelligence.setRequestInterval(1);
-  await PluginMappintelligence.setRequestPerQueue(300);
-  await PluginMappintelligence.setEverId("111111111");
-  await PluginMappintelligence.setSendAppVersionInEveryRequest(true);
-  await PluginMappintelligence.enableCrashTracking(
-      ExceptionType.allExceptionTypes);
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  PluginMappintelligence.initialize(
+      ["165126124990956"], 'https://mit.db.com');
+  PluginMappintelligence.setLogLevel(LogLevel.all);
+  PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
+  PluginMappintelligence.setRequestInterval(1);
+  PluginMappintelligence.setAnonymousTracking(true, [""], true);
   PluginMappintelligence.build();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -77,10 +54,11 @@ class HomePage extends StatelessWidget {
     "Webview",
     "WebviewForAndroid",
     "Media",
-    "Exception"
+    "Exception",
+    "Deutche Bank"
   ];
 
-  StatelessWidget _determineWidget(int index) {
+  Widget _determineWidget(int index) {
     switch (index) {
       case 0:
         return DetailsView(index);
@@ -100,6 +78,8 @@ class HomePage extends StatelessWidget {
         return Media();
       case 8:
         return ExceptionTracking();
+      case 9:
+        return DeutcheBank();
       default:
         return DetailsView(index);
     }
