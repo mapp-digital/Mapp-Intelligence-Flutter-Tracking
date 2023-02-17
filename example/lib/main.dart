@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence_example/DeutcheBank.dart';
@@ -18,7 +16,7 @@ import 'ExceptionTracking.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   PluginMappintelligence.initialize(
-      ["165126124990956"], 'https://mit.db.com');
+      ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
   PluginMappintelligence.setLogLevel(LogLevel.all);
   PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   PluginMappintelligence.setRequestInterval(1);
@@ -55,7 +53,7 @@ class HomePage extends StatelessWidget {
     "WebviewForAndroid",
     "Media",
     "Exception",
-    "Deutche Bank"
+    "Deutsche Bank"
   ];
 
   Widget _determineWidget(int index) {
