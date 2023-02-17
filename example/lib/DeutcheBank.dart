@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
@@ -85,7 +83,7 @@ class DeutcheBank extends StatelessWidget {
     }
     return Scaffold(
         appBar: AppBar(
-          title: Text('Deutche Bank'),
+          title: Text('Deutsche Bank'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: ListView(children: buttons));
