@@ -213,7 +213,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 Webtrekk.getInstance().anonymousTracking(
                     enabled = anonymousTracking!!,
                     suppressParams = params.toSet(),
-                    generateNewEverId = generateNewEverId!!,
                 )
 
                 Log.d(
