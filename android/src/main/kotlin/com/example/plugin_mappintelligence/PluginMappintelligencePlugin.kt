@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.annotation.NonNull
+import com.example.plugin_mappintelligence.Parser.toMap
 import com.example.plugin_mappintelligence.webviewflutter.FlutterCookieManager
 import com.example.plugin_mappintelligence.webviewflutter.WebViewFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -247,6 +248,11 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 Webtrekk.getInstance().setVersionInEachRequest(sendAppVersion)
                 result.success("Ok")
             }
+            FlutterFunctions.GET_CURRENT_CONFIG -> {
+                val activeConfig = Webtrekk.getInstance().getCurrentConfiguration()
+                val map = activeConfig.toMap()
+                result.success(map)
+            }
             FlutterFunctions.ENABLE_CRASH_TRACKING -> {
                 val logLevelIndex = call.arguments<List<Int>>()!![0]
                 val validLogLevel =
@@ -264,7 +270,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                         .trackException(name, message)
                 }
             }
-            FlutterFunctions.TRACK_EXCEPTION_WITH_TYPE->{
+            FlutterFunctions.TRACK_EXCEPTION_WITH_TYPE -> {
 
             }
             FlutterFunctions.RAISE_UNCAUGHT_EXCEPTION -> {
@@ -626,16 +632,16 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val ENABLE_ANONYMOUS_TRACKING = "enableAnonymousTracking"
 
         const val TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE = "trackExceptionWithNameAndMessage"
-        const val TRACK_EXCEPTION_WITH_TYPE="trackExceptionWithType"
+        const val TRACK_EXCEPTION_WITH_TYPE = "trackExceptionWithType"
         const val TRACK_ERROR = "trackError"
         const val RAISE_UNCAUGHT_EXCEPTION = "raiseUncaughtException"
+        const val GET_CURRENT_CONFIG = "getCurrentConfig"
 
         //Only iOS
         const val SET_REQUEST_PER_QUEUE = "setRequestPerQueue"
         const val ENABLE_ANONYMOUS_TRACKING_WITH_PARAMETERS =
             "enableAnonymousTrackingWithParameters"
         const val IS_ANONYMOUS_TRACKING_ENABLE = "isAnonymousTrackingEnabled"
-
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

@@ -172,17 +172,23 @@ class PluginMappintelligence {
     return data;
   }
 
-  static Future<void> setAnonymousTracking(bool anonymousTracking,
-      List<String> params, bool generateNewEverId) async {
+  static Future<void> setAnonymousTracking(
+      bool anonymousTracking, List<String> params,
+      [bool? generateNewEverId=false]) async {
     await _channel.invokeMethod('enableAnonymousTracking', <dynamic, dynamic>{
       'anonymousTracking': anonymousTracking,
       'params': params.isNotEmpty ? params : null,
-      'generateNewEverId': generateNewEverId
     });
   }
 
   // This method is only for Android
   static Future<String> sendAndCleanData() async {
     return await _channel.invokeMethod("sendAndCleanData");
+  }
+
+  static Future<Map> getCurrentConfig() async {
+    final currentConfig = await _channel.invokeMapMethod("getCurrentConfig");
+    debugPrint(jsonEncode(currentConfig));
+    return Future.value(currentConfig);
   }
 }

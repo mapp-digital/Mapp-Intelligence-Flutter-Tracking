@@ -138,6 +138,10 @@ class DetailsView extends StatelessWidget {
           PluginMappintelligence.sendAndCleanData();
         },
         child: Text("Send data and clean")));
+    buttons.add(ElevatedButton(onPressed: () async {
+      PluginMappintelligence.getCurrentConfig();
+    }, child : Text("Print current config"),
+    ));
     return buttons;
   }
 

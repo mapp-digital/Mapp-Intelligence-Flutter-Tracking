@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
-import 'package:plugin_mappintelligence_example/DeutcheBank.dart';
+import 'package:plugin_mappintelligence_example/DeepLinkTracking.dart';
+import 'package:plugin_mappintelligence_example/DeutscheBank.dart';
 import 'ActionTracking.dart';
 import 'Campaign.dart';
 import 'Details.dart';
@@ -20,7 +21,7 @@ void main() async {
   PluginMappintelligence.setLogLevel(LogLevel.all);
   PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   PluginMappintelligence.setRequestInterval(1);
-  PluginMappintelligence.setAnonymousTracking(true, [""], true);
+  PluginMappintelligence.setAnonymousTracking(false, [""]);
   PluginMappintelligence.build();
   runApp(MyApp());
 }
@@ -46,6 +47,7 @@ class HomePage extends StatelessWidget {
   final List<String> _screens = const [
     "Configuration",
     "Page Tracking",
+    "URL Tracking",
     "Action",
     "Campaign",
     "Ecommerce",
@@ -53,7 +55,7 @@ class HomePage extends StatelessWidget {
     "WebviewForAndroid",
     "Media",
     "Exception",
-    "Deutsche Bank"
+    "Page View Event"
   ];
 
   Widget _determineWidget(int index) {
@@ -63,21 +65,23 @@ class HomePage extends StatelessWidget {
       case 1:
         return PageTracking();
       case 2:
-        return ActionTracking();
+        return DeepLinkTracking();
       case 3:
-        return Campaign();
+        return ActionTracking();
       case 4:
-        return Ecommerce();
+        return Campaign();
       case 5:
-        return WebviewApp();
+        return Ecommerce();
       case 6:
-        return WebviewForAndroid();
+        return WebviewApp();
       case 7:
-        return Media();
+        return WebviewForAndroid();
       case 8:
-        return ExceptionTracking();
+        return Media();
       case 9:
-        return DeutcheBank();
+        return ExceptionTracking();
+      case 10:
+        return DeutscheBank();
       default:
         return DetailsView(index);
     }

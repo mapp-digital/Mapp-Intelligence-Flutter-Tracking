@@ -1,6 +1,6 @@
 name: plugin_mappintelligence
 description: The MappIntelligence SDK allows you to track user activities, screen flow and media usage for an App. All data is send to the MappIntelligence tracking system for further analysis.
-version: 5.1.0
+version: 5.0.2
 homepage: https://github.com/mapp-digital/Mapp-Intelligence-Flutter-Tracking
 
 environment:

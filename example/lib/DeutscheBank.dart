@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 
-class DeutcheBank extends StatelessWidget {
+class DeutscheBank extends StatelessWidget {
   SessionParameters sessionParameters() {
     String environment = String.fromEnvironment(
       'ENVIRONMENT',
