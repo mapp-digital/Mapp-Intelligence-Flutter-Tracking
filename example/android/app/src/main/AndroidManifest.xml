@@ -1,10 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.plugin_mappintelligence_example">
 
     <application
         android:name=".Application"
         android:icon="@mipmap/ic_launcher"
         android:label="plugin_mappintelligence_example"
+        tools:replace="android:label"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"

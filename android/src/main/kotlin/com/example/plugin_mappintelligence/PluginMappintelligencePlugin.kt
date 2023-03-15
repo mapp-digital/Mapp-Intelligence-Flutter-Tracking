@@ -19,6 +19,7 @@ import java.lang.Exception
 import java.util.*
 import org.json.JSONObject
 import webtrekk.android.sdk.Config
+import webtrekk.android.sdk.DefaultConfiguration
 import webtrekk.android.sdk.ExceptionType
 import webtrekk.android.sdk.Logger
 import webtrekk.android.sdk.Webtrekk
@@ -34,6 +35,7 @@ import webtrekk.android.sdk.events.eventParams.PageParameters
 import webtrekk.android.sdk.events.eventParams.ProductParameters
 import webtrekk.android.sdk.events.eventParams.SessionParameters
 import webtrekk.android.sdk.events.eventParams.UserCategories
+import kotlin.collections.HashMap
 
 /** PluginMappintelligencePlugin */
 class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -61,6 +63,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     var webtrekkConfigurations: WebtrekkConfiguration.Builder? = null
+
     var config: Config? = null
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -94,6 +97,16 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 } else {
                     webtrekkConfigurations?.logLevel(Logger.Level.BASIC)
                     Webtrekk.getInstance().setLogLevel(Logger.Level.BASIC)
+                }
+                result.success("Ok")
+            }
+
+            FlutterFunctions.SET_USER_MATCHING_ENABLED->{
+                val args=call.arguments<Map<String,Boolean>>()
+                val enabled=args?.get("enabled")
+                enabled?.let {
+                    webtrekkConfigurations?.setUserMatchingEnabled(it)
+                    Webtrekk.getInstance().setUserMatchingEnabled(it)
                 }
                 result.success("Ok")
             }
@@ -253,6 +266,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 val map = activeConfig.toMap()
                 result.success(map)
             }
+            FlutterFunctions.UPDATE_CUSTOM_PARAMS -> {
+                val flutterPluginVersion = call.arguments<List<String>>()!![0]
+                updateCustomParams(flutterPluginVersion)
+                result.success(true)
+            }
+
             FlutterFunctions.ENABLE_CRASH_TRACKING -> {
                 val logLevelIndex = call.arguments<List<Int>>()!![0]
                 val validLogLevel =
@@ -280,6 +299,19 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
             else -> result.notImplemented()
         }
+    }
+
+    private fun updateCustomParams(flutterPluginVersion: String) {
+        val defaultConfig = DefaultConfiguration::class
+        val exactSdkVersionField = defaultConfig.java.getDeclaredField("exactSdkVersion")
+        exactSdkVersionField.isAccessible = true
+        exactSdkVersionField.set(this, flutterPluginVersion)
+        exactSdkVersionField.isAccessible = false
+
+        val platformField = defaultConfig.java.getDeclaredField("platform")
+        platformField.isAccessible = true
+        platformField.set(this, "Flutter")
+        platformField.isAccessible = false
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -621,6 +653,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val BUILD = "build"
         const val GET_EVER_ID = "getEverId"
         const val GET_USER_AGENT = "getUserAgent"
+        const val UPDATE_CUSTOM_PARAMS = "updateCustomParams"
 
         const val SET_EVER_ID = "setEverId"
         const val RESET_CONFIG = "resetConfig"
@@ -630,6 +663,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val SET_SEND_APP_VERSION_IN_EVERY_REQUEST = "setSendAppVersionInEveryRequest"
         const val ENABLE_CRASH_TRACKING = "enableCrashTracking"
         const val ENABLE_ANONYMOUS_TRACKING = "enableAnonymousTracking"
+        const val SET_USER_MATCHING_ENABLED="setUserMatchingEnabled"
 
         const val TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE = "trackExceptionWithNameAndMessage"
         const val TRACK_EXCEPTION_WITH_TYPE = "trackExceptionWithType"

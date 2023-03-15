@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter/widgets.dart';
 import 'object_tracking_classes.dart';
 
 class PluginMappintelligence {
@@ -148,6 +149,7 @@ class PluginMappintelligence {
 
   //This method is only for android
   static Future<void> build() async {
+    await updateCustomParams();
     await _channel.invokeMethod('build');
   }
 
@@ -174,7 +176,7 @@ class PluginMappintelligence {
 
   static Future<void> setAnonymousTracking(
       bool anonymousTracking, List<String> params,
-      [bool? generateNewEverId=false]) async {
+      [bool? generateNewEverId = false]) async {
     await _channel.invokeMethod('enableAnonymousTracking', <dynamic, dynamic>{
       'anonymousTracking': anonymousTracking,
       'params': params.isNotEmpty ? params : null,
@@ -190,5 +192,20 @@ class PluginMappintelligence {
     final currentConfig = await _channel.invokeMapMethod("getCurrentConfig");
     debugPrint(jsonEncode(currentConfig));
     return Future.value(currentConfig);
+  }
+
+  static Future<bool> updateCustomParams() async {
+    // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
+    final flutterPluginVersion = "5.0.2";
+    debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
+    final result = await _channel
+        .invokeMethod("updateCustomParams", [flutterPluginVersion]);
+    return Future.value(result);
+  }
+
+  static Future<String> setUserMatchingEnabled(bool enabled) async {
+    final args = <String, bool>{"enabled": enabled};
+    final result = await _channel.invokeMethod("setUserMatchingEnabled", args);
+    return result;
   }
 }
