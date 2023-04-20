@@ -20,7 +20,7 @@ dependencies:
   plugin_mappintelligence:
     path: ../
   mapp_sdk:
-    path: /Users/semsudin.tafilovic/StudioProjects/Mapp-Flutter-Plugin-1/
+    path: /Users/stefan.stevanovic/Documents/Mapp-Flutter-Plugin/
   #  plugin_mappintelligence: ^5.0.1
 
   # The following adds the Cupertino Icons font to your application.

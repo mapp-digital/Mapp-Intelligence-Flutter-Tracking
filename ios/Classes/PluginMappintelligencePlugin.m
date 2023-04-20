@@ -319,6 +319,12 @@ static NSNumber* logLevelGlobal = nil;
     }];
     [[MappIntelligence shared] trackExceptionWith:error];
     result(@"success");
+  } else if ([@"setUserMatchingEnabled" isEqualToString: call.method]) {
+    NSLog(@"pre poziva stigoh");
+    NSNumber* isEnabled = call.arguments[@"enabled"];
+    [[MappIntelligence shared] setEnableUserMatching:[isEnabled boolValue]];
+    NSLog(@"posle poziva stigoh");
+    result(@"success");
   }
   else { 
     result(FlutterMethodNotImplemented);
