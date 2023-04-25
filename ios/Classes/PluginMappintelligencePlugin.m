@@ -325,6 +325,13 @@ static NSNumber* logLevelGlobal = nil;
     [[MappIntelligence shared] setEnableUserMatching:[isEnabled boolValue]];
     NSLog(@"posle poziva stigoh");
     result(@"success");
+  } else if ([@"sendAndCleanData" isEqualToString: call.method]) {
+    [[MIDefaultTracker sharedInstance] sendRequestFromDatabaseWithCompletionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        }
+    }];
+    result(@"success");
   }
   else { 
     result(FlutterMethodNotImplemented);

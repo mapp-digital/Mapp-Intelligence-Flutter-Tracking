@@ -183,11 +183,11 @@ class PluginMappintelligence {
     });
   }
 
-  // This method is only for Android
   static Future<String> sendAndCleanData() async {
     return await _channel.invokeMethod("sendAndCleanData");
   }
 
+// This method is only for Android
   static Future<Map> getCurrentConfig() async {
     final currentConfig = await _channel.invokeMapMethod("getCurrentConfig");
     debugPrint(jsonEncode(currentConfig));
