@@ -55,7 +55,7 @@ static NSNumber* logLevelGlobal = nil;
     result(@"batch support set successfull");
   } else if ([@"setRequestInterval" isEqualToString: call.method]) {
     NSNumber* interval = call.arguments[0];
-    [[MappIntelligence shared] setRequestInterval:[interval intValue]*60];
+    [[MappIntelligence shared] setRequestInterval:[interval intValue]];
     result(@"request interval set successfull");
   } else if ([@"setRequestPerQueue" isEqualToString: call.method]) {
     NSNumber* requestsNumber = call.arguments[0];
@@ -100,7 +100,9 @@ static NSNumber* logLevelGlobal = nil;
     result(isEnabled);
   } else if ([@"trackPage" isEqualToString: call.method]) {
     NSString* pageName = call.arguments[0];
-    [[MappIntelligence shared] trackCustomPage:pageName trackingParams:nil];
+    MIPageViewEvent* event = [[MIPageViewEvent alloc] init];
+    event.pageName = pageName;
+    [[MappIntelligence shared] trackPage:event];
     result(@"success");
   } else if ([@"trackCustomPage" isEqualToString: call.method]) {
     NSString* pageName = call.arguments[0];
@@ -320,10 +322,8 @@ static NSNumber* logLevelGlobal = nil;
     [[MappIntelligence shared] trackExceptionWith:error];
     result(@"success");
   } else if ([@"setUserMatchingEnabled" isEqualToString: call.method]) {
-    NSLog(@"pre poziva stigoh");
     NSNumber* isEnabled = call.arguments[@"enabled"];
     [[MappIntelligence shared] setEnableUserMatching:[isEnabled boolValue]];
-    NSLog(@"posle poziva stigoh");
     result(@"success");
   } else if ([@"sendAndCleanData" isEqualToString: call.method]) {
     [[MIDefaultTracker sharedInstance] sendRequestFromDatabaseWithCompletionHandler:^(NSError * _Nullable error) {
@@ -332,6 +332,10 @@ static NSNumber* logLevelGlobal = nil;
         }
     }];
     result(@"success");
+  }
+   else if ([@"getCurrentConfig" isEqualToString: call.method]) {
+     [[MappIntelligence shared] setBatchSupportEnabled:[[MappIntelligence shared] batchSupportEnabled]]; 
+    result([[NSDictionary alloc] init]);
   }
   else { 
     result(FlutterMethodNotImplemented);
