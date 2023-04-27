@@ -19,7 +19,8 @@ class DeepLinkTracking extends StatelessWidget {
     final url =
         "https://testurl.com/?wt_mc=email.newsletter.nov2020.thursday&cc45=parameter45";
     PluginMappintelligence.trackUrl(url, null);
-    PluginMappintelligence.trackPage("DeepLink Tracking");
+    //PluginMappintelligence.trackPage("DeepLink Tracking");
+    PluginMappintelligence.trackPageWithCustomData(null, "Deeplink Tracking");
     PluginMappintelligence.sendAndCleanData();
   }
 

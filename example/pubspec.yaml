@@ -19,8 +19,7 @@ dependencies:
   #    # the parent directory to use the current plugin's version.
   plugin_mappintelligence:
     path: ../
-  mapp_sdk:
-    path: /Users/semsudin.tafilovic/StudioProjects/Mapp-Flutter-Plugin-1/
+  mapp_sdk: ^0.0.7
   #  plugin_mappintelligence: ^5.0.1
 
   # The following adds the Cupertino Icons font to your application.
