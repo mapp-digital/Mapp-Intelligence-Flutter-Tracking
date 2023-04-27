@@ -19,8 +19,8 @@ dependencies:
   #    # the parent directory to use the current plugin's version.
   plugin_mappintelligence:
     path: ../
+    
   mapp_sdk: ^0.0.7
-  #  plugin_mappintelligence: ^5.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

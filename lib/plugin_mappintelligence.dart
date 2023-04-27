@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -183,17 +184,19 @@ class PluginMappintelligence {
     });
   }
 
-  // This method is only for Android
   static Future<String> sendAndCleanData() async {
     return await _channel.invokeMethod("sendAndCleanData");
   }
 
   static Future<Map> getCurrentConfig() async {
     final currentConfig = await _channel.invokeMapMethod("getCurrentConfig");
-    debugPrint(jsonEncode(currentConfig));
+    if (Platform.isAndroid) {
+      debugPrint(jsonEncode(currentConfig));
+    }
     return Future.value(currentConfig);
   }
 
+// This method is only for Android
   static Future<bool> updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
     final flutterPluginVersion = "5.0.2";
