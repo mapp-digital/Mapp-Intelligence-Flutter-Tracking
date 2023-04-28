@@ -332,10 +332,14 @@ static NSNumber* logLevelGlobal = nil;
         }
     }];
     result(@"success");
-  }
-   else if ([@"getCurrentConfig" isEqualToString: call.method]) {
+  } else if ([@"getCurrentConfig" isEqualToString: call.method]) {
      [[MappIntelligence shared] setBatchSupportEnabled:[[MappIntelligence shared] batchSupportEnabled]]; 
     result([[NSDictionary alloc] init]);
+  } else if ([@"updateCustomParams" isEqualToString: call.method]) {
+    NSString* version = call.arguments[0];
+    [[MIDefaultTracker sharedInstance] setPlatform:@"Flutter"];
+    [[MIDefaultTracker sharedInstance] setVersion:version]; 
+    result(@"success");
   }
   else { 
     result(FlutterMethodNotImplemented);
