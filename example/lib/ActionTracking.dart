@@ -33,7 +33,6 @@ class ActionTracking extends StatelessWidget {
         userCategorises.country = "Serbia";
         userCategorises.customerId = "99898390";
         userCategorises.emailAddress = "stefan.stevanovic@mapp.com";
-        userCategorises.emailReceiverId = "8743798";
 
         var event = ActionEvent("TestAction");
         event.eventParameters = eventParameters;

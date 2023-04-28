@@ -196,7 +196,6 @@ class PluginMappintelligence {
     return Future.value(currentConfig);
   }
 
-// This method is only for Android
   static Future<bool> updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
     final flutterPluginVersion = "5.0.2";

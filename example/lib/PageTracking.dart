@@ -38,7 +38,6 @@ class PageTracking extends StatelessWidget {
         userCategorises.city = "Nis";
         userCategorises.country = "Serbia";
         userCategorises.customerId = "99898390";
-        userCategorises.emailReceiverId = "8743798";
         userCategorises.gender = Gender.female;
         userCategorises.newsletterSubscribed = true;
         userCategorises.street = "Jovana Ristica";
