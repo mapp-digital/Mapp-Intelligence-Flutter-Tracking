@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 
-class DeutscheBank extends StatelessWidget {
+class PageViewEventScreen extends StatelessWidget {
   SessionParameters sessionParameters() {
     String environment = String.fromEnvironment(
       'ENVIRONMENT',
@@ -83,7 +83,7 @@ class DeutscheBank extends StatelessWidget {
     }
     return Scaffold(
         appBar: AppBar(
-          title: Text('Deutsche Bank'),
+          title: Text('Page View Event'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: ListView(children: buttons));

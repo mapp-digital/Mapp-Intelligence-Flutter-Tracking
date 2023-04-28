@@ -119,9 +119,11 @@ class DetailsView extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
-        PluginMappintelligence.setAnonymousTracking(true, ['uc703','uc709'], true);
+        PluginMappintelligence.setAnonymousTracking(
+            true, ['uc703', 'uc709'], true);
       },
-      child: Text("Set anonymous tracking true \n suppress parameters uc703, uc709"),
+      child: Text(
+          "Set anonymous tracking true \n suppress parameters uc703, uc709"),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
@@ -138,10 +140,22 @@ class DetailsView extends StatelessWidget {
           PluginMappintelligence.sendAndCleanData();
         },
         child: Text("Send data and clean")));
-    buttons.add(ElevatedButton(onPressed: () async {
-      PluginMappintelligence.getCurrentConfig();
-    }, child : Text("Print current config"),
+    buttons.add(ElevatedButton(
+      onPressed: () async {
+        PluginMappintelligence.getCurrentConfig();
+      },
+      child: Text("Print current config"),
     ));
+    buttons.add(ElevatedButton(
+        onPressed: () {
+          PluginMappintelligence.setUserMatchingEnabled(false);
+        },
+        child: Text("Disable user matching")));
+            buttons.add(ElevatedButton(
+        onPressed: () {
+          PluginMappintelligence.setUserMatchingEnabled(true);
+        },
+        child: Text("Enable user matching")));
     return buttons;
   }
 
@@ -186,5 +200,4 @@ class DetailsView extends StatelessWidget {
   }
 
   // show the dialog
-
 }

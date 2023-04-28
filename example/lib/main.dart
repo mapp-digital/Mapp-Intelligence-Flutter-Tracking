@@ -4,17 +4,17 @@ import 'package:mapp_sdk/mapp_sdk.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence_example/DeepLinkTracking.dart';
-import 'package:plugin_mappintelligence_example/DeutscheBank.dart';
+
 import 'ActionTracking.dart';
 import 'Campaign.dart';
 import 'Details.dart';
 import 'Ecommerce.dart';
+import 'ExceptionTracking.dart';
 import 'Media.dart';
 import 'PageTracking.dart';
+import 'PageViewEvent.dart';
 import 'Webview.dart';
 import 'WebviewForAndroid.dart';
-
-import 'ExceptionTracking.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,8 +67,6 @@ class HomePage extends StatelessWidget {
 
   Widget _determineWidget(int index) {
     switch (index) {
-      case 0:
-        return DetailsView(index);
       case 1:
         return PageTracking();
       case 2:
@@ -88,7 +86,7 @@ class HomePage extends StatelessWidget {
       case 9:
         return ExceptionTracking();
       case 10:
-        return DeutscheBank();
+        return PageViewEventScreen();
       default:
         return DetailsView(index);
     }
