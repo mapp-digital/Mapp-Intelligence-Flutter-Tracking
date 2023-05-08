@@ -113,9 +113,10 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
             FlutterFunctions.BATCH_SUPPORT -> {
                 val enable = call.arguments<ArrayList<Boolean>>()!![0]
-                val interval = call.arguments<ArrayList<Int>>()!![1]
-                webtrekkConfigurations?.setBatchSupport(enable, interval)
+                val size = call.arguments<ArrayList<Int>>()!![1]
+                webtrekkConfigurations?.setBatchSupport(enable, size)
                 Webtrekk.getInstance().setBatchEnabled(enable)
+                Webtrekk.getInstance().setRequestPerBatch(size)
                 result.success("Ok")
 
             }
@@ -391,7 +392,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             pageViewEvent.eCommerceParameters = eCommerceParameters
             Webtrekk.getInstance().trackMedia(pageViewEvent)
         }
-
     }
 
     private fun toMediaParameters(json: JSONObject): MediaParameters? {
@@ -481,8 +481,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             null
         } else {
             param = UserCategories()
-            if (jsonOb.isNotNull("gender"))
-                param.gender = UserCategories.Gender.values()[jsonOb.optInt("gender")]
             param.birthday = toBirthday(jsonOb)
             if (jsonOb.isNotNull("city")) param.city = jsonOb.optString("city")
             if (jsonOb.isNotNull("country")) param.country = jsonOb.optString("country")
@@ -491,15 +489,17 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             if (jsonOb.isNotNull("emailReceiverId")) param.emailReceiverId =
                 jsonOb.optString("emailReceiverId")
             if (jsonOb.isNotNull("firstName")) param.firstName = jsonOb.optString("firstName")
+            if (jsonOb.isNotNull("gender"))
+                param.gender = UserCategories.Gender.values()[jsonOb.optInt("gender")]
             if (jsonOb.isNotNull("customerId")) param.customerId = jsonOb.optString("customerId")
             if (jsonOb.isNotNull("lastName")) param.lastName = jsonOb.optString("lastName")
+            if (jsonOb.isNotNull("newsletterSubscribed")) param.newsletterSubscribed =
+                jsonOb.optBoolean("newsletterSubscribed")
             if (jsonOb.isNotNull("phoneNumber")) param.phoneNumber = jsonOb.optString("phoneNumber")
             if (jsonOb.isNotNull("street")) param.street = jsonOb.optString("street")
             if (jsonOb.isNotNull("streetNumber")) param.streetNumber =
                 jsonOb.optString("streetNumber")
             if (jsonOb.isNotNull("zipCode")) param.zipCode = jsonOb.optString("zipCode")
-            if (jsonOb.isNotNull("newsletterSubscribed")) param.newsletterSubscribed =
-                jsonOb.optBoolean("newsletterSubscribed")
             if (jsonOb.isNotNull("customCategories")) param.customCategories =
                 jsonOb.optJSONObject("customCategories").toMap()
             param
@@ -541,9 +541,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 ) product.cost = objectInArray.optDouble("cost")
                 if (objectInArray.isNotNull("quantity")) product.quantity =
                     objectInArray.optInt("quantity")
-                product.categories = objectInArray.optJSONObject("categories").toMap()
-                product.ecommerceParameters =
-                    objectInArray.optJSONObject("ecommerceParameters").toMap()
                 if (objectInArray.isNotNull("productAdvertiseID")) product.productAdvertiseID =
                     objectInArray.optDouble("productAdvertiseID")
                 if (objectInArray.isNotNull("productSoldOut")
@@ -552,6 +549,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 }
                 if (objectInArray.isNotNull("productVariant")) product.productVariant =
                     objectInArray.optString("productVariant")
+                product.categories = objectInArray.optJSONObject("categories").toMap()
+                product.ecommerceParameters =
+                    objectInArray.optJSONObject("ecommerceParameters").toMap()
                 param.add(product)
             }
             param
@@ -569,6 +569,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             param.products = toProduct(jsonOb)
             if (jsonOb.isNotNull("status")) param.status =
                 ECommerceParameters.Status.values()[jsonOb.optInt("status")]
+            if(jsonOb.isNotNull("currency")) param.currency=jsonOb.optString("currency")
             if (jsonOb.isNotNull("orderID")) param.orderID = jsonOb.optString("orderID")
             if (jsonOb.isNotNull("orderValue")) param.orderValue = jsonOb.optDouble("orderValue")
             if (jsonOb.isNotNull("returningOrNewCustomer")) param.returningOrNewCustomer =
@@ -591,7 +592,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             if (jsonOb.isNotNull("shippingCost") && !jsonOb.optDouble("shippingCost")
                     .isNaN()
             ) param.shippingCost = jsonOb.optDouble("shippingCost")
-//
+
+            if(jsonOb.isNotNull("markUp")) param.markUp=jsonOb.optDouble("markUp")
+            if(jsonOb.isNotNull("orderStatus")) param.orderStatus=jsonOb.optString("orderStatus")
             if (jsonOb.isNotNull("customParameters")) param.customParameters =
                 jsonOb.optJSONObject("customParameters").toMap()
             param

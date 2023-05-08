@@ -75,10 +75,8 @@ class Ecommerce extends StatelessWidget {
         pageEvent.ecommerceParameters = ecommerceParameters1;
 
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
-
-        pageEvent.ecommerceParameters!.products = [prepareProducts()[1]];
-        PluginMappintelligence.trackPageWithCustomData(pageEvent);
       },
+      
       child: Text('View Product'),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
