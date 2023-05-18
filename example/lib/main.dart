@@ -20,11 +20,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
-  PluginMappintelligence.setLogLevel(LogLevel.all);
-  PluginMappintelligence.setBatchSupportEnabledWithSize(true, 150);
+  PluginMappintelligence.setLogLevel(LogLevel.info);
+  PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   PluginMappintelligence.setRequestInterval(1);
   PluginMappintelligence.setAnonymousTracking(false, [""]);
   PluginMappintelligence.setUserMatchingEnabled(true);
+  PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
   PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;

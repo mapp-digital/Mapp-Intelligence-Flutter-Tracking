@@ -13,8 +13,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   /// Constructs an instance that will listen for webviews broadcasting to the
   /// given [id], using the given [WebViewPlatformCallbacksHandler].
   MethodChannelWebViewPlatform(int id, this._platformCallbacksHandler)
-      : assert(_platformCallbacksHandler != null),
-        _channel = MethodChannel('plugin_mappintelligence/webview_$id') {
+      : _channel = MethodChannel('plugin_mappintelligence/webview_$id') {
     _channel.setMethodCallHandler(_onMethodCall);
   }
 
@@ -77,7 +76,6 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
     String url,
     Map<String, String>? headers,
   ) async {
-    assert(url != null);
     return _channel.invokeMethod<void>('loadUrl', <String, dynamic>{
       'url': url,
       'headers': headers,

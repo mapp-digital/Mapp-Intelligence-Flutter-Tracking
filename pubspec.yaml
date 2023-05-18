@@ -3,7 +3,7 @@ description: The MappIntelligence SDK allows you to track user activities, scree
 
 # !! IMPORTANT !! WHEN UPDATES THIS VERSION, IT'S NEEDED TO UPDATE VERSION in 
 #`plugin_mappintelligence` file in the method `updateCustomParams`
-version: 5.0.2
+version: 5.0.3
 
 homepage: https://github.com/mapp-digital/Mapp-Intelligence-Flutter-Tracking
 

@@ -49,13 +49,8 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    //implementation ("com.mapp.sdk:intelligence-android:5.1.5.2")
-     implementation ("com.mapp.sdk:intelligence-android:5.1.5.2"){
-         exclude group: "androidx.work", module:"work-runtime"
-     }
-
+    implementation ("com.mapp.sdk:intelligence-android:5.1.5.3")
     implementation 'androidx.annotation:annotation:1.5.0'
     implementation 'androidx.webkit:webkit:1.6.0'
-
     implementation "androidx.work:work-runtime-ktx:2.8.0"
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -198,7 +197,7 @@ class PluginMappintelligence {
 
   static Future<bool> updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
-    final flutterPluginVersion = "5.0.2";
+    final flutterPluginVersion = "5.0.3";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
     final result = await _channel
         .invokeMethod("updateCustomParams", [flutterPluginVersion]);
