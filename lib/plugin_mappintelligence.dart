@@ -154,8 +154,8 @@ class PluginMappintelligence {
   }
 
   static Future<String> getEverID() async {
-    final String everId = await _channel.invokeMethod('getEverId');
-    return everId;
+    final String? everId = await _channel.invokeMethod('getEverId');
+    return everId ?? "";
   }
 
   static Future<String> setEverId(String everId) async {
@@ -184,7 +184,12 @@ class PluginMappintelligence {
   }
 
   static Future<String> sendAndCleanData() async {
-    return await _channel.invokeMethod("sendAndCleanData");
+    final result = await _channel.invokeMethod("sendAndCleanData");
+    if (Platform.isAndroid) {
+      final log = await _printUsageStatisticsCalculationLog();
+      debugPrint("$log");
+    }
+    return result;
   }
 
   static Future<Map> getCurrentConfig() async {
@@ -195,9 +200,21 @@ class PluginMappintelligence {
     return Future.value(currentConfig);
   }
 
+  static Future<String> _printUsageStatisticsCalculationLog() async {
+    final result =
+        await _channel.invokeMethod("printUsageStatisticsCalculationLog");
+    return Future.value(result);
+  }
+
+  static Future<String> setTemporarySessionId(String temporarySessionId) async {
+    final result = await _channel.invokeMethod("setTemporarySessionId",
+        Map.of({"temporarySessionId": temporarySessionId}));
+    return Future.value(result);
+  }
+
   static Future<bool> updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
-    final flutterPluginVersion = "5.0.3";
+    final flutterPluginVersion = "5.0.4";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
     final result = await _channel
         .invokeMethod("updateCustomParams", [flutterPluginVersion]);

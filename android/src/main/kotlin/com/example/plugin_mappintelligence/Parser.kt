@@ -6,6 +6,7 @@ object Parser {
     fun ActiveConfig.toMap():Map<String,Any?>{
         return mapOf(
             "everId" to this.everId,
+            "everIdMode" to this.everIdMode?.name,
             "appFirstOpen" to this.appFirstOpen,
             "trackIds" to this.trackIds.joinToString(separator = ","),
             "trackDomains" to this.trackDomains,
@@ -24,6 +25,7 @@ object Parser {
             "requestsPerBatch" to this.requestsPerBatch,
             "sendVersionInEachRequest" to this.sendVersionInEachRequest,
             "shouldMigrate" to this.shouldMigrate,
+            "temporarySessionId" to this.temporarySessionId
         )
     }
 }

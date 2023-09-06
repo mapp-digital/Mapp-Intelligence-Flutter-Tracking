@@ -67,8 +67,8 @@ class DetailsView extends StatelessWidget {
 
     buttons.add(ElevatedButton(
       onPressed: () {
-        PluginMappintelligence.getEverID()
-            .then((String value) => {showAlertDialog(context, value)});
+        PluginMappintelligence.getEverID().then((String value) =>
+            {showAlertDialog(context, "Current EverId: ${value.isEmpty ? "null" : value}")});
       },
       child: Text('Get Ever ID'),
       style:
@@ -151,11 +151,18 @@ class DetailsView extends StatelessWidget {
           PluginMappintelligence.setUserMatchingEnabled(false);
         },
         child: Text("Disable user matching")));
-            buttons.add(ElevatedButton(
+    buttons.add(ElevatedButton(
         onPressed: () {
           PluginMappintelligence.setUserMatchingEnabled(true);
         },
         child: Text("Enable user matching")));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          final result = await PluginMappintelligence.setTemporarySessionId(
+              "user-1234-xyz");
+          showAlertDialog(context, "Result: $result");
+        },
+        child: Text("Set temporary session ID")));
     return buttons;
   }
 

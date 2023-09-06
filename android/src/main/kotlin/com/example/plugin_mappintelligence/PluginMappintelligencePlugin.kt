@@ -18,6 +18,7 @@ import io.flutter.plugin.common.PluginRegistry
 import java.lang.Exception
 import java.util.*
 import org.json.JSONObject
+import webtrekk.android.sdk.ActiveConfig
 import webtrekk.android.sdk.Config
 import webtrekk.android.sdk.DefaultConfiguration
 import webtrekk.android.sdk.ExceptionType
@@ -71,6 +72,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             FlutterFunctions.GET_PLATFORM_VERSION -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
             }
+
             FlutterFunctions.INITIALIZE -> {
                 val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()!!["trackIds"]
                 val trackDomain: String? =
@@ -101,9 +103,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 result.success("Ok")
             }
 
-            FlutterFunctions.SET_USER_MATCHING_ENABLED->{
-                val args=call.arguments<Map<String,Boolean>>()
-                val enabled=args?.get("enabled")
+            FlutterFunctions.SET_USER_MATCHING_ENABLED -> {
+                val args = call.arguments<Map<String, Boolean>>()
+                val enabled = args?.get("enabled")
                 enabled?.let {
                     webtrekkConfigurations?.setUserMatchingEnabled(it)
                     Webtrekk.getInstance().setUserMatchingEnabled(it)
@@ -120,6 +122,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 result.success("Ok")
 
             }
+
             FlutterFunctions.SET_REQUEST_INTERVAL -> {
                 val requestInterval = call.arguments<ArrayList<Int>>()!![0]
                 webtrekkConfigurations?.requestsInterval(interval = requestInterval.toLong())
@@ -127,11 +130,13 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 result.success("Ok")
 
             }
+
             FlutterFunctions.OPT_IN -> {
                 Webtrekk.getInstance().optOut(false)
                 result.success("Ok")
 
             }
+
             FlutterFunctions.OPT_OUT_WITH_DATA -> {
                 val enable = call.arguments<ArrayList<Boolean>>()!![0]
                 Webtrekk.getInstance().optOut(true, enable)
@@ -154,39 +159,48 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 // val param = call.arguments<ArrayList<HashMap<String,String>>>()[1]
                 Webtrekk.getInstance().trackCustomPage(name)
             }
+
             FlutterFunctions.TRACK_CUSTOM_PAGE -> {
                 val name = call.arguments<ArrayList<String>>()!![0]
                 val param = call.arguments<ArrayList<HashMap<String, String>>>()!![1]
                 Webtrekk.getInstance().trackCustomPage(name, param)
             }
+
             FlutterFunctions.TRACK_OBJECT_PAGE_WITHOUT_DATA -> {
                 val name = call.arguments<ArrayList<String>>()!![0]
                 Webtrekk.getInstance().trackPage(PageViewEvent(name))
 
             }
+
             FlutterFunctions.TRACK_OBJECT_PAGE_WITH_DATA -> {
                 val json = call.arguments<ArrayList<String>>()!![0]
                 objectTrackingPage(json)
             }
+
             FlutterFunctions.TRACK_ACTION -> {
                 val json = call.arguments<ArrayList<String>>()!![0]
                 objectAction(json)
             }
+
             FlutterFunctions.TRACK_WITHOUT_MEDIA_CODE -> {
                 val url = call.arguments<ArrayList<String>>()!![0]
                 Webtrekk.getInstance().trackUrl(Uri.parse(url))
             }
+
             FlutterFunctions.TRACK_URL -> {
                 val mediaCode = call.arguments<ArrayList<String>>()!![1]
                 val url = call.arguments<ArrayList<String>>()!![0]
                 Webtrekk.getInstance().trackUrl(Uri.parse(url), mediaCode)
             }
+
             FlutterFunctions.TRACK_MEDIA -> {
                 val json = call.arguments<ArrayList<String>>()!![0]
                 objectMedia(json)
             }
+
             FlutterFunctions.TRACK_WEB_VIEW -> {
             }
+
             FlutterFunctions.DISPOSE_WEB_VIEW -> {
             }
             //only iOS
@@ -209,6 +223,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     Webtrekk.getInstance().setIdsAndDomain(trackIds, trackDomain)
                 result.success("Ok")
             }
+
             FlutterFunctions.GET_TRACK_IDS_AND_DOMAIN -> {
                 val trackIds = Webtrekk.getInstance().getTrackIds()
                 val trackDomain = Webtrekk.getInstance().getTrackDomain()
@@ -217,6 +232,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 map["trackDomain"] = trackDomain
                 result.success(map)
             }
+
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING -> {
                 val anonymousTracking: Boolean? =
                     call.arguments<HashMap<String, Boolean>>()!!["anonymousTracking"]
@@ -236,37 +252,47 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 )
                 result.success(anonymousTracking)
             }
+
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING_WITH_PARAMETERS -> {
                 result.success(iOS)
             }
+
             FlutterFunctions.IS_ANONYMOUS_TRACKING_ENABLE -> {
                 result.success(iOS)
             }
+
             FlutterFunctions.GET_EVER_ID -> {
-                result.success(Webtrekk.getInstance().getEverId())
+                val everId=Webtrekk.getInstance().getEverId()
+                result.success(everId ?: "")
             }
+
             FlutterFunctions.GET_USER_AGENT -> {
                 result.success(Webtrekk.getInstance().getUserAgent())
             }
+
             FlutterFunctions.SET_EVER_ID -> {
                 val everId = call.arguments<List<String>>()!![0]
                 Webtrekk.getInstance().setEverId(everId)
                 result.success("Ok")
             }
+
             FlutterFunctions.SEND_AND_CLEAN_DATA -> {
                 Webtrekk.getInstance().sendRequestsNowAndClean()
                 result.success("Ok")
             }
+
             FlutterFunctions.SET_SEND_APP_VERSION_IN_EVERY_REQUEST -> {
                 val sendAppVersion = call.arguments<ArrayList<Boolean>>()!![0]
                 Webtrekk.getInstance().setVersionInEachRequest(sendAppVersion)
                 result.success("Ok")
             }
+
             FlutterFunctions.GET_CURRENT_CONFIG -> {
                 val activeConfig = Webtrekk.getInstance().getCurrentConfiguration()
                 val map = activeConfig.toMap()
                 result.success(map)
             }
+
             FlutterFunctions.UPDATE_CUSTOM_PARAMS -> {
                 val flutterPluginVersion = call.arguments<List<String>>()!![0]
                 updateCustomParams(flutterPluginVersion)
@@ -282,6 +308,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 Webtrekk.getInstance().setExceptionLogLevel(logLevel)
                 result.success("Ok")
             }
+
             FlutterFunctions.TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE -> {
                 val name = call.arguments<HashMap<String, String>>()!!["name"] ?: ""
                 val message: String = call.arguments<HashMap<String, String>>()!!["message"] ?: ""
@@ -290,14 +317,32 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                         .trackException(name, message)
                 }
             }
+
             FlutterFunctions.TRACK_EXCEPTION_WITH_TYPE -> {
 
             }
+
             FlutterFunctions.RAISE_UNCAUGHT_EXCEPTION -> {
                 //Integer.parseInt("$$#@")
                 throw Exception("CUSTOM UNCAUGHT EXCEPTION")
                 result.success("ok")
             }
+
+            FlutterFunctions.PRINT_USAGE_STATISTICS_CALCULATION_LOG->{
+                val log=printUsageStatisticsCalculationLog()
+                result.success(log)
+            }
+
+            FlutterFunctions.SET_TEMPORARY_SESSION_ID->{
+                val sessionId=call.arguments<HashMap<String, String>>()?.get("temporarySessionId")
+                if(sessionId.isNullOrEmpty()){
+                    result.error("","Temporary session id should not be null or empty",null)
+                }else{
+                    Webtrekk.getInstance().setTemporarySessionId(sessionId)
+                    result.success("ok")
+                }
+            }
+
             else -> result.notImplemented()
         }
     }
@@ -569,7 +614,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             param.products = toProduct(jsonOb)
             if (jsonOb.isNotNull("status")) param.status =
                 ECommerceParameters.Status.values()[jsonOb.optInt("status")]
-            if(jsonOb.isNotNull("currency")) param.currency=jsonOb.optString("currency")
+            if (jsonOb.isNotNull("currency")) param.currency = jsonOb.optString("currency")
             if (jsonOb.isNotNull("orderID")) param.orderID = jsonOb.optString("orderID")
             if (jsonOb.isNotNull("orderValue")) param.orderValue = jsonOb.optDouble("orderValue")
             if (jsonOb.isNotNull("returningOrNewCustomer")) param.returningOrNewCustomer =
@@ -593,8 +638,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     .isNaN()
             ) param.shippingCost = jsonOb.optDouble("shippingCost")
 
-            if(jsonOb.isNotNull("markUp")) param.markUp=jsonOb.optDouble("markUp")
-            if(jsonOb.isNotNull("orderStatus")) param.orderStatus=jsonOb.optString("orderStatus")
+            if (jsonOb.isNotNull("markUp")) param.markUp = jsonOb.optDouble("markUp")
+            if (jsonOb.isNotNull("orderStatus")) param.orderStatus = jsonOb.optString("orderStatus")
             if (jsonOb.isNotNull("customParameters")) param.customParameters =
                 jsonOb.optJSONObject("customParameters").toMap()
             param
@@ -633,6 +678,12 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         return mapp
     }
 
+    private fun printUsageStatisticsCalculationLog():String {
+        val currentConfig = Webtrekk.getInstance().getCurrentConfiguration()
+        val log=currentConfig.printUsageStatisticCalculation()
+        return log
+    }
+
     val iOS: String = "Only iOS function"
 
     object FlutterFunctions {
@@ -666,7 +717,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val SET_SEND_APP_VERSION_IN_EVERY_REQUEST = "setSendAppVersionInEveryRequest"
         const val ENABLE_CRASH_TRACKING = "enableCrashTracking"
         const val ENABLE_ANONYMOUS_TRACKING = "enableAnonymousTracking"
-        const val SET_USER_MATCHING_ENABLED="setUserMatchingEnabled"
+        const val SET_USER_MATCHING_ENABLED = "setUserMatchingEnabled"
 
         const val TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE = "trackExceptionWithNameAndMessage"
         const val TRACK_EXCEPTION_WITH_TYPE = "trackExceptionWithType"
@@ -679,6 +730,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val ENABLE_ANONYMOUS_TRACKING_WITH_PARAMETERS =
             "enableAnonymousTrackingWithParameters"
         const val IS_ANONYMOUS_TRACKING_ENABLE = "isAnonymousTrackingEnabled"
+        const val PRINT_USAGE_STATISTICS_CALCULATION_LOG = "printUsageStatisticsCalculationLog"
+        const val SET_TEMPORARY_SESSION_ID="setTemporarySessionId"
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

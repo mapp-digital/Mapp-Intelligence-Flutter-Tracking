@@ -23,7 +23,7 @@ void main() async {
   PluginMappintelligence.setLogLevel(LogLevel.info);
   PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   PluginMappintelligence.setRequestInterval(1);
-  PluginMappintelligence.setAnonymousTracking(false, [""]);
+  PluginMappintelligence.setAnonymousTracking(true, [""]);
   PluginMappintelligence.setUserMatchingEnabled(true);
   PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
   PluginMappintelligence.build();
