@@ -26,6 +26,7 @@ void main() async {
   PluginMappintelligence.setAnonymousTracking(true, [""]);
   PluginMappintelligence.setUserMatchingEnabled(true);
   PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
+  PluginMappintelligence.setTemporarySessionId("user-xyz-1234");
   PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;
