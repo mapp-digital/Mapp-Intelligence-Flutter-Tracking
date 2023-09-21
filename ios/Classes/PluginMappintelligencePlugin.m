@@ -88,12 +88,14 @@ static NSNumber* logLevelGlobal = nil;
       [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
     }
     NSNumber* generateNewEverID = call.arguments[@"generateNewEverId"];
-    NSLog(@"generate new id: %@", generateNewEverID);
-    if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
-      [[MIDefaultTracker sharedDefaults] removeObjectForKey:@"everId"];
-      [[MIDefaultTracker sharedInstance] generateEverId];
-      [self updateInit: [[MIDefaultTracker sharedDefaults] stringForKey:@"everId"]];
-    } 
+    if(generateNewEverID) {
+      NSLog(@"generate new id: %@", generateNewEverID);
+      if ([generateNewEverID boolValue] && ![isEnabled boolValue]) {
+        [[MIDefaultTracker sharedDefaults] removeObjectForKey:@"everId"];
+        [[MIDefaultTracker sharedInstance] generateEverId];
+        [self updateInit: [[MIDefaultTracker sharedDefaults] stringForKey:@"everId"]];
+      } 
+    }
     result(@"success");
   } else if ([@"isAnonymousTrackingEnabled" isEqualToString: call.method]) {
     NSNumber* isEnabled = [NSNumber numberWithBool:[[MappIntelligence shared] anonymousTracking]];
@@ -340,8 +342,16 @@ static NSNumber* logLevelGlobal = nil;
     [[MIDefaultTracker sharedInstance] setPlatform:@"Flutter"];
     [[MIDefaultTracker sharedInstance] setVersion:version]; 
     result(@"success");
-  }
-  else { 
+  } else if ([@"printUsageStatisticsCalculationLog" isEqualToString: call.method]) {
+    NSLog(@"Ovde sam da printam statistiku");
+    [[[MIDefaultTracker sharedInstance] usageStatistics] printUserStatistics]; 
+    NSLog(@"Ovde sam jer sam isprintao statistiku");
+    result(@"success");
+  } else if ([@"setTemporarySessionId" isEqualToString: call.method]) {
+    NSString* temporarryID = call.arguments[@"temporarySessionId"];
+    [[MappIntelligence shared] setTemporarySessionId:temporarryID];
+    result(@"success");
+  } else { 
     result(FlutterMethodNotImplemented);
   }
 }
