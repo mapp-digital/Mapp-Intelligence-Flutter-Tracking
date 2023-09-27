@@ -349,7 +349,13 @@ static NSNumber* logLevelGlobal = nil;
     result(@"success");
   } else if ([@"setTemporarySessionId" isEqualToString: call.method]) {
     NSString* temporarryID = call.arguments[@"temporarySessionId"];
-    [[MappIntelligence shared] setTemporarySessionId:temporarryID];
+    if([temporarryID  isEqual: @""]) {
+        NSLog(@"temporarry user ID can not be empty string!");
+        result(@"success");
+        return;
+    } else {
+      [[MappIntelligence shared] setTemporarySessionId:temporarryID];
+    }
     result(@"success");
   } else { 
     result(FlutterMethodNotImplemented);
