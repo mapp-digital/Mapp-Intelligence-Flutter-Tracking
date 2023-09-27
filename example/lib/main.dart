@@ -20,7 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
-  PluginMappintelligence.setLogLevel(LogLevel.info);
+  PluginMappintelligence.setLogLevel(LogLevel.debug);
   PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   PluginMappintelligence.setRequestInterval(1);
   PluginMappintelligence.setAnonymousTracking(true, [""]);
