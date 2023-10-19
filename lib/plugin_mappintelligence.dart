@@ -149,7 +149,7 @@ class PluginMappintelligence {
 
   //This method is only for android
   static Future<void> build() async {
-    await updateCustomParams();
+    await _updateCustomParams();
     await _channel.invokeMethod('build');
   }
 
@@ -212,7 +212,7 @@ class PluginMappintelligence {
     return Future.value(result);
   }
 
-  static Future<bool> updateCustomParams() async {
+  static Future<bool> _updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
     final flutterPluginVersion = "5.0.4";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");

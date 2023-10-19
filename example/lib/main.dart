@@ -18,22 +18,24 @@ import 'WebviewForAndroid.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  PluginMappintelligence.initialize(
+
+  await PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
 
-  PluginMappintelligence.setLogLevel(LogLevel.debug);
-  PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
-  PluginMappintelligence.setRequestInterval(1);
-  PluginMappintelligence.setEverId("0987654321");
-  PluginMappintelligence.setAnonymousTracking(false, [""]);
-  PluginMappintelligence.setUserMatchingEnabled(true);
-  PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
-  PluginMappintelligence.setTemporarySessionId("user-xyz-1234");
-  PluginMappintelligence.updateCustomParams();
-  PluginMappintelligence.build();
+  await PluginMappintelligence.setLogLevel(LogLevel.debug);
+  await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
+  await PluginMappintelligence.setRequestInterval(1);
+  await PluginMappintelligence.setEverId("0987654321");
+  await PluginMappintelligence.setAnonymousTracking(false, [""]);
+  await PluginMappintelligence.setUserMatchingEnabled(true);
+  await PluginMappintelligence.enableCrashTracking(
+      ExceptionType.allExceptionTypes);
+  await PluginMappintelligence.setTemporarySessionId("user-xyz-1234");
+  await PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;
-  MappSdk.engage("183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
+  await MappSdk.engage(
+      "183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
 
   runApp(MyApp());
 }
