@@ -20,10 +20,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
+
   PluginMappintelligence.setLogLevel(LogLevel.debug);
   PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   PluginMappintelligence.setRequestInterval(1);
-  PluginMappintelligence.setAnonymousTracking(true, [""]);
+  PluginMappintelligence.setEverId("0987654321");
+  PluginMappintelligence.setAnonymousTracking(false, [""]);
   PluginMappintelligence.setUserMatchingEnabled(true);
   PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
   PluginMappintelligence.setTemporarySessionId("user-xyz-1234");
