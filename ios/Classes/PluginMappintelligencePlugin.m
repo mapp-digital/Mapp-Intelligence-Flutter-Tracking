@@ -341,11 +341,9 @@ static NSNumber* logLevelGlobal = nil;
     NSString* version = call.arguments[0];
     [[MIDefaultTracker sharedInstance] setPlatform:@"Flutter"];
     [[MIDefaultTracker sharedInstance] setVersion:version]; 
-    result(@"success");
+    result(@1);
   } else if ([@"printUsageStatisticsCalculationLog" isEqualToString: call.method]) {
-    NSLog(@"Ovde sam da printam statistiku");
     [[[MIDefaultTracker sharedInstance] usageStatistics] printUserStatistics]; 
-    NSLog(@"Ovde sam jer sam isprintao statistiku");
     result(@"success");
   } else if ([@"setTemporarySessionId" isEqualToString: call.method]) {
     NSString* temporarryID = call.arguments[@"temporarySessionId"];
