@@ -34,8 +34,7 @@ void main() async {
   await PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;
-  await MappSdk.engage(
-      "183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
+  MappSdk.engage("183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
 
   runApp(MyApp());
 }

@@ -341,7 +341,7 @@ static NSNumber* logLevelGlobal = nil;
     NSString* version = call.arguments[0];
     [[MIDefaultTracker sharedInstance] setPlatform:@"Flutter"];
     [[MIDefaultTracker sharedInstance] setVersion:version]; 
-    result(@"succcess");
+    result(@"success");
   } else if ([@"printUsageStatisticsCalculationLog" isEqualToString: call.method]) {
     [[[MIDefaultTracker sharedInstance] usageStatistics] printUserStatistics]; 
     result(@"success");
