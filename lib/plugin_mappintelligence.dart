@@ -212,7 +212,7 @@ class PluginMappintelligence {
     return Future.value(result);
   }
 
-  static Future<bool> _updateCustomParams() async {
+  static Future<String> _updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
     final flutterPluginVersion = "5.0.4";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");

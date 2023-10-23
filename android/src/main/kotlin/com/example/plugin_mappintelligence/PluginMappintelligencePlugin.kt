@@ -296,7 +296,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             FlutterFunctions.UPDATE_CUSTOM_PARAMS -> {
                 val flutterPluginVersion = call.arguments<List<String>>()!![0]
                 updateCustomParams(flutterPluginVersion)
-                result.success(true)
+                result.success("Ok")
             }
 
             FlutterFunctions.ENABLE_CRASH_TRACKING -> {
