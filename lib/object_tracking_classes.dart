@@ -274,4 +274,19 @@ class MIFormParameters {
   bool? confirmButton;
   int? anonymous;
   List<int>? pathAnalysis;
+  Map<String, dynamic> toJson() => {
+        'formName': formName,
+        'fieldIds': (fieldIds?.map((e) => e))?.toList(),
+        'renameFields':
+            renameFields?.map((key, value) => MapEntry(key.toString(), value)),
+        'changeFieldsValue': changeFieldsValue
+            ?.map((key, value) => MapEntry(key.toString(), value)),
+        'anonymousSpecificFields':
+            (anonymousSpecificFields?.map((e) => e))?.toList(),
+        'fullContentSpecificFields':
+            (fullContentSpecificFields?.map((e) => e))?.toList(),
+        'confirmButton': confirmButton,
+        'anonymous': anonymous,
+        'pathAnalysis': (pathAnalysis?.map((e) => e))?.toList()
+      };
 }
