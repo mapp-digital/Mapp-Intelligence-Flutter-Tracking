@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class PageParameters {
   String? searchTerm;
   Map<int, String>? params;
@@ -260,4 +262,16 @@ enum ExceptionType {
 class ErrorUserInfo {
   static String failureReason = "failureReason";
   static String description = "description";
+}
+
+class MIFormParameters {
+  String? formName;
+  List<int>? fieldIds;
+  Map<String, String>? renameFields;
+  Map<String, String>? changeFieldsValue;
+  List<int>? anonymousSpecificFields;
+  List<int>? fullContentSpecificFields;
+  bool? confirmButton;
+  int? anonymous;
+  List<int>? pathAnalysis;
 }
