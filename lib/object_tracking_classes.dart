@@ -68,7 +68,16 @@ class UserCategories {
       };
 }
 
-enum Status { noneStatus, addedToBasket, purchased, viewed }
+enum Status {
+  noneStatus,
+  addedToBasket,
+  purchased,
+  viewed,
+  deletedFromBasket,
+  addedToWishlist,
+  deletedFromWishlist,
+  checkout,
+}
 
 class Product {
   String? name;

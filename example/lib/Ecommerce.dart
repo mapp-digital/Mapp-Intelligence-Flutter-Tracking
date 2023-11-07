@@ -8,7 +8,7 @@ class Ecommerce extends StatelessWidget {
     Product product1 = Product();
     product1.name = "Product1";
     product1.categories = {1: "ProductCat1", 2: "ProductCat2"};
-    product1.ecommerceParameters={22:"ecommerceParameter"};
+    product1.ecommerceParameters = {22: "ecommerceParameter"};
     product1.cost = 10.33;
     product1.productAdvertiseID = 56291;
     product1.productSoldOut = false;
@@ -17,7 +17,7 @@ class Ecommerce extends StatelessWidget {
     Product product2 = Product();
     product2.name = "Product2";
     product2.categories = {2: "ProductCat2"};
-    product1.ecommerceParameters={22:"ecommerceParameter"};
+    product1.ecommerceParameters = {22: "ecommerceParameter"};
     product2.cost = 5.17;
     product2.productAdvertiseID = 562918888888888;
     product2.productSoldOut = true;
@@ -37,7 +37,8 @@ class Ecommerce extends StatelessWidget {
   double calculateOrderValue(EcommerceParameters ecommerceParameters) {
     var totalCost = 0.0;
     ecommerceParameters.products?.forEach((product) {
-      totalCost = totalCost + (product.cost ?? 0.00) * (product.quantity ?? 1.00);
+      totalCost =
+          totalCost + (product.cost ?? 0.00) * (product.quantity ?? 1.00);
     });
     totalCost = totalCost +
         (ecommerceParameters.shippingCost ?? 0.00) -
@@ -76,7 +77,6 @@ class Ecommerce extends StatelessWidget {
 
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
       },
-      
       child: Text('View Product'),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
@@ -138,6 +138,114 @@ class Ecommerce extends StatelessWidget {
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.deletedFromBasket;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Deleted from basket")));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.addedToWishlist;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Added to wishlist")));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.deletedFromWishlist;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Deleted from wishlist")));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.checkout;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Checkout")));
     return buttons;
   }
 
