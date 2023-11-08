@@ -214,7 +214,7 @@ class PluginMappintelligence {
 
   static Future<String> _updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
-    final flutterPluginVersion = "5.0.4.1";
+    final flutterPluginVersion = "5.0.4.2";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
     final result = await _channel
         .invokeMethod("updateCustomParams", [flutterPluginVersion]);
@@ -226,4 +226,9 @@ class PluginMappintelligence {
     final result = await _channel.invokeMethod("setUserMatchingEnabled", args);
     return result;
   }
+
+  // static Future<String> formTracking(MIFormParameters parameters) async {
+  //   final result = await _channel.invokeMethod("formTracking", [jsonEncode(parameters.toJson())]);
+  //   return result;
+  // }
 }

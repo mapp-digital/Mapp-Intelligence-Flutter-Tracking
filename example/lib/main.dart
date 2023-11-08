@@ -4,6 +4,7 @@ import 'package:mapp_sdk/mapp_sdk.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence_example/DeepLinkTracking.dart';
+import 'package:plugin_mappintelligence_example/FormTracking.dart';
 
 import 'ActionTracking.dart';
 import 'Campaign.dart';
@@ -68,7 +69,8 @@ class HomePage extends StatelessWidget {
     "WebviewForAndroid",
     "Media",
     "Exception",
-    "Page View Event"
+    "Page View Event",
+    "FormTracking"
   ];
 
   Widget _determineWidget(int index) {
@@ -93,6 +95,8 @@ class HomePage extends StatelessWidget {
         return ExceptionTracking();
       case 10:
         return PageViewEventScreen();
+      case 11:
+        return FormTrackingScreen();
       default:
         return DetailsView(index);
     }
