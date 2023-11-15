@@ -82,7 +82,7 @@ static NSNumber* logLevelGlobal = nil;
   else if ([@"enableAnonymousTracking" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[@"anonymousTracking"];  
     NSArray<NSString *>* supressedParameters = call.arguments[@"params"];
-    if([isEnabled boolValue]) {
+    if([isEnabled boolValue] && supressedParameters != [NSNull null]) {
       [[MappIntelligence shared] enableAnonymousTracking:supressedParameters];
     } else {
       [[MappIntelligence shared] setAnonymousTracking: [isEnabled boolValue]];
@@ -101,6 +101,7 @@ static NSNumber* logLevelGlobal = nil;
     NSNumber* isEnabled = [NSNumber numberWithBool:[[MappIntelligence shared] anonymousTracking]];
     result(isEnabled);
   } else if ([@"trackPage" isEqualToString: call.method]) {
+    NSLog(@"page is tracked objc flutter");
     NSString* pageName = call.arguments[0];
     MIPageViewEvent* event = [[MIPageViewEvent alloc] init];
     event.pageName = pageName;

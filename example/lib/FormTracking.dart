@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 
 class FormTrackingScreen extends StatelessWidget {
   @override
@@ -72,20 +71,20 @@ class _FormTrackingState extends State<FormTracking> {
     buttons.add(ElevatedButton(
       onPressed: () async {},
       child: Text('Confirm'),
-      style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColorDark),
+      style:
+          ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () {},
       child: Text('Cancel'),
-      style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColorDark),
+      style:
+          ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () {},
       child: Text('Path Anylisis'),
-      style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColorDark),
+      style:
+          ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColorDark),
     ));
 
     buttons.add(ListTile(
