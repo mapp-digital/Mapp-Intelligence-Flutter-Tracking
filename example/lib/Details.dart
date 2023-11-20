@@ -15,16 +15,12 @@ class DetailsView extends StatelessWidget {
         await PluginMappintelligence.optOutAndSendCurrentData(true);
       },
       child: Text('Opt out'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () {
         PluginMappintelligence.optIn();
       },
       child: Text('Opt in'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
 
     buttons.add(ElevatedButton(
@@ -38,8 +34,6 @@ class DetailsView extends StatelessWidget {
         PluginMappintelligence.build();
       },
       child: Text('Test setup'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
 
     buttons.add(ElevatedButton(
@@ -53,26 +47,22 @@ class DetailsView extends StatelessWidget {
         //PluginMappintelligence.setEverId("111111111");
       },
       child: Text("Reset"),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () {
         PluginMappintelligence.setEverId("123456789");
       },
       child: Text("Set Ever ID"),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
 
     buttons.add(ElevatedButton(
       onPressed: () {
-        PluginMappintelligence.getEverID().then((String value) =>
-            {showAlertDialog(context, "Current EverId: ${value.isEmpty ? "null" : value}")});
+        PluginMappintelligence.getEverID().then((String value) => {
+              showAlertDialog(
+                  context, "Current EverId: ${value.isEmpty ? "null" : value}")
+            });
       },
       child: Text('Get Ever ID'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
 
     buttons.add(ElevatedButton(
@@ -81,8 +71,6 @@ class DetailsView extends StatelessWidget {
             ["826582930668809"], "http://vdestellaaccount01.wt-eu02.net");
       },
       child: Text("Set new track IDs and domain during runtime"),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -106,16 +94,12 @@ class DetailsView extends StatelessWidget {
         }
       },
       child: Text("Get trackId and trackDomain"),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
         PluginMappintelligence.setAnonymousTracking(true, [], false);
       },
       child: Text("Set anonymous tracking true \n no suppressed parameters"),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -124,16 +108,12 @@ class DetailsView extends StatelessWidget {
       },
       child: Text(
           "Set anonymous tracking true \n suppress parameters uc703, uc709"),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
         PluginMappintelligence.setAnonymousTracking(false, ['cs801'], true);
       },
       child: Text("Set anonymous tracking false \n generate new everID true"),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
         onPressed: () async {
@@ -170,8 +150,9 @@ class DetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Configuration'),
-        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(
+          'Configuration',
+        ),
       ),
       body: ListView(
         children: _buildButtons(context),

@@ -11,8 +11,6 @@ class PageTracking extends StatelessWidget {
         PluginMappintelligence.trackPage(className);
       },
       child: Text('Track Page'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -20,8 +18,6 @@ class PageTracking extends StatelessWidget {
         PluginMappintelligence.trackPage("customName", pageParameters);
       },
       child: Text('Track Custom Page'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -87,8 +83,6 @@ class PageTracking extends StatelessWidget {
         PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
       },
       child: Text('Track Page with custom data'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     return buttons;
   }
@@ -98,7 +92,6 @@ class PageTracking extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Page Tracking'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         children: _buildButtons(context),

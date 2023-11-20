@@ -7,7 +7,6 @@ class FormTrackingScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Form Tracking'),
-          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: FormTracking());
   }
@@ -71,20 +70,14 @@ class _FormTrackingState extends State<FormTracking> {
     buttons.add(ElevatedButton(
       onPressed: () async {},
       child: Text('Confirm'),
-      style:
-          ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () {},
       child: Text('Cancel'),
-      style:
-          ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () {},
       child: Text('Path Anylisis'),
-      style:
-          ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColorDark),
     ));
 
     buttons.add(ListTile(

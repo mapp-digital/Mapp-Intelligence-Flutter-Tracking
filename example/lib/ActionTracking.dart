@@ -16,8 +16,6 @@ class ActionTracking extends StatelessWidget {
         PluginMappintelligence.trackAction(event);
       },
       child: Text('Track Action'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -42,8 +40,6 @@ class ActionTracking extends StatelessWidget {
         PluginMappintelligence.trackAction(event);
       },
       child: Text('Track Custom Action'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     return buttons;
   }
@@ -53,7 +49,6 @@ class ActionTracking extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Action Tracking'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         children: _buildButtons(context),

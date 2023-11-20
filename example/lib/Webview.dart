@@ -7,7 +7,6 @@ class WebviewApp extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('WebView'),
-          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: WebviewScreen());
   }

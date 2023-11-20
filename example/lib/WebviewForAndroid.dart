@@ -16,7 +16,6 @@ class WebviewForAndroid extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('WebviewForAndroid'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: WebView(
           initialUrl: 'http://demoshop.webtrekk.com/web2app/index.html',
@@ -27,6 +26,4 @@ class WebviewForAndroid extends StatelessWidget {
           }),
     );
   }
-
-
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mapp_sdk/helper_classes.dart';
-import 'package:mapp_sdk/mapp_sdk.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
+import 'package:plugin_mappintelligence/tracking/mapp_analytics_observer.dart';
+import 'package:plugin_mappintelligence/tracking/tracking_events.dart';
 import 'package:plugin_mappintelligence_example/DeepLinkTracking.dart';
 import 'package:plugin_mappintelligence_example/FormTracking.dart';
 
@@ -43,12 +43,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("RUN MATERIAL APP");
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
           primaryColor: Color(0xFF00BAFF),
           primaryColorDark: Color(0xFF0592D7),
           cardColor: Color(0xFF888888),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Color(0xFF00BAFF),
+              titleTextStyle: TextStyle(color: Colors.white)),
           colorScheme:
               ColorScheme.fromSwatch().copyWith(secondary: Color(0xFF58585A))),
       home: HomePage(),
@@ -72,6 +76,26 @@ class HomePage extends StatelessWidget {
     "Page View Event",
     "FormTracking"
   ];
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      navigatorObservers: [
+        MappAnalyticsObserver([TrackingEvents.PUSH])
+      ],
+      theme: ThemeData.light(useMaterial3: true).copyWith(
+        appBarTheme: AppBarTheme(
+            backgroundColor: Color(0xFF00BAFF),
+            iconTheme: IconThemeData(color: Colors.white),
+            titleTextStyle: TextStyle(color: Colors.white, fontSize: 18)),
+      ),
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Mapp Intelligence Demo'),
+          ),
+          body: _buildListView(context)),
+    );
+  }
 
   Widget _determineWidget(int index) {
     switch (index) {
@@ -114,28 +138,18 @@ class HomePage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             onTap: () {
+              final widget = _determineWidget(index);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => _determineWidget(index),
+                  settings: RouteSettings(name: widget.toString()),
+                  builder: (context) => widget,
                 ),
               );
             },
           ),
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Mapp Intelligence Demo'),
-            backgroundColor: Theme.of(context).primaryColorDark,
-          ),
-          body: _buildListView(context)),
     );
   }
 }

@@ -37,7 +37,6 @@ class DeepLinkTracking extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('URL Tracking'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

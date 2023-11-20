@@ -12,7 +12,6 @@ class VideoPlayerApp extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Video Player Demo'),
-          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: VideoPlayerScreen());
   }

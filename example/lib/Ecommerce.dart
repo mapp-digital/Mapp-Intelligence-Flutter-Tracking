@@ -8,7 +8,7 @@ class Ecommerce extends StatelessWidget {
     Product product1 = Product();
     product1.name = "Product1";
     product1.categories = {1: "ProductCat1", 2: "ProductCat2"};
-    product1.ecommerceParameters={22:"ecommerceParameter"};
+    product1.ecommerceParameters = {22: "ecommerceParameter"};
     product1.cost = 10.33;
     product1.productAdvertiseID = 56291;
     product1.productSoldOut = false;
@@ -17,7 +17,7 @@ class Ecommerce extends StatelessWidget {
     Product product2 = Product();
     product2.name = "Product2";
     product2.categories = {2: "ProductCat2"};
-    product1.ecommerceParameters={22:"ecommerceParameter"};
+    product1.ecommerceParameters = {22: "ecommerceParameter"};
     product2.cost = 5.17;
     product2.productAdvertiseID = 562918888888888;
     product2.productSoldOut = true;
@@ -37,7 +37,8 @@ class Ecommerce extends StatelessWidget {
   double calculateOrderValue(EcommerceParameters ecommerceParameters) {
     var totalCost = 0.0;
     ecommerceParameters.products?.forEach((product) {
-      totalCost = totalCost + (product.cost ?? 0.00) * (product.quantity ?? 1.00);
+      totalCost =
+          totalCost + (product.cost ?? 0.00) * (product.quantity ?? 1.00);
     });
     totalCost = totalCost +
         (ecommerceParameters.shippingCost ?? 0.00) -
@@ -76,10 +77,7 @@ class Ecommerce extends StatelessWidget {
 
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
       },
-      
       child: Text('View Product'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -105,8 +103,6 @@ class Ecommerce extends StatelessWidget {
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
       },
       child: Text('Add to basket'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -135,8 +131,6 @@ class Ecommerce extends StatelessWidget {
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
       },
       child: Text('Confirmation'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     return buttons;
   }
@@ -146,7 +140,6 @@ class Ecommerce extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Ecommerce'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         children: _buildButtons(context),

@@ -18,14 +18,10 @@ class Media extends StatelessWidget {
         PluginMappintelligence.trackMedia(mediaEvent);
       },
       child: Text('Test Media1'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {},
       child: Text('Player Example'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -37,8 +33,6 @@ class Media extends StatelessWidget {
         );
       },
       child: Text('Player Example2'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     return buttons;
   }
@@ -48,7 +42,6 @@ class Media extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Media'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         children: _buildButtons(context),

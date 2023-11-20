@@ -20,8 +20,6 @@ class Campaign extends StatelessWidget {
         PluginMappintelligence.trackPageWithCustomData(event);
       },
       child: Text('Test Campaign'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -32,8 +30,6 @@ class Campaign extends StatelessWidget {
         PluginMappintelligence.trackPageWithCustomData(null, className);
       },
       child: Text('Test Link1'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -44,8 +40,6 @@ class Campaign extends StatelessWidget {
         PluginMappintelligence.trackPageWithCustomData(null, className);
       },
       child: Text('Test Link2'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     return buttons;
   }
@@ -55,7 +49,6 @@ class Campaign extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Campaign'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         children: _buildButtons(context),

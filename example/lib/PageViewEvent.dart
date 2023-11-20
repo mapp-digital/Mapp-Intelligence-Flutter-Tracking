@@ -84,7 +84,6 @@ class PageViewEventScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Page View Event'),
-          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: ListView(children: buttons));
   }

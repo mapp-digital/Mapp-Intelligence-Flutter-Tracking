@@ -11,8 +11,6 @@ class ExceptionTracking extends StatelessWidget {
             "exceptionName", "exceptionMessage");
       },
       child: Text('Track Exception With Name And Message'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -20,8 +18,6 @@ class ExceptionTracking extends StatelessWidget {
         //PluginMappintelligence.raiseUncaughtException();
       },
       child: Text('Track Uncaught exception'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
@@ -34,8 +30,6 @@ class ExceptionTracking extends StatelessWidget {
             userInfo, "www.mapp.test.intelligence.com", 200);
       },
       child: Text('Track Error'),
-      style:
-          ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),
     ));
     return buttons;
   }
@@ -45,7 +39,6 @@ class ExceptionTracking extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Exception Tracking'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         children: _buildButtons(context),
