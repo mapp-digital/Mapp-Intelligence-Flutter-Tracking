@@ -169,12 +169,13 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             FlutterFunctions.TRACK_OBJECT_PAGE_WITHOUT_DATA -> {
                 val name = call.arguments<ArrayList<String>>()!![0]
                 Webtrekk.getInstance().trackPage(PageViewEvent(name))
-
+                result.success(true)
             }
 
             FlutterFunctions.TRACK_OBJECT_PAGE_WITH_DATA -> {
                 val json = call.arguments<ArrayList<String>>()!![0]
                 objectTrackingPage(json)
+                result.success(true)
             }
 
             FlutterFunctions.TRACK_ACTION -> {

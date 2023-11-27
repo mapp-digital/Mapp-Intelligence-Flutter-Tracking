@@ -5,6 +5,7 @@ import 'package:plugin_mappintelligence/tracking/mapp_analytics_observer.dart';
 import 'package:plugin_mappintelligence/tracking/tracking_events.dart';
 import 'package:plugin_mappintelligence_example/DeepLinkTracking.dart';
 import 'package:plugin_mappintelligence_example/FormTracking.dart';
+import 'package:plugin_mappintelligence_example/ProductStatuses.dart';
 
 import 'ActionTracking.dart';
 import 'Campaign.dart';
@@ -23,7 +24,7 @@ void main() async {
   await PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
 
-  await PluginMappintelligence.setLogLevel(LogLevel.all);
+  await PluginMappintelligence.setLogLevel(LogLevel.debug);
   await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   await PluginMappintelligence.setRequestInterval(1);
   await PluginMappintelligence.setEverId("0987654321");
@@ -74,7 +75,8 @@ class HomePage extends StatelessWidget {
     "Media",
     "Exception",
     "Page View Event",
-    "FormTracking"
+    "FormTracking",
+    "Product Statuses"
   ];
 
   @override
@@ -121,6 +123,8 @@ class HomePage extends StatelessWidget {
         return PageViewEventScreen();
       case 11:
         return FormTrackingScreen();
+      case 12:
+        return ProductStatuses();
       default:
         return DetailsView(index);
     }

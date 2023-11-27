@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class PageParameters {
   String? searchTerm;
   Map<int, String>? params;
