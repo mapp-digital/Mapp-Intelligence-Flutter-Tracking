@@ -40,49 +40,49 @@ class ProductStatuses extends StatelessWidget {
     ecommerceProperties.products = [product];
 
     final buttons = [
-      MaterialButton(
+      ElevatedButton(
           child: Text("None"),
           onPressed: () {
             ecommerceProperties.status = Status.noneStatus;
             PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
           }),
-      MaterialButton(
+      ElevatedButton(
           child: Text("Added to basked"),
           onPressed: () {
             ecommerceProperties.status = Status.addedToBasket;
             PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
           }),
-      MaterialButton(
+      ElevatedButton(
           child: Text("Purchased"),
           onPressed: () {
             ecommerceProperties.status = Status.purchased;
             PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
           }),
-      MaterialButton(
+      ElevatedButton(
           child: Text("Viewed"),
           onPressed: () {
             ecommerceProperties.status = Status.viewed;
             PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
           }),
-      MaterialButton(
+      ElevatedButton(
           child: Text("Deleted From Basked"),
           onPressed: () {
             ecommerceProperties.status = Status.deletedFromBasket;
             PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
           }),
-      MaterialButton(
+      ElevatedButton(
           child: Text("Added to Whishlist"),
           onPressed: () {
             ecommerceProperties.status = Status.addedToWishlist;
             PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
           }),
-      MaterialButton(
+      ElevatedButton(
           child: Text("Deleted from Whishlist"),
           onPressed: () {
             ecommerceProperties.status = Status.deletedFromWishlist;
             PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
           }),
-      MaterialButton(
+      ElevatedButton(
           child: Text("Checkout"),
           onPressed: () {
             ecommerceProperties.status = Status.checkout;
