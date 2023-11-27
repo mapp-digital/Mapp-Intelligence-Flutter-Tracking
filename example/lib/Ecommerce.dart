@@ -132,6 +132,114 @@ class Ecommerce extends StatelessWidget {
       },
       child: Text('Confirmation'),
     ));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.deletedFromBasket;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Deleted from basket")));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.addedToWishlist;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Added to wishlist")));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.deletedFromWishlist;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Deleted from wishlist")));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          var product1 = prepareProducts()[0];
+          var product2 = prepareProducts()[1];
+          //product1.quantity = 3;
+          //product2.quantity = 2;
+
+          var ecommerceParameters = getBaseEcommerce();
+
+          ecommerceParameters.products = [product1, product2];
+          ecommerceParameters.currency = "EUR";
+          ecommerceParameters.orderID = "1234nb5";
+          ecommerceParameters.paymentMethod = "Credit Card";
+          ecommerceParameters.shippingServiceProvider = "DHL";
+          ecommerceParameters.shippingSpeed = "express";
+          ecommerceParameters.shippingCost = 20.89;
+          ecommerceParameters.couponValue = 10.18;
+          ecommerceParameters.orderValue =
+              calculateOrderValue(ecommerceParameters);
+          ecommerceParameters.status = Status.checkout;
+
+          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          pageEvent.ecommerceParameters = ecommerceParameters;
+
+          PluginMappintelligence.trackPageWithCustomData(pageEvent);
+        },
+        child: Text("Checkout")));
     return buttons;
   }
 
