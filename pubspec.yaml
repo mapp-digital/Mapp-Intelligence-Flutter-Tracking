@@ -1,14 +1,14 @@
 name: plugin_mappintelligence
 description: The MappIntelligence SDK allows you to track user activities, screen flow and media usage for an App. All data is send to the MappIntelligence tracking system for further analysis.
 
-# !! IMPORTANT !! WHEN UPDATES THIS VERSION, IT'S NEEDED TO UPDATE VERSION in 
+# !! IMPORTANT !! WHEN UPDATES THIS VERSION, IT'S NEEDED TO UPDATE VERSION in
 #`lib/plugin_mappintelligence` file in the method `updateCustomParams`
-version: 5.0.4+3
+version: 5.0.5
 
 homepage: https://github.com/mapp-digital/Mapp-Intelligence-Flutter-Tracking
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
@@ -18,7 +18,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -36,5 +35,3 @@ flutter:
         pluginClass: PluginMappintelligencePlugin
       ios:
         pluginClass: PluginMappintelligencePlugin
-
-
