@@ -101,7 +101,6 @@ static NSNumber* logLevelGlobal = nil;
     NSNumber* isEnabled = [NSNumber numberWithBool:[[MappIntelligence shared] anonymousTracking]];
     result(isEnabled);
   } else if ([@"trackPage" isEqualToString: call.method]) {
-    NSLog(@"page is tracked objc flutter");
     NSString* pageName = call.arguments[0];
     MIPageViewEvent* event = [[MIPageViewEvent alloc] init];
     event.pageName = pageName;

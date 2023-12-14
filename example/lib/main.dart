@@ -24,7 +24,7 @@ void main() async {
   await PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
 
-  await PluginMappintelligence.setLogLevel(LogLevel.debug);
+  await PluginMappintelligence.setLogLevel(LogLevel.all);
   await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   await PluginMappintelligence.setRequestInterval(1);
   await PluginMappintelligence.setEverId("0987654321");
