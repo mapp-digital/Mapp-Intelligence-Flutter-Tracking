@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
@@ -24,11 +26,11 @@ void main() async {
   await PluginMappintelligence.initialize(
       ["794940687426749"], 'http://tracker-int-01.webtrekk.net');
 
-  await PluginMappintelligence.setLogLevel(LogLevel.debug);
+  await PluginMappintelligence.setLogLevel(LogLevel.all);
   await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   await PluginMappintelligence.setRequestInterval(1);
   await PluginMappintelligence.setEverId("0987654321");
-  await PluginMappintelligence.setAnonymousTracking(false, [""]);
+  await PluginMappintelligence.setAnonymousTracking(true, [""]);
   await PluginMappintelligence.setUserMatchingEnabled(true);
   await PluginMappintelligence.enableCrashTracking(
       ExceptionType.allExceptionTypes);
@@ -79,24 +81,61 @@ class HomePage extends StatelessWidget {
     "Product Statuses"
   ];
 
+  Future<void> showConsentDialog(BuildContext context) async {
+    final everId = await PluginMappintelligence.getEverID();
+    if (everId.isNotEmpty) return;
+    WidgetsBinding.instance.addPostFrameCallback((duration) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text("Licence aggrement"),
+          content: Text("Do you accept?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  acceptAggrement(ctx);
+                },
+                child: Text("Ok")),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+                child: Text("Cancel")),
+          ],
+        ),
+      );
+    });
+  }
+
+  Future<void> acceptAggrement(BuildContext context) async {
+    //PluginMappintelligence.sendAndCleanData();
+    await PluginMappintelligence.setAnonymousTracking(false, []);
+    //await PluginMappintelligence.reset();
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorObservers: [
-        MappAnalyticsObserver([TrackingEvents.PUSH])
-      ],
-      theme: ThemeData.light(useMaterial3: true).copyWith(
-        appBarTheme: AppBarTheme(
-            backgroundColor: Color(0xFF00BAFF),
-            iconTheme: IconThemeData(color: Colors.white),
-            titleTextStyle: TextStyle(color: Colors.white, fontSize: 18)),
-      ),
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Mapp Intelligence Demo'),
-          ),
-          body: _buildListView(context)),
-    );
+    PluginMappintelligence.trackPage("HomePage", {});
+    return FutureBuilder(
+        future: showConsentDialog(context),
+        builder: (context, snapshot) => MaterialApp(
+              navigatorObservers: [
+                MappAnalyticsObserver([TrackingEvents.PUSH])
+              ],
+              theme: ThemeData.light(useMaterial3: true).copyWith(
+                appBarTheme: AppBarTheme(
+                    backgroundColor: Color(0xFF00BAFF),
+                    iconTheme: IconThemeData(color: Colors.white),
+                    titleTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 18)),
+              ),
+              home: Scaffold(
+                  appBar: AppBar(
+                    title: const Text('Mapp Intelligence Demo'),
+                  ),
+                  body: _buildListView(context)),
+            ));
   }
 
   Widget _determineWidget(int index) {

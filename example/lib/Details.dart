@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
@@ -111,7 +113,8 @@ class DetailsView extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
-        PluginMappintelligence.setAnonymousTracking(false, ['cs801'], true);
+        await PluginMappintelligence.setAnonymousTracking(
+            false, ['cs801'], true);
       },
       child: Text("Set anonymous tracking false \n generate new everID true"),
     ));
