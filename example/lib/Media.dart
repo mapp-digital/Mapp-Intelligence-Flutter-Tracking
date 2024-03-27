@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
+import 'package:plugin_mappintelligence_example/ManualMediaTracking.dart';
 import 'package:plugin_mappintelligence_example/VideoPlayer.dart';
 
 class Media extends StatelessWidget {
@@ -34,6 +35,14 @@ class Media extends StatelessWidget {
       },
       child: Text('Player Example2'),
     ));
+    buttons.add(ElevatedButton(
+        onPressed: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ManualMediaTracking()),
+          );
+        },
+        child: Text('Manual Media Tracking')));
     return buttons;
   }
 

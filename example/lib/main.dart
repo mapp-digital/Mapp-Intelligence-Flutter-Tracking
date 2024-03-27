@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
@@ -108,9 +106,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> acceptAggrement(BuildContext context) async {
-    //PluginMappintelligence.sendAndCleanData();
     await PluginMappintelligence.setAnonymousTracking(false, []);
-    //await PluginMappintelligence.reset();
     Navigator.pop(context);
   }
 
