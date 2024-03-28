@@ -1,3 +1,7 @@
+## 5.0.6
+
+Fixed bug - Fixed unexpected tracking behaviour for media tracking
+
 ## 5.0.5
 
 Fixed bug - everId not generated after anonymousTracking set to false

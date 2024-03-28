@@ -216,8 +216,8 @@ class MediaParameters {
   String? name;
   String? action;
   int? bandwith;
-  int? duration;
-  int? position;
+  num? duration;
+  num? position;
   bool? soundIsMuted;
   double? soundVolume;
   Map<int, String>? customCategories;

@@ -126,7 +126,7 @@ class PluginMappintelligence {
   }
 
   static Future<void> trackMedia(MediaEvent mediaEvent) async {
-    //print(jsonEncode(mediaEvent.toJson()), wrapWidth: 1024);
+    debugPrint(jsonEncode(mediaEvent.toJson()), wrapWidth: 1024);
     await _channel
         .invokeMethod('trackMedia', [jsonEncode(mediaEvent.toJson())]);
   }
@@ -214,7 +214,7 @@ class PluginMappintelligence {
 
   static Future<String> _updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pucspec.yaml plugin file
-    final flutterPluginVersion = "5.0.5";
+    final flutterPluginVersion = "5.0.6";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
     final result = await _channel
         .invokeMethod("updateCustomParams", [flutterPluginVersion]);

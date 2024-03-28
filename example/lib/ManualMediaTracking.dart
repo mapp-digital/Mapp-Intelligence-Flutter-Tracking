@@ -17,8 +17,8 @@ var incrementPosition = false;
 
 void trackMedia(BuildContext context, String action) {
   final mediaName = mediaNameController.text;
-  final duration = int.tryParse(durationController.text) ?? 0;
-  var position = int.tryParse(positionController.text) ?? 0;
+  final duration = num.tryParse(durationController.text) ?? 0;
+  var position = num.tryParse(positionController.text) ?? 0;
   if (mediaName.isEmpty) {
     showDialog(
         context: context,
