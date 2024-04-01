@@ -2,7 +2,7 @@ group 'com.example.plugin_mappintelligence'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.8.0'
+    ext.kotlin_version = '1.9.23'
     repositories {
         //mavenLocal()
         google()
@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -41,15 +41,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation ("com.mapp.sdk:intelligence-android:5.1.8")
-    implementation 'androidx.annotation:annotation:1.6.0'
-    implementation 'androidx.webkit:webkit:1.7.0'
-    implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation 'androidx.annotation:annotation:1.7.1'
+    implementation 'androidx.webkit:webkit:1.10.0'
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
 }
