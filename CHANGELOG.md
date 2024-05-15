@@ -1,3 +1,6 @@
+## 5.0.7
+Fixed bug on Android - duplicate records are send for use case when application starts with a optOut=true and some tracking records exists in the local database.
+
 ## 5.0.6
 
 Fixed bug - Fixed unexpected tracking behaviour for media tracking
