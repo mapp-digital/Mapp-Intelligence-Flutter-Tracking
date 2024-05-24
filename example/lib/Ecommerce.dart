@@ -72,7 +72,7 @@ class Ecommerce extends StatelessWidget {
         ecommerceParameters1.shippingSpeed = "highest";
         ecommerceParameters1.shippingServiceProvider = "DHL";
 
-        var pageEvent = PageViewEvent("TrackProductView");
+        var pageEvent = PageViewEvent("Product View");
         pageEvent.ecommerceParameters = ecommerceParameters1;
 
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
@@ -94,7 +94,7 @@ class Ecommerce extends StatelessWidget {
         ecommerceParameters1.status = Status.addedToBasket;
         ecommerceParameters1.products = [product1];
 
-        var pageEvent = PageViewEvent("TrackProductAddedToBasket");
+        var pageEvent = PageViewEvent("Product Added To Basket");
         pageEvent.ecommerceParameters = ecommerceParameters1;
 
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
@@ -125,7 +125,7 @@ class Ecommerce extends StatelessWidget {
             calculateOrderValue(ecommerceParameters);
         ecommerceParameters.status = Status.purchased;
 
-        var pageEvent = PageViewEvent("TrackProductConfirmed");
+        var pageEvent = PageViewEvent("Product Confirmed");
         pageEvent.ecommerceParameters = ecommerceParameters;
 
         PluginMappintelligence.trackPageWithCustomData(pageEvent);
@@ -153,7 +153,7 @@ class Ecommerce extends StatelessWidget {
               calculateOrderValue(ecommerceParameters);
           ecommerceParameters.status = Status.deletedFromBasket;
 
-          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          var pageEvent = PageViewEvent("Product Deleted From Basket");
           pageEvent.ecommerceParameters = ecommerceParameters;
 
           PluginMappintelligence.trackPageWithCustomData(pageEvent);
@@ -180,7 +180,7 @@ class Ecommerce extends StatelessWidget {
               calculateOrderValue(ecommerceParameters);
           ecommerceParameters.status = Status.addedToWishlist;
 
-          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          var pageEvent = PageViewEvent("Product Added to wishlist");
           pageEvent.ecommerceParameters = ecommerceParameters;
 
           PluginMappintelligence.trackPageWithCustomData(pageEvent);
@@ -207,7 +207,7 @@ class Ecommerce extends StatelessWidget {
               calculateOrderValue(ecommerceParameters);
           ecommerceParameters.status = Status.deletedFromWishlist;
 
-          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          var pageEvent = PageViewEvent("Product deleted from wishlist");
           pageEvent.ecommerceParameters = ecommerceParameters;
 
           PluginMappintelligence.trackPageWithCustomData(pageEvent);
@@ -234,7 +234,7 @@ class Ecommerce extends StatelessWidget {
               calculateOrderValue(ecommerceParameters);
           ecommerceParameters.status = Status.checkout;
 
-          var pageEvent = PageViewEvent("TrackProductConfirmed");
+          var pageEvent = PageViewEvent("Product checkout");
           pageEvent.ecommerceParameters = ecommerceParameters;
 
           PluginMappintelligence.trackPageWithCustomData(pageEvent);
