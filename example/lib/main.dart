@@ -61,8 +61,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final List<String> _screens = const [
     "Configuration",
     "Page Tracking",
@@ -111,8 +117,13 @@ class HomePage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     PluginMappintelligence.trackPage("HomePage", {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return FutureBuilder(
         future: showConsentDialog(context),
         builder: (context, snapshot) => MaterialApp(
