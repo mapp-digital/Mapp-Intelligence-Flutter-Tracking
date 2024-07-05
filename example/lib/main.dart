@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mapp_sdk/helper_classes.dart';
+import 'package:mapp_sdk/mapp_sdk.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/tracking/mapp_analytics_observer.dart';
@@ -37,7 +39,7 @@ void main() async {
   await PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;
-  //MappSdk.engage("183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
+  MappSdk.engage("183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
 
   runApp(MyApp());
 }

@@ -226,10 +226,11 @@ class PluginMappintelligence {
     final result = await _channel.invokeMethod("setUserMatchingEnabled", args);
     return result;
   }
-  //TODO: handle this in Android
+
   static Future<String> setEnableBackgroundSendout(bool enabled) async {
     final args = <String, bool>{"enabled": enabled};
-    final result = await _channel.invokeMethod("setEnableBackgroundSendout", args);
+    final result =
+        await _channel.invokeMethod("setEnableBackgroundSendout", args);
     return result;
   }
 

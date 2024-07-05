@@ -251,6 +251,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     this::class.java.name,
                     "Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: $params"
                 )
+
                 result.success(true)
             }
 
@@ -344,6 +345,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 }
             }
 
+            FlutterFunctions.SET_BACKGROUND_SENDOUT->{
+                result.success("ok")
+            }
             else -> result.notImplemented()
         }
     }
@@ -733,6 +737,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val IS_ANONYMOUS_TRACKING_ENABLE = "isAnonymousTrackingEnabled"
         const val PRINT_USAGE_STATISTICS_CALCULATION_LOG = "printUsageStatisticsCalculationLog"
         const val SET_TEMPORARY_SESSION_ID="setTemporarySessionId"
+        const val SET_BACKGROUND_SENDOUT="setEnableBackgroundSendout"
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
