@@ -76,6 +76,12 @@ class DetailsView extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
+        await PluginMappintelligence.optOutAndSendCurrentData(true);
+      },
+      child: Text('Show Gallery Permission'),
+    ));
+    buttons.add(ElevatedButton(
+      onPressed: () async {
         Map<dynamic, dynamic>? data =
             await PluginMappintelligence.getTrackIdsAndDomain();
         if (data != null) {

@@ -26,10 +26,11 @@ void main() async {
 
   await PluginMappintelligence.setLogLevel(LogLevel.all);
   await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
-  await PluginMappintelligence.setRequestInterval(1);
+  await PluginMappintelligence.setRequestInterval(5);
   await PluginMappintelligence.setEverId("0987654321");
   await PluginMappintelligence.setAnonymousTracking(true, [""]);
   await PluginMappintelligence.setUserMatchingEnabled(true);
+  await PluginMappintelligence.setEnableBackgroundSendout(true);
   await PluginMappintelligence.enableCrashTracking(
       ExceptionType.allExceptionTypes);
   await PluginMappintelligence.setTemporarySessionId("user-xyz-1234");
