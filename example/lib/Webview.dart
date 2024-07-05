@@ -49,7 +49,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
           MediaQuery.of(context).size.height -
               (Scaffold.of(context).appBarMaxHeight ??
                   MediaQuery.of(context).padding.top + kToolbarHeight),
-          'http://demoshop.webtrekk.com/web2app/index.html');
+          'https://demoshop.webtrekk.com/media/web2app/index.html');
       isInitialized = true;
     }
     super.didChangeDependencies();
