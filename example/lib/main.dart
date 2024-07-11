@@ -90,22 +90,26 @@ class _HomePageState extends State<HomePage> {
   Future<void> showConsentDialog(BuildContext context) async {
     WidgetsBinding.instance.addPostFrameCallback((duration) {
       showDialog(
+        barrierDismissible: false,
         context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text("User Tracking"),
-          content: Text("Do you accept tracking with Ever ID?"),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  acceptAggrement(ctx, false);
-                },
-                child: Text("Ok")),
-            TextButton(
-                onPressed: () {
-                  acceptAggrement(ctx, true);
-                },
-                child: Text("Cancel")),
-          ],
+        builder: (ctx) => PopScope(
+          canPop: false,
+          child: AlertDialog(
+            title: Text("User Tracking"),
+            content: Text("Do you accept tracking with Ever ID?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    acceptAggrement(ctx, false);
+                  },
+                  child: Text("Ok")),
+              TextButton(
+                  onPressed: () {
+                    acceptAggrement(ctx, true);
+                  },
+                  child: Text("Cancel")),
+            ],
+          ),
         ),
       );
     });
