@@ -30,7 +30,6 @@ void main() async {
   await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   await PluginMappintelligence.setRequestInterval(5);
   await PluginMappintelligence.setEverId("0987654321");
-  await PluginMappintelligence.setAnonymousTracking(true, [""]);
   await PluginMappintelligence.setUserMatchingEnabled(true);
   await PluginMappintelligence.setEnableBackgroundSendout(true);
   await PluginMappintelligence.enableCrashTracking(
@@ -89,23 +88,21 @@ class _HomePageState extends State<HomePage> {
   ];
 
   Future<void> showConsentDialog(BuildContext context) async {
-    final everId = await PluginMappintelligence.getEverID();
-    if (everId.isNotEmpty) return;
     WidgetsBinding.instance.addPostFrameCallback((duration) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text("Licence aggrement"),
-          content: Text("Do you accept?"),
+          title: Text("User Tracking"),
+          content: Text("Do you accept tracking with Ever ID?"),
           actions: [
             TextButton(
                 onPressed: () {
-                  acceptAggrement(ctx);
+                  acceptAggrement(ctx, false);
                 },
                 child: Text("Ok")),
             TextButton(
                 onPressed: () {
-                  Navigator.pop(ctx);
+                  acceptAggrement(ctx, true);
                 },
                 child: Text("Cancel")),
           ],
@@ -114,8 +111,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> acceptAggrement(BuildContext context) async {
-    await PluginMappintelligence.setAnonymousTracking(false, []);
+  Future<void> acceptAggrement(BuildContext context, bool anonymous) async {
+    await PluginMappintelligence.setAnonymousTracking(anonymous, []);
     Navigator.pop(context);
   }
 
