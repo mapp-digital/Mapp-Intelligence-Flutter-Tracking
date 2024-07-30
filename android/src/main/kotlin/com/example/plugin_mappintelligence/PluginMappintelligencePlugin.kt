@@ -576,6 +576,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     )
                     .setEverId(configAdapter.everId)
                     .sendAppVersionInEveryRequest(configAdapter.versionInEachRequest)
+                    .setUserMatchingEnabled(configAdapter.userMatchingEnabled)
 
             if (configAdapter.shouldMigrate) builder.enableMigration()
 
