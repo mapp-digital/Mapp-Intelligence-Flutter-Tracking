@@ -30,7 +30,7 @@ void main() async {
   await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
   await PluginMappintelligence.setRequestInterval(5);
   await PluginMappintelligence.setEverId("0987654321");
-  await PluginMappintelligence.setUserMatchingEnabled(false);
+  await PluginMappintelligence.setUserMatchingEnabled(true);
   await PluginMappintelligence.setEnableBackgroundSendout(true);
   await PluginMappintelligence.enableCrashTracking(
       ExceptionType.allExceptionTypes);
@@ -38,7 +38,7 @@ void main() async {
   await PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;
-  await MappSdk.engage(
+  MappSdk.engage(
       "183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
 
   runApp(MyApp());
