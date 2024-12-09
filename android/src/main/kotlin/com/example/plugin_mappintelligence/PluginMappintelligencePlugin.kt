@@ -15,11 +15,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.PluginRegistry
-import java.lang.Exception
-import java.util.*
 import org.json.JSONObject
-import webtrekk.android.sdk.ActiveConfig
-import webtrekk.android.sdk.Config
 import webtrekk.android.sdk.DefaultConfiguration
 import webtrekk.android.sdk.ExceptionType
 import webtrekk.android.sdk.Logger
@@ -36,7 +32,8 @@ import webtrekk.android.sdk.events.eventParams.PageParameters
 import webtrekk.android.sdk.events.eventParams.ProductParameters
 import webtrekk.android.sdk.events.eventParams.SessionParameters
 import webtrekk.android.sdk.events.eventParams.UserCategories
-import kotlin.collections.HashMap
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 /** PluginMappintelligencePlugin */
 class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -48,6 +45,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     private var mContext: Context? = null
     private var activity: Activity? = null
     private var flutterCookieManager: FlutterCookieManager? = null
+
+    private lateinit var instance: Webtrekk
+    private val configAdapter = ConfigAdapter()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "plugin_mappintelligence")
@@ -63,10 +63,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         flutterCookieManager = FlutterCookieManager(messenger)
     }
 
-    var webtrekkConfigurations: WebtrekkConfiguration.Builder? = null
-
-    var config: Config? = null
-
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             FlutterFunctions.GET_PLATFORM_VERSION -> {
@@ -74,129 +70,67 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.INITIALIZE -> {
-                val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()!!["trackIds"]
-                val trackDomain: String? =
-                    call.arguments<HashMap<String, String>>()!!["trackDomain"]
-                if (trackIds != null && trackDomain != null) {
-                    webtrekkConfigurations = WebtrekkConfiguration.Builder(
-                        trackIds,
-                        trackDomain
-                    ).disableAutoTracking()
-                        .enableCrashTracking(ExceptionType.NONE)
-
-                    mContext?.let {
-                        Webtrekk.getInstance().init(context = it, webtrekkConfigurations!!.build())
-                    }
-                }
-                result.success("Ok")
+                init(call, result)
             }
 
             FlutterFunctions.SET_LOG_LEVEL -> {
-                val logLevel = call.arguments<ArrayList<Int>>()!![0]
-                if (logLevel == 7) {
-                    webtrekkConfigurations?.logLevel(Logger.Level.NONE)
-                    Webtrekk.getInstance().setLogLevel(Logger.Level.NONE)
-                } else {
-                    webtrekkConfigurations?.logLevel(Logger.Level.BASIC)
-                    Webtrekk.getInstance().setLogLevel(Logger.Level.BASIC)
-                }
-                result.success("Ok")
+                setLogLevel(call, result)
             }
 
             FlutterFunctions.SET_USER_MATCHING_ENABLED -> {
-                val args = call.arguments<Map<String, Boolean>>()
-                val enabled = args?.get("enabled")
-                enabled?.let {
-                    webtrekkConfigurations?.setUserMatchingEnabled(it)
-                    Webtrekk.getInstance().setUserMatchingEnabled(it)
-                }
-                result.success("Ok")
+                setUserMatching(call, result)
             }
 
             FlutterFunctions.BATCH_SUPPORT -> {
-                val enable = call.arguments<ArrayList<Boolean>>()!![0]
-                val size = call.arguments<ArrayList<Int>>()!![1]
-                webtrekkConfigurations?.setBatchSupport(enable, size)
-                Webtrekk.getInstance().setBatchEnabled(enable)
-                Webtrekk.getInstance().setRequestPerBatch(size)
-                result.success("Ok")
-
+                setBatchSupport(call, result)
             }
 
             FlutterFunctions.SET_REQUEST_INTERVAL -> {
-                val requestInterval = call.arguments<ArrayList<Int>>()!![0]
-                webtrekkConfigurations?.requestsInterval(interval = requestInterval.toLong())
-                Webtrekk.getInstance().setRequestInterval(requestInterval.toLong())
-                result.success("Ok")
-
+                setRequestInterval(call, result)
             }
 
             FlutterFunctions.OPT_IN -> {
-                Webtrekk.getInstance().optOut(false)
-                result.success("Ok")
-
+                setOptIn(result)
             }
 
             FlutterFunctions.OPT_OUT_WITH_DATA -> {
-                val enable = call.arguments<ArrayList<Boolean>>()!![0]
-                Webtrekk.getInstance().optOut(true, enable)
-                result.success("Ok")
+                setOptOut(call, result)
             }
 
             FlutterFunctions.BUILD -> {
-                webtrekkConfigurations?.let {
-                    config = it.build()
-                    mContext?.let {
-                        Webtrekk.getInstance().init(it.applicationContext, config!!)
-                    }
-                }
-
-                result.success("Ok")
+                build(result)
             }
 
             FlutterFunctions.TRACK_PAGE -> {
-                val name = call.arguments<ArrayList<String>>()!![0]
-                // val param = call.arguments<ArrayList<HashMap<String,String>>>()[1]
-                Webtrekk.getInstance().trackCustomPage(name)
+                trackPage(call, result)
             }
 
             FlutterFunctions.TRACK_CUSTOM_PAGE -> {
-                val name = call.arguments<ArrayList<String>>()!![0]
-                val param = call.arguments<ArrayList<HashMap<String, String>>>()!![1]
-                Webtrekk.getInstance().trackCustomPage(name, param)
+                trackCustomPage(call, result)
             }
 
             FlutterFunctions.TRACK_OBJECT_PAGE_WITHOUT_DATA -> {
-                val name = call.arguments<ArrayList<String>>()!![0]
-                Webtrekk.getInstance().trackPage(PageViewEvent(name))
-                result.success(true)
+                trackObjectPage(call, result)
             }
 
             FlutterFunctions.TRACK_OBJECT_PAGE_WITH_DATA -> {
-                val json = call.arguments<ArrayList<String>>()!![0]
-                objectTrackingPage(json)
-                result.success(true)
+                trackObjectPageWithData(call, result)
             }
 
             FlutterFunctions.TRACK_ACTION -> {
-                val json = call.arguments<ArrayList<String>>()!![0]
-                objectAction(json)
+                trackAction(call, result)
             }
 
             FlutterFunctions.TRACK_WITHOUT_MEDIA_CODE -> {
-                val url = call.arguments<ArrayList<String>>()!![0]
-                Webtrekk.getInstance().trackUrl(Uri.parse(url))
+                trackUrl(call, result)
             }
 
             FlutterFunctions.TRACK_URL -> {
-                val mediaCode = call.arguments<ArrayList<String>>()!![1]
-                val url = call.arguments<ArrayList<String>>()!![0]
-                Webtrekk.getInstance().trackUrl(Uri.parse(url), mediaCode)
+                trackUrl(call, result)
             }
 
             FlutterFunctions.TRACK_MEDIA -> {
-                val json = call.arguments<ArrayList<String>>()!![0]
-                objectMedia(json)
+                trackMedia(call, result)
             }
 
             FlutterFunctions.TRACK_WEB_VIEW -> {
@@ -210,48 +144,19 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.RESET_CONFIG -> {
-                mContext?.let {
-                    Webtrekk.reset(it)
-                }
-                result.success("Ok")
+                reset(call, result)
             }
 
             FlutterFunctions.SET_TRACK_IDS_AND_DOMAIN -> {
-                val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()!!["trackIds"]
-                val trackDomain: String? =
-                    call.arguments<HashMap<String, String>>()!!["trackDomain"]
-                if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrBlank())
-                    Webtrekk.getInstance().setIdsAndDomain(trackIds, trackDomain)
-                result.success("Ok")
+                setTrackIdsAndDomain(call, result)
             }
 
             FlutterFunctions.GET_TRACK_IDS_AND_DOMAIN -> {
-                val trackIds = Webtrekk.getInstance().getTrackIds()
-                val trackDomain = Webtrekk.getInstance().getTrackDomain()
-                val map = mutableMapOf<Any, Any>()
-                map["trackIds"] = trackIds
-                map["trackDomain"] = trackDomain
-                result.success(map)
+                getTrackIdsAndDomain(call, result)
             }
 
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING -> {
-                val anonymousTracking: Boolean? =
-                    call.arguments<HashMap<String, Boolean>>()!!["anonymousTracking"]
-                val params =
-                    call.arguments<HashMap<String, List<String>>>()!!["params"] ?: emptyList()
-
-                anonymousTracking?.let {anonymous->
-                    Webtrekk.getInstance().anonymousTracking(
-                        enabled = anonymous,
-                        suppressParams = params.toSet(),
-                    )
-                }
-
-                Log.d(
-                    this::class.java.name,
-                    "Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: $params"
-                )
-                result.success(true)
+                setAnonymousTracking(call, result)
             }
 
             FlutterFunctions.ENABLE_ANONYMOUS_TRACKING_WITH_PARAMETERS -> {
@@ -263,60 +168,42 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.GET_EVER_ID -> {
-                val everId=Webtrekk.getInstance().getEverId()
-                result.success(everId ?: "")
+                getEverId(call, result)
             }
 
             FlutterFunctions.GET_USER_AGENT -> {
-                result.success(Webtrekk.getInstance().getUserAgent())
+                getUserAgent(call, result)
             }
 
             FlutterFunctions.SET_EVER_ID -> {
-                val everId = call.arguments<List<String>>()!![0]
-                Webtrekk.getInstance().setEverId(everId)
-                result.success("Ok")
+                setEverId(call, result)
             }
 
             FlutterFunctions.SEND_AND_CLEAN_DATA -> {
-                Webtrekk.getInstance().sendRequestsNowAndClean()
-                result.success("Ok")
+                sendAndCleanData(call, result)
             }
 
             FlutterFunctions.SET_SEND_APP_VERSION_IN_EVERY_REQUEST -> {
-                val sendAppVersion = call.arguments<ArrayList<Boolean>>()!![0]
-                Webtrekk.getInstance().setVersionInEachRequest(sendAppVersion)
-                result.success("Ok")
+                setSendAppVersion(call, result)
             }
 
             FlutterFunctions.GET_CURRENT_CONFIG -> {
-                val activeConfig = Webtrekk.getInstance().getCurrentConfiguration()
-                val map = activeConfig.toMap()
-                result.success(map)
+                getCurrentConfig(call, result)
             }
 
             FlutterFunctions.UPDATE_CUSTOM_PARAMS -> {
-                val flutterPluginVersion = call.arguments<List<String>>()!![0]
-                updateCustomParams(flutterPluginVersion)
+                call.arguments<List<String>>()?.get(0)?.let { flutterPluginVersion ->
+                    updateCustomParams(flutterPluginVersion)
+                }
                 result.success("Ok")
             }
 
             FlutterFunctions.ENABLE_CRASH_TRACKING -> {
-                val logLevelIndex = call.arguments<List<Int>>()!![0]
-                val validLogLevel =
-                    ExceptionType.values().map { it.ordinal }.contains(logLevelIndex)
-                val logLevel =
-                    if (validLogLevel) ExceptionType.values()[logLevelIndex] else ExceptionType.ALL
-                Webtrekk.getInstance().setExceptionLogLevel(logLevel)
-                result.success("Ok")
+                enableCrashTracking(call, result)
             }
 
             FlutterFunctions.TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE -> {
-                val name = call.arguments<HashMap<String, String>>()!!["name"] ?: ""
-                val message: String = call.arguments<HashMap<String, String>>()!!["message"] ?: ""
-                if (name.isNotEmpty() && message.isNotEmpty()) {
-                    Webtrekk.getInstance()
-                        .trackException(name, message)
-                }
+                trackExceptionWithNameAndMessage(call, result)
             }
 
             FlutterFunctions.TRACK_EXCEPTION_WITH_TYPE -> {
@@ -324,28 +211,413 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             }
 
             FlutterFunctions.RAISE_UNCAUGHT_EXCEPTION -> {
+                result.success("ok")
                 //Integer.parseInt("$$#@")
                 throw Exception("CUSTOM UNCAUGHT EXCEPTION")
+            }
+
+            FlutterFunctions.PRINT_USAGE_STATISTICS_CALCULATION_LOG -> {
+                printUsageStatisticsCalculationLog(call, result)
+            }
+
+            FlutterFunctions.SET_TEMPORARY_SESSION_ID -> {
+                setTemporarySessionId(call, result)
+            }
+
+            FlutterFunctions.SET_BACKGROUND_SENDOUT -> {
                 result.success("ok")
-            }
-
-            FlutterFunctions.PRINT_USAGE_STATISTICS_CALCULATION_LOG->{
-                val log=printUsageStatisticsCalculationLog()
-                result.success(log)
-            }
-
-            FlutterFunctions.SET_TEMPORARY_SESSION_ID->{
-                val sessionId=call.arguments<HashMap<String, String>>()?.get("temporarySessionId")
-                if(sessionId.isNullOrEmpty()){
-                    result.error("","Temporary session id should not be null or empty",null)
-                }else{
-                    Webtrekk.getInstance().setTemporarySessionId(sessionId)
-                    result.success("ok")
-                }
             }
 
             else -> result.notImplemented()
         }
+    }
+
+    private fun init(call: MethodCall, result: MethodChannel.Result) {
+        val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()!!["trackIds"]
+        val trackDomain: String? =
+            call.arguments<HashMap<String, String>>()!!["trackDomain"]
+        if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrBlank()) {
+            runOnPlugin(whenInitialized = {
+                instance.setIdsAndDomain(trackIds, trackDomain)
+            }, whenNotInitialized = {
+                configAdapter.trackDomain = trackDomain
+                configAdapter.trackIds = trackIds
+            })
+        }
+        result.success("Ok")
+    }
+
+    private fun setLogLevel(call: MethodCall, result: MethodChannel.Result) {
+        val logLevel = call.arguments<ArrayList<Int>>()!![0]
+        val nativeLogLevel = if (logLevel == 7) Logger.Level.NONE else Logger.Level.BASIC
+        runOnPlugin(whenInitialized = {
+            instance.setLogLevel(nativeLogLevel)
+        }, whenNotInitialized = {
+            configAdapter.logLevel = nativeLogLevel
+        })
+        result.success("Ok")
+    }
+
+    private fun setUserMatching(call: MethodCall, result: MethodChannel.Result) {
+        val args = call.arguments<Map<String, Boolean>>()
+        val enabled = args?.get("enabled") ?: false
+        runOnPlugin(whenInitialized = {
+            instance.setUserMatchingEnabled(enabled)
+        }, whenNotInitialized = {
+            configAdapter.userMatchingEnabled = enabled
+        })
+        result.success("Ok")
+    }
+
+    private fun setBatchSupport(call: MethodCall, result: MethodChannel.Result) {
+        val enable = call.arguments<ArrayList<Boolean>>()!![0]
+        val size = call.arguments<ArrayList<Int>>()!![1]
+        runOnPlugin(whenInitialized = {
+            instance.setBatchEnabled(enable)
+            instance.setRequestPerBatch(size)
+        }, whenNotInitialized = {
+            configAdapter.batchSupport = enable
+            configAdapter.requestPerBatch = size
+        })
+        result.success("Ok")
+    }
+
+    private fun setRequestInterval(call: MethodCall, result: MethodChannel.Result) {
+        val requestInterval = call.arguments<ArrayList<Int>>()!![0]
+        runOnPlugin(whenInitialized = {
+            instance.setRequestInterval(requestInterval.toLong())
+        }, whenNotInitialized = {
+            configAdapter.requestsIntervalMinutes = requestInterval
+        })
+        result.success("Ok")
+    }
+
+    private fun setOptOut(call: MethodCall, result: MethodChannel.Result) {
+        val enable = call.arguments<ArrayList<Boolean>>()!![0]
+        runOnPlugin(whenInitialized = {
+            instance.optOut(true, enable)
+        })
+        result.success("Ok")
+    }
+
+    private fun setOptIn(result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            instance.optOut(false)
+        })
+        result.success("Ok")
+    }
+
+    private fun trackPage(call: MethodCall, result: MethodChannel.Result) {
+        val name = call.arguments<ArrayList<String>>()!![0]
+        runOnPlugin(whenInitialized = {
+            instance.trackCustomPage(name)
+        })
+        result.success("Ok")
+    }
+
+    private fun trackCustomPage(call: MethodCall, result: MethodChannel.Result) {
+        val name = call.arguments<ArrayList<String>>()!![0]
+        val param = call.arguments<ArrayList<HashMap<String, String>>>()!![1]
+        runOnPlugin(whenInitialized = {
+            instance.trackCustomPage(name, param)
+        })
+        result.success("Ok")
+    }
+
+    private fun trackObjectPage(call: MethodCall, result: MethodChannel.Result) {
+        val name = call.arguments<ArrayList<String>>()!![0]
+        runOnPlugin(whenInitialized = {
+            instance.trackPage(PageViewEvent(name))
+        })
+        result.success("Ok")
+    }
+
+    private fun trackObjectPageWithData(call: MethodCall, result: MethodChannel.Result) {
+        val json = call.arguments<ArrayList<String>>()!![0]
+        runOnPlugin(whenInitialized = {
+            val jsonObject = JSONObject(json)
+            val name: String = jsonObject.getString("name")
+            val pageViewEvent = PageViewEvent(name)
+            val pageParameters: PageParameters? = toPageParams(jsonObject)
+            val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
+            val userCategories: UserCategories? = toUserCategories(jsonObject)
+            val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
+            val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
+            pageViewEvent.campaignParameters = campaignParameters
+            pageViewEvent.pageParameters = pageParameters
+            pageViewEvent.sessionParameters = sessionParameters
+            pageViewEvent.userCategories = userCategories
+            pageViewEvent.eCommerceParameters = eCommerceParameters
+            instance.trackPage(pageViewEvent)
+        })
+        result.success(true)
+    }
+
+    private fun trackAction(call: MethodCall, result: MethodChannel.Result) {
+        val json = call.arguments<ArrayList<String>>()!![0]
+        runOnPlugin(whenInitialized = {
+            val jsonObject = JSONObject(json)
+            val name: String = jsonObject.getString("name")
+            val pageViewEvent = ActionEvent(name)
+            val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
+            val eventParameters: EventParameters? = toEvenParam(jsonObject)
+            val userCategories: UserCategories? = toUserCategories(jsonObject)
+            val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
+            val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
+            pageViewEvent.eventParameters = eventParameters
+            pageViewEvent.campaignParameters = campaignParameters
+            pageViewEvent.sessionParameters = sessionParameters
+            pageViewEvent.userCategories = userCategories
+            pageViewEvent.eCommerceParameters = eCommerceParameters
+            instance.trackAction(pageViewEvent)
+        })
+        result.success("Ok")
+    }
+
+    private fun trackUrl(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val url = call.arguments<ArrayList<String>>()?.get(0)
+            val mediaCode = call.arguments<ArrayList<String>>()?.get(1)
+            if (mediaCode == null)
+                instance.trackUrl(Uri.parse(url))
+            else
+                instance.trackUrl(Uri.parse(url), mediaCode)
+        })
+        result.success("Ok")
+    }
+
+    private fun trackMedia(call: MethodCall, result: MethodChannel.Result) {
+        val json = call.arguments<ArrayList<String>>()?.get(0)
+        runOnPlugin(whenInitialized = {
+            json?.let {
+                val jsonObject = JSONObject(it)
+                val name: String = jsonObject.getString("name")
+                val mediaParameters: MediaParameters? = toMediaParameters(jsonObject)
+                if (mediaParameters != null) {
+                    val pageViewEvent = MediaEvent(name, mediaParameters)
+                    val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
+                    val eventParameters: EventParameters? = toEvenParam(jsonObject)
+                    val eCommerceParameters: ECommerceParameters? =
+                        toECommerceParameters(jsonObject)
+                    pageViewEvent.eventParameters = eventParameters
+                    pageViewEvent.sessionParameters = sessionParameters
+                    pageViewEvent.eCommerceParameters = eCommerceParameters
+                    Webtrekk.getInstance().trackMedia(pageViewEvent)
+                }
+            }
+        })
+        result.success("Ok")
+    }
+
+    private fun setTrackIdsAndDomain(call: MethodCall, result: MethodChannel.Result) {
+        val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()?.get("trackIds")
+        val trackDomain: String? =
+            call.arguments<HashMap<String, String>>()?.get("trackDomain")
+        if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrEmpty()) {
+            runOnPlugin(whenInitialized = {
+                instance.setIdsAndDomain(trackIds, trackDomain)
+            }, whenNotInitialized = {
+                configAdapter.trackDomain = trackDomain
+                configAdapter.trackIds = trackIds
+            })
+        }
+        result.success("Ok")
+    }
+
+    private fun getTrackIdsAndDomain(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val trackIds = Webtrekk.getInstance().getTrackIds()
+            val trackDomain = Webtrekk.getInstance().getTrackDomain()
+            val map = mutableMapOf<Any, Any>()
+            map["trackIds"] = trackIds
+            map["trackDomain"] = trackDomain
+            result.success(map)
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized", null)
+        })
+    }
+
+    private fun setAnonymousTracking(call: MethodCall, result: MethodChannel.Result) {
+        val anonymousTracking: Boolean =
+            call.arguments<HashMap<String, Boolean>>()?.get("anonymousTracking") ?: false
+        val params =
+            call.arguments<HashMap<String, List<String>>>()?.get("params") ?: emptySet()
+        Log.d(
+            this::class.java.name,
+            "Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: $params"
+        )
+        runOnPlugin(whenInitialized = {
+            instance.anonymousTracking(
+                enabled = anonymousTracking,
+                suppressParams = params.toSet(),
+            )
+        }, whenNotInitialized = {
+            configAdapter.anonymousTracking = anonymousTracking
+            configAdapter.suppressParams = params.toSet()
+        })
+        result.success(true)
+    }
+
+    private fun getEverId(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val everId = instance.getEverId()
+            result.success(everId ?: "")
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized!", null)
+        })
+    }
+
+    private fun setEverId(call: MethodCall, result: MethodChannel.Result) {
+        call.arguments<List<String>>()?.get(0)?.let { everId ->
+            runOnPlugin(whenInitialized = {
+                instance.setEverId(everId)
+            }, whenNotInitialized = {
+                configAdapter.everId = everId
+            })
+        }
+        result.success("Ok")
+    }
+
+    private fun getUserAgent(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val userAgent = instance.getUserAgent()
+            result.success(userAgent ?: "")
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized!", null)
+        })
+    }
+
+    private fun sendAndCleanData(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            instance.sendRequestsNowAndClean()
+            result.success("Ok")
+        })
+    }
+
+    private fun setSendAppVersion(call: MethodCall, result: MethodChannel.Result) {
+        val sendAppVersion = call.arguments<ArrayList<Boolean>>()?.get(0) ?: false
+        runOnPlugin(whenInitialized = {
+            instance.setVersionInEachRequest(sendAppVersion)
+            result.success("Ok")
+        }, whenNotInitialized = {
+            configAdapter.versionInEachRequest = sendAppVersion
+        })
+    }
+
+    private fun getCurrentConfig(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val activeConfig = instance.getCurrentConfiguration()
+            val map = activeConfig.toMap()
+            result.success(map)
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized!", null)
+        })
+    }
+
+    private fun enableCrashTracking(call: MethodCall, result: MethodChannel.Result) {
+        val logLevelIndex = call.arguments<List<Int>>()?.get(0)
+        val level = ExceptionType.entries.firstOrNull { it.ordinal == logLevelIndex }
+            ?: ExceptionType.ALL
+        runOnPlugin(whenInitialized = {
+            instance.setExceptionLogLevel(level)
+        }, whenNotInitialized = {
+            configAdapter.exceptionLogLevel = level
+        })
+        result.success("Ok")
+    }
+
+    private fun trackExceptionWithNameAndMessage(call: MethodCall, result: MethodChannel.Result) {
+        val name = call.arguments<HashMap<String, String>>()?.get("name") ?: ""
+        val message: String = call.arguments<HashMap<String, String>>()?.get("message") ?: ""
+        if (name.isNotEmpty() && message.isNotEmpty()) {
+            runOnPlugin(whenInitialized = {
+                instance.trackException(name, message)
+            }, whenNotInitialized = {
+                result.error("Not Initialized", "Mapp SDK not initialized!", null)
+            })
+        }
+    }
+
+    private fun printUsageStatisticsCalculationLog(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
+        runOnPlugin(whenInitialized = {
+            val currentConfig = instance.getCurrentConfiguration()
+            val log = currentConfig.printUsageStatisticCalculation()
+            result.success(log)
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized!", null)
+        })
+    }
+
+    private fun setTemporarySessionId(call: MethodCall, result: MethodChannel.Result) {
+        call.arguments<HashMap<String, String>>()?.get("temporarySessionId")?.let { sessionId ->
+            runOnPlugin(whenInitialized = {
+                instance.setTemporarySessionId(sessionId)
+            }, whenNotInitialized = {
+                configAdapter.temporarySessionId = sessionId
+            })
+        }
+
+        result.success("ok")
+    }
+
+    private fun build(result: MethodChannel.Result) {
+        runOnPlugin(whenNotInitialized = {
+            val builder =
+                WebtrekkConfiguration.Builder(configAdapter.trackIds, configAdapter.trackDomain)
+                    .logLevel(configAdapter.logLevel)
+                    .enableCrashTracking(configAdapter.exceptionLogLevel)
+                    .setBatchSupport(configAdapter.batchSupport, configAdapter.requestPerBatch)
+                    .requestsInterval(
+                        TimeUnit.MINUTES,
+                        configAdapter.requestsIntervalMinutes.toLong()
+                    )
+                    .setEverId(configAdapter.everId)
+                    .sendAppVersionInEveryRequest(configAdapter.versionInEachRequest)
+                    .setUserMatchingEnabled(configAdapter.userMatchingEnabled)
+
+            if (configAdapter.shouldMigrate) builder.enableMigration()
+
+            if (!configAdapter.autoTracking) builder.disableAutoTracking()
+
+            if (!configAdapter.activityAutoTracking) builder.disableActivityAutoTracking()
+
+            if (!configAdapter.fragmentsAutoTracking) builder.disableFragmentsAutoTracking()
+
+            mContext?.let {
+                Webtrekk.getInstance().init(it, builder.build())
+                instance = Webtrekk.getInstance().apply {
+                    this.anonymousTracking(
+                        configAdapter.anonymousTracking,
+                        configAdapter.suppressParams
+                    )
+                    this.setTemporarySessionId(configAdapter.temporarySessionId)
+                }
+            }
+        }, whenInitialized = {})
+        result.success("Ok")
+    }
+
+    private fun reset(call: MethodCall, result: MethodChannel.Result) {
+        mContext?.let {
+            runOnPlugin(whenInitialized = {
+                Webtrekk.reset(it)
+                instance = Webtrekk.getInstance()
+                instance.setIdsAndDomain(configAdapter.trackIds, configAdapter.trackDomain)
+            })
+        }
+        result.success("Ok")
+    }
+
+    /**
+     * Helper function to execute actions based on Webtrekk instance state
+     * Provide two functions as input parameters to be executed if instance is initialized or not
+     */
+    private fun runOnPlugin(whenInitialized: () -> Unit, whenNotInitialized: (() -> Unit)? = null) {
+        if (::instance.isInitialized) whenInitialized.invoke()
+        else whenNotInitialized?.invoke()
     }
 
     private fun updateCustomParams(flutterPluginVersion: String) {
@@ -370,40 +642,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         flutterCookieManager = null
     }
 
-    private fun objectTrackingPage(data: String) {
-        val jsonObject = JSONObject(data)
-        val name: String = jsonObject.getString("name")
-        val pageViewEvent = PageViewEvent(name)
-        val pageParameters: PageParameters? = toPageParams(jsonObject)
-        val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
-        val userCategories: UserCategories? = toUserCategories(jsonObject)
-        val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
-        val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
-        pageViewEvent.campaignParameters = campaignParameters
-        pageViewEvent.pageParameters = pageParameters
-        pageViewEvent.sessionParameters = sessionParameters
-        pageViewEvent.userCategories = userCategories
-        pageViewEvent.eCommerceParameters = eCommerceParameters
-        Webtrekk.getInstance().trackPage(pageViewEvent)
-    }
-
-    private fun objectAction(data: String) {
-        val jsonObject = JSONObject(data)
-        val name: String = jsonObject.getString("name")
-        val pageViewEvent = ActionEvent(name)
-        val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
-        val eventParameters: EventParameters? = toEvenParam(jsonObject)
-        val userCategories: UserCategories? = toUserCategories(jsonObject)
-        val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
-        val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
-        pageViewEvent.eventParameters = eventParameters
-        pageViewEvent.campaignParameters = campaignParameters
-        pageViewEvent.sessionParameters = sessionParameters
-        pageViewEvent.userCategories = userCategories
-        pageViewEvent.eCommerceParameters = eCommerceParameters
-        Webtrekk.getInstance().trackAction(pageViewEvent)
-    }
-
     companion object {
         /**
          * Registers a plugin implementation that uses the stable `io.flutter.plugin.common`
@@ -424,21 +662,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         }
     }
 
-    private fun objectMedia(data: String) {
-        val jsonObject = JSONObject(data)
-        val name: String = jsonObject.getString("name")
-        val mediaParameters: MediaParameters? = toMediaParameters(jsonObject)
-        if (mediaParameters != null) {
-            val pageViewEvent = MediaEvent(name, mediaParameters)
-            val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
-            val eventParameters: EventParameters? = toEvenParam(jsonObject)
-            val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
-            pageViewEvent.eventParameters = eventParameters
-            pageViewEvent.sessionParameters = sessionParameters
-            pageViewEvent.eCommerceParameters = eCommerceParameters
-            Webtrekk.getInstance().trackMedia(pageViewEvent)
-        }
-    }
 
     private fun toMediaParameters(json: JSONObject): MediaParameters? {
         val pageParameters: MediaParameters
@@ -679,12 +902,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         return mapp
     }
 
-    private fun printUsageStatisticsCalculationLog():String {
-        val currentConfig = Webtrekk.getInstance().getCurrentConfiguration()
-        val log=currentConfig.printUsageStatisticCalculation()
-        return log
-    }
-
     val iOS: String = "Only iOS function"
 
     object FlutterFunctions {
@@ -732,7 +949,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             "enableAnonymousTrackingWithParameters"
         const val IS_ANONYMOUS_TRACKING_ENABLE = "isAnonymousTrackingEnabled"
         const val PRINT_USAGE_STATISTICS_CALCULATION_LOG = "printUsageStatisticsCalculationLog"
-        const val SET_TEMPORARY_SESSION_ID="setTemporarySessionId"
+        const val SET_TEMPORARY_SESSION_ID = "setTemporarySessionId"
+        const val SET_BACKGROUND_SENDOUT = "setEnableBackgroundSendout"
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

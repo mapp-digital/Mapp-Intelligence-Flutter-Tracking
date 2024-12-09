@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mapp_sdk/helper_classes.dart';
+import 'package:mapp_sdk/mapp_sdk.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/tracking/mapp_analytics_observer.dart';
@@ -26,17 +28,18 @@ void main() async {
 
   await PluginMappintelligence.setLogLevel(LogLevel.all);
   await PluginMappintelligence.setBatchSupportEnabledWithSize(false, 150);
-  await PluginMappintelligence.setRequestInterval(1);
+  await PluginMappintelligence.setRequestInterval(5);
   await PluginMappintelligence.setEverId("0987654321");
-  await PluginMappintelligence.setAnonymousTracking(true, [""]);
-  await PluginMappintelligence.setUserMatchingEnabled(true);
+  await PluginMappintelligence.setUserMatchingEnabled(false);
+  await PluginMappintelligence.setEnableBackgroundSendout(true);
   await PluginMappintelligence.enableCrashTracking(
       ExceptionType.allExceptionTypes);
   await PluginMappintelligence.setTemporarySessionId("user-xyz-1234");
   await PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;
-  //MappSdk.engage("183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
+  await MappSdk.engage(
+      "183408d0cd3632.83592719", "", SERVER.L3, "206974", "5963");
 
   runApp(MyApp());
 }
@@ -86,33 +89,35 @@ class _HomePageState extends State<HomePage> {
   ];
 
   Future<void> showConsentDialog(BuildContext context) async {
-    final everId = await PluginMappintelligence.getEverID();
-    if (everId.isNotEmpty) return;
     WidgetsBinding.instance.addPostFrameCallback((duration) {
       showDialog(
+        barrierDismissible: false,
         context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text("Licence aggrement"),
-          content: Text("Do you accept?"),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  acceptAggrement(ctx);
-                },
-                child: Text("Ok")),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                },
-                child: Text("Cancel")),
-          ],
+        builder: (ctx) => PopScope(
+          canPop: false,
+          child: AlertDialog(
+            title: Text("User Tracking"),
+            content: Text("Do you accept tracking with Ever ID?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    acceptAggrement(ctx, false);
+                  },
+                  child: Text("Ok")),
+              TextButton(
+                  onPressed: () {
+                    acceptAggrement(ctx, true);
+                  },
+                  child: Text("Cancel")),
+            ],
+          ),
         ),
       );
     });
   }
 
-  Future<void> acceptAggrement(BuildContext context) async {
-    await PluginMappintelligence.setAnonymousTracking(false, []);
+  Future<void> acceptAggrement(BuildContext context, bool anonymous) async {
+    await PluginMappintelligence.setAnonymousTracking(anonymous, []);
     Navigator.pop(context);
   }
 

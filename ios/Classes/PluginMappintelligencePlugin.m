@@ -327,6 +327,10 @@ static NSNumber* logLevelGlobal = nil;
     NSNumber* isEnabled = call.arguments[@"enabled"];
     [[MappIntelligence shared] setEnableUserMatching:[isEnabled boolValue]];
     result(@"success");
+  } else if ([@"setEnableBackgroundSendout" isEqualToString: call.method]) {
+    NSNumber* isEnabled = call.arguments[@"enabled"];
+    [[MappIntelligence shared] setEnableBackgroundSendout:isEnabled];
+    result(@"success");
   } else if ([@"sendAndCleanData" isEqualToString: call.method]) {
     [[MIDefaultTracker sharedInstance] sendRequestFromDatabaseWithCompletionHandler:^(NSError * _Nullable error) {
         if (error) {
