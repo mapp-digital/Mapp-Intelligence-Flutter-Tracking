@@ -233,9 +233,11 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun init(call: MethodCall, result: MethodChannel.Result) {
-        val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()!!["trackIds"]
+        val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()
+            ?.getOrElse("trackIds") { emptyList() }
         val trackDomain: String? =
-            call.arguments<HashMap<String, String>>()!!["trackDomain"]
+            call.arguments<HashMap<String, String>>()?.getOrElse("trackDomain") { null }
+
         if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrBlank()) {
             runOnPlugin(whenInitialized = {
                 instance.setIdsAndDomain(trackIds, trackDomain)
@@ -248,7 +250,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setLogLevel(call: MethodCall, result: MethodChannel.Result) {
-        val logLevel = call.arguments<ArrayList<Int>>()!![0]
+        val logLevel = call.arguments<ArrayList<Int>>()?.getOrElse(0) { 7 }
         val nativeLogLevel = if (logLevel == 7) Logger.Level.NONE else Logger.Level.BASIC
         runOnPlugin(whenInitialized = {
             instance.setLogLevel(nativeLogLevel)
@@ -259,8 +261,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setUserMatching(call: MethodCall, result: MethodChannel.Result) {
-        val args = call.arguments<Map<String, Boolean>>()
-        val enabled = args?.get("enabled") ?: false
+        val enabled =
+            call.arguments<Map<String, Boolean>>()?.get("enabled") ?: false
         runOnPlugin(whenInitialized = {
             instance.setUserMatchingEnabled(enabled)
         }, whenNotInitialized = {
@@ -270,20 +272,20 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setBatchSupport(call: MethodCall, result: MethodChannel.Result) {
-        val enable = call.arguments<ArrayList<Boolean>>()!![0]
-        val size = call.arguments<ArrayList<Int>>()!![1]
+        val enabled = call.arguments<ArrayList<Boolean>>()?.getOrNull(0) ?: false
+        val size = call.arguments<ArrayList<Int>>()?.getOrNull(1) ?: 50
         runOnPlugin(whenInitialized = {
-            instance.setBatchEnabled(enable)
+            instance.setBatchEnabled(enabled)
             instance.setRequestPerBatch(size)
         }, whenNotInitialized = {
-            configAdapter.batchSupport = enable
+            configAdapter.batchSupport = enabled
             configAdapter.requestPerBatch = size
         })
         result.success("Ok")
     }
 
     private fun setRequestInterval(call: MethodCall, result: MethodChannel.Result) {
-        val requestInterval = call.arguments<ArrayList<Int>>()!![0]
+        val requestInterval = call.arguments<ArrayList<Int>>()?.getOrNull(0) ?: 15
         runOnPlugin(whenInitialized = {
             instance.setRequestInterval(requestInterval.toLong())
         }, whenNotInitialized = {
@@ -293,7 +295,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setOptOut(call: MethodCall, result: MethodChannel.Result) {
-        val enable = call.arguments<ArrayList<Boolean>>()!![0]
+        val enable = call.arguments<ArrayList<Boolean>>()?.getOrNull(0) ?: false
         runOnPlugin(whenInitialized = {
             instance.optOut(true, enable)
         })
@@ -308,89 +310,95 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun trackPage(call: MethodCall, result: MethodChannel.Result) {
-        val name = call.arguments<ArrayList<String>>()!![0]
-        runOnPlugin(whenInitialized = {
-            instance.trackCustomPage(name)
-        })
+        call.arguments<ArrayList<String>>()?.getOrNull(0)?.let { name ->
+            runOnPlugin(whenInitialized = {
+                instance.trackCustomPage(name)
+            })
+        }
+
         result.success("Ok")
     }
 
     private fun trackCustomPage(call: MethodCall, result: MethodChannel.Result) {
-        val name = call.arguments<ArrayList<String>>()!![0]
-        val param = call.arguments<ArrayList<HashMap<String, String>>>()!![1]
-        runOnPlugin(whenInitialized = {
-            instance.trackCustomPage(name, param)
-        })
+        val param = call.arguments<ArrayList<Map<String, String>>>()?.getOrNull(1) ?: emptyMap()
+        call.arguments<ArrayList<String>>()?.getOrNull(0)?.let { name ->
+            runOnPlugin(whenInitialized = {
+                instance.trackCustomPage(name, param)
+            })
+        }
         result.success("Ok")
     }
 
     private fun trackObjectPage(call: MethodCall, result: MethodChannel.Result) {
-        val name = call.arguments<ArrayList<String>>()!![0]
-        runOnPlugin(whenInitialized = {
-            instance.trackPage(PageViewEvent(name))
-        })
+        call.arguments<ArrayList<String>>()?.getOrNull(0)?.let { name ->
+            runOnPlugin(whenInitialized = {
+                instance.trackPage(PageViewEvent(name))
+            })
+        }
         result.success("Ok")
     }
 
     private fun trackObjectPageWithData(call: MethodCall, result: MethodChannel.Result) {
-        val json = call.arguments<ArrayList<String>>()!![0]
-        runOnPlugin(whenInitialized = {
-            val jsonObject = JSONObject(json)
-            val name: String = jsonObject.getString("name")
-            val pageViewEvent = PageViewEvent(name)
-            val pageParameters: PageParameters? = toPageParams(jsonObject)
-            val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
-            val userCategories: UserCategories? = toUserCategories(jsonObject)
-            val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
-            val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
-            pageViewEvent.campaignParameters = campaignParameters
-            pageViewEvent.pageParameters = pageParameters
-            pageViewEvent.sessionParameters = sessionParameters
-            pageViewEvent.userCategories = userCategories
-            pageViewEvent.eCommerceParameters = eCommerceParameters
-            instance.trackPage(pageViewEvent)
-        })
+        call.arguments<ArrayList<String>>()?.getOrNull(0)?.let { json ->
+            runOnPlugin(whenInitialized = {
+                val jsonObject = JSONObject(json)
+                val name: String = jsonObject.getString("name")
+                val pageViewEvent = PageViewEvent(name)
+                val pageParameters: PageParameters? = toPageParams(jsonObject)
+                val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
+                val userCategories: UserCategories? = toUserCategories(jsonObject)
+                val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
+                val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
+                pageViewEvent.campaignParameters = campaignParameters
+                pageViewEvent.pageParameters = pageParameters
+                pageViewEvent.sessionParameters = sessionParameters
+                pageViewEvent.userCategories = userCategories
+                pageViewEvent.eCommerceParameters = eCommerceParameters
+                instance.trackPage(pageViewEvent)
+            })
+        }
         result.success(true)
     }
 
     private fun trackAction(call: MethodCall, result: MethodChannel.Result) {
-        val json = call.arguments<ArrayList<String>>()!![0]
-        runOnPlugin(whenInitialized = {
-            val jsonObject = JSONObject(json)
-            val name: String = jsonObject.getString("name")
-            val pageViewEvent = ActionEvent(name)
-            val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
-            val eventParameters: EventParameters? = toEvenParam(jsonObject)
-            val userCategories: UserCategories? = toUserCategories(jsonObject)
-            val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
-            val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
-            pageViewEvent.eventParameters = eventParameters
-            pageViewEvent.campaignParameters = campaignParameters
-            pageViewEvent.sessionParameters = sessionParameters
-            pageViewEvent.userCategories = userCategories
-            pageViewEvent.eCommerceParameters = eCommerceParameters
-            instance.trackAction(pageViewEvent)
-        })
+        call.arguments<ArrayList<String>>()?.getOrNull(0)?.let { json ->
+            runOnPlugin(whenInitialized = {
+                val jsonObject = JSONObject(json)
+                val name: String = jsonObject.optString("name")
+                val pageViewEvent = ActionEvent(name)
+                val sessionParameters: SessionParameters? = toSessionParameters(jsonObject)
+                val eventParameters: EventParameters? = toEvenParam(jsonObject)
+                val userCategories: UserCategories? = toUserCategories(jsonObject)
+                val eCommerceParameters: ECommerceParameters? = toECommerceParameters(jsonObject)
+                val campaignParameters: CampaignParameters? = toCampaignParameters(jsonObject)
+                pageViewEvent.eventParameters = eventParameters
+                pageViewEvent.campaignParameters = campaignParameters
+                pageViewEvent.sessionParameters = sessionParameters
+                pageViewEvent.userCategories = userCategories
+                pageViewEvent.eCommerceParameters = eCommerceParameters
+                instance.trackAction(pageViewEvent)
+            })
+        }
         result.success("Ok")
     }
 
     private fun trackUrl(call: MethodCall, result: MethodChannel.Result) {
-        runOnPlugin(whenInitialized = {
-            val url = call.arguments<ArrayList<String>>()?.get(0)
-            val mediaCode = call.arguments<ArrayList<String>>()?.get(1)
-            if (mediaCode == null)
-                instance.trackUrl(Uri.parse(url))
-            else
-                instance.trackUrl(Uri.parse(url), mediaCode)
-        })
+        val mediaCode = call.arguments<ArrayList<String>>()?.getOrNull(1)
+        call.arguments<ArrayList<String>>()?.getOrNull(0)?.let { url ->
+            runOnPlugin(whenInitialized = {
+                if (mediaCode == null)
+                    instance.trackUrl(Uri.parse(url))
+                else
+                    instance.trackUrl(Uri.parse(url), mediaCode)
+            })
+        }
         result.success("Ok")
     }
 
     private fun trackMedia(call: MethodCall, result: MethodChannel.Result) {
-        val json = call.arguments<ArrayList<String>>()?.get(0)
-        runOnPlugin(whenInitialized = {
-            json?.let {
-                val jsonObject = JSONObject(it)
+        call.arguments<ArrayList<String>>()?.getOrNull(0)?.let { json ->
+            runOnPlugin(whenInitialized = {
+                val jsonObject = JSONObject(json)
                 val name: String = jsonObject.getString("name")
                 val mediaParameters: MediaParameters? = toMediaParameters(jsonObject)
                 if (mediaParameters != null) {
@@ -404,15 +412,16 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     pageViewEvent.eCommerceParameters = eCommerceParameters
                     Webtrekk.getInstance().trackMedia(pageViewEvent)
                 }
-            }
-        })
+            })
+        }
         result.success("Ok")
     }
 
     private fun setTrackIdsAndDomain(call: MethodCall, result: MethodChannel.Result) {
-        val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()?.get("trackIds")
+        val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()
+            ?.getOrElse("trackIds") { emptyList() }
         val trackDomain: String? =
-            call.arguments<HashMap<String, String>>()?.get("trackDomain")
+            call.arguments<HashMap<String, String>>()?.getOrElse("trackDomain") { null }
         if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrEmpty()) {
             runOnPlugin(whenInitialized = {
                 instance.setIdsAndDomain(trackIds, trackDomain)
@@ -439,9 +448,11 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
     private fun setAnonymousTracking(call: MethodCall, result: MethodChannel.Result) {
         val anonymousTracking: Boolean =
-            call.arguments<HashMap<String, Boolean>>()?.get("anonymousTracking") ?: false
+            call.arguments<HashMap<String, Boolean>>()?.getOrElse("anonymousTracking") { null }
+                ?: false
         val params =
-            call.arguments<HashMap<String, List<String>>>()?.get("params") ?: emptySet()
+            call.arguments<HashMap<String, List<String>>>()?.getOrElse("params") { null }
+                ?: emptySet()
         Log.d(
             this::class.java.name,
             "Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: $params"
@@ -468,7 +479,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setEverId(call: MethodCall, result: MethodChannel.Result) {
-        call.arguments<List<String>>()?.get(0)?.let { everId ->
+        call.arguments<List<String>>()?.getOrNull(0)?.let { everId ->
             runOnPlugin(whenInitialized = {
                 instance.setEverId(everId)
             }, whenNotInitialized = {
@@ -495,7 +506,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setSendAppVersion(call: MethodCall, result: MethodChannel.Result) {
-        val sendAppVersion = call.arguments<ArrayList<Boolean>>()?.get(0) ?: false
+        val sendAppVersion = call.arguments<ArrayList<Boolean>>()?.getOrNull(0) ?: false
         runOnPlugin(whenInitialized = {
             instance.setVersionInEachRequest(sendAppVersion)
             result.success("Ok")
@@ -515,7 +526,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun enableCrashTracking(call: MethodCall, result: MethodChannel.Result) {
-        val logLevelIndex = call.arguments<List<Int>>()?.get(0)
+        val logLevelIndex = call.arguments<List<Int>>()?.getOrNull(0)
         val level = ExceptionType.entries.firstOrNull { it.ordinal == logLevelIndex }
             ?: ExceptionType.ALL
         runOnPlugin(whenInitialized = {
@@ -527,8 +538,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun trackExceptionWithNameAndMessage(call: MethodCall, result: MethodChannel.Result) {
-        val name = call.arguments<HashMap<String, String>>()?.get("name") ?: ""
-        val message: String = call.arguments<HashMap<String, String>>()?.get("message") ?: ""
+        val name = call.arguments<HashMap<String, String>>()?.getOrElse("name") { null } ?: ""
+        val message: String =
+            call.arguments<HashMap<String, String>>()?.getOrElse("message") { null } ?: ""
         if (name.isNotEmpty() && message.isNotEmpty()) {
             runOnPlugin(whenInitialized = {
                 instance.trackException(name, message)
@@ -552,13 +564,14 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setTemporarySessionId(call: MethodCall, result: MethodChannel.Result) {
-        call.arguments<HashMap<String, String>>()?.get("temporarySessionId")?.let { sessionId ->
-            runOnPlugin(whenInitialized = {
-                instance.setTemporarySessionId(sessionId)
-            }, whenNotInitialized = {
-                configAdapter.temporarySessionId = sessionId
-            })
-        }
+        call.arguments<HashMap<String, String>>()?.getOrElse("temporarySessionId") { null }
+            ?.let { sessionId ->
+                runOnPlugin(whenInitialized = {
+                    instance.setTemporarySessionId(sessionId)
+                }, whenNotInitialized = {
+                    configAdapter.temporarySessionId = sessionId
+                })
+            }
 
         result.success("ok")
     }
