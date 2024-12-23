@@ -237,7 +237,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             ?.getOrElse("trackIds") { emptyList() }
         val trackDomain: String? =
             call.arguments<HashMap<String, String>>()?.getOrElse("trackDomain") { null }
-
         if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrBlank()) {
             runOnPlugin(whenInitialized = {
                 instance.setIdsAndDomain(trackIds, trackDomain)
@@ -315,7 +314,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 instance.trackCustomPage(name)
             })
         }
-
         result.success("Ok")
     }
 
@@ -572,7 +570,114 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     configAdapter.temporarySessionId = sessionId
                 })
             }
+        })
+        result.success("Ok")
+    }
 
+    private fun setTrackIdsAndDomain(call: MethodCall, result: MethodChannel.Result) {
+        val trackIds = call.arguments<HashMap<String, ArrayList<String>>>()?.get("trackIds")
+        val trackDomain: String? =
+            call.arguments<HashMap<String, String>>()?.get("trackDomain")
+        if (!trackIds.isNullOrEmpty() && !trackDomain.isNullOrEmpty()) {
+            runOnPlugin(whenInitialized = {
+                instance.setIdsAndDomain(trackIds, trackDomain)
+            }, whenNotInitialized = {
+                configAdapter.trackDomain = trackDomain
+                configAdapter.trackIds = trackIds
+            })
+        }
+        result.success("Ok")
+    }
+
+    private fun getTrackIdsAndDomain(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val trackIds = Webtrekk.getInstance().getTrackIds()
+            val trackDomain = Webtrekk.getInstance().getTrackDomain()
+            val map = mutableMapOf<Any, Any>()
+            map["trackIds"] = trackIds
+            map["trackDomain"] = trackDomain
+            result.success(map)
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized", null)
+        })
+    }
+
+    private fun setAnonymousTracking(call: MethodCall, result: MethodChannel.Result) {
+        val anonymousTracking: Boolean =
+            call.arguments<HashMap<String, Boolean>>()?.get("anonymousTracking") ?: false
+        val params =
+            call.arguments<HashMap<String, List<String>>>()?.get("params") ?: emptySet()
+        Log.d(
+            this::class.java.name,
+            "Enable Anonymous tracking: anonymousTracking:${anonymousTracking}, params: $params"
+        )
+        runOnPlugin(whenInitialized = {
+            instance.anonymousTracking(
+                enabled = anonymousTracking,
+                suppressParams = params.toSet(),
+            )
+        }, whenNotInitialized = {
+            configAdapter.anonymousTracking = anonymousTracking
+            configAdapter.suppressParams = params.toSet()
+        })
+        result.success(true)
+    }
+
+    private fun getEverId(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val everId = instance.getEverId()
+            result.success(everId ?: "")
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized!", null)
+        })
+    }
+
+    private fun setEverId(call: MethodCall, result: MethodChannel.Result) {
+        call.arguments<List<String>>()?.get(0)?.let { everId ->
+            runOnPlugin(whenInitialized = {
+                instance.setEverId(everId)
+            }, whenNotInitialized = {
+                configAdapter.everId = everId
+            })
+        }
+        result.success("Ok")
+    }
+
+    private fun getUserAgent(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val userAgent = instance.getUserAgent()
+            result.success(userAgent ?: "")
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized!", null)
+        })
+    }
+
+    private fun sendAndCleanData(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            instance.sendRequestsNowAndClean()
+            result.success("Ok")
+        })
+    }
+
+    private fun setSendAppVersion(call: MethodCall, result: MethodChannel.Result) {
+        val sendAppVersion = call.arguments<ArrayList<Boolean>>()?.get(0) ?: false
+        runOnPlugin(whenInitialized = {
+            instance.setVersionInEachRequest(sendAppVersion)
+            result.success("Ok")
+        }, whenNotInitialized = {
+            configAdapter.versionInEachRequest = sendAppVersion
+        })
+    }
+
+    private fun getCurrentConfig(call: MethodCall, result: MethodChannel.Result) {
+        runOnPlugin(whenInitialized = {
+            val activeConfig = instance.getCurrentConfiguration()
+            val map = activeConfig.toMap()
+            result.success(map)
+        }, whenNotInitialized = {
+            result.error("Not Initialized", "Mapp SDK not initialized!", null)
+        })
+    }
         result.success("ok")
     }
 
