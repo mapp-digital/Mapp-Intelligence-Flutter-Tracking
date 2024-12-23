@@ -18,7 +18,7 @@ class WebviewForAndroid extends StatelessWidget {
         title: Text('WebviewForAndroid'),
       ),
       body: WebView(
-          initialUrl: 'http://demoshop.webtrekk.com/web2app/index.html',
+          initialUrl: 'https://demoshop.webtrekk.com/media/web2app/index.html',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) async {
 //            NOT WORKING HERE:
