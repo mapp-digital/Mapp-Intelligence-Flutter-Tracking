@@ -27,6 +27,7 @@ static NSNumber* logLevelGlobal = nil;
   if ([@"getPlatformVersion" isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
   }else if ([@"build" isEqualToString:call.method]) {
+    [[MIDefaultTracker sharedInstance] setIsItFlutter:YES];
     result(@"success");
 //do nothing, that method is only used for Android
   } else if ([@"initialize" isEqualToString:call.method]) {
