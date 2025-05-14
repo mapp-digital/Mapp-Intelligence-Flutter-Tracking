@@ -49,7 +49,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     private lateinit var instance: Webtrekk
     private val configAdapter = ConfigAdapter()
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "plugin_mappintelligence")
         channel?.setMethodCallHandler(this)
         mContext = flutterPluginBinding.applicationContext
@@ -226,6 +226,21 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
             FlutterFunctions.SET_BACKGROUND_SENDOUT -> {
                 result.success("ok")
+            }
+
+            FlutterFunctions.DISABLE_AUTO_TRACKING -> {
+                val disabled = call.arguments<Boolean>() == true
+                disableAutoTracking(disabled, result)
+            }
+
+            FlutterFunctions.DISABLE_ACTIVITY_TRACKING -> {
+                val disabled = call.arguments<Boolean>() == true
+                disableActivityTracking(disabled, result)
+            }
+
+            FlutterFunctions.DISABLE_FRAGMENT_TRACKING -> {
+                val disabled = call.arguments<Boolean>() == true
+                disableFragmentTracking(disabled, result)
             }
 
             else -> result.notImplemented()
@@ -506,12 +521,13 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     }
 
     private fun setSendAppVersion(call: MethodCall, result: MethodChannel.Result) {
-        val sendAppVersion = call.arguments<ArrayList<Boolean>>()?.getOrNull(0) ?: false
+        val sendAppVersion = call.arguments<List<Boolean>>()?.getOrNull(0) ?: false
         runOnPlugin(whenInitialized = {
             instance.setVersionInEachRequest(sendAppVersion)
             result.success("Ok")
         }, whenNotInitialized = {
             configAdapter.versionInEachRequest = sendAppVersion
+            result.success("Ok")
         })
     }
 
@@ -573,6 +589,21 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 })
             }
 
+        result.success("ok")
+    }
+
+    private fun disableAutoTracking(disabled: Boolean, result: MethodChannel.Result) {
+        configAdapter.autoTracking = !disabled
+        result.success("ok")
+    }
+
+    private fun disableActivityTracking(disabled: Boolean, result: MethodChannel.Result) {
+        configAdapter.activityAutoTracking = !disabled
+        result.success("ok")
+    }
+
+    private fun disableFragmentTracking(disabled: Boolean, result: MethodChannel.Result) {
+        configAdapter.fragmentsAutoTracking = !disabled
         result.success("ok")
     }
 
@@ -653,26 +684,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         }
         flutterCookieManager!!.dispose()
         flutterCookieManager = null
-    }
-
-    companion object {
-        /**
-         * Registers a plugin implementation that uses the stable `io.flutter.plugin.common`
-         * package.
-         *
-         *
-         * Calling this automatically initializes the plugin. However plugins initialized this way
-         * won't react to changes in activity or context, unlike [CameraPlugin].
-         */
-        fun registerWith(registrar: PluginRegistry.Registrar) {
-            registrar
-                .platformViewRegistry()
-                .registerViewFactory(
-                    "plugin_mappintelligence/webview",
-                    WebViewFactory(registrar.messenger(), registrar.view())
-                )
-            FlutterCookieManager(registrar.messenger())
-        }
     }
 
 
@@ -955,6 +966,9 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val TRACK_ERROR = "trackError"
         const val RAISE_UNCAUGHT_EXCEPTION = "raiseUncaughtException"
         const val GET_CURRENT_CONFIG = "getCurrentConfig"
+        const val DISABLE_AUTO_TRACKING = "disableAutoTracking"
+        const val DISABLE_FRAGMENT_TRACKING = "disableFragmentTracking"
+        const val DISABLE_ACTIVITY_TRACKING = "disableActivityTracking"
 
         //Only iOS
         const val SET_REQUEST_PER_QUEUE = "setRequestPerQueue"

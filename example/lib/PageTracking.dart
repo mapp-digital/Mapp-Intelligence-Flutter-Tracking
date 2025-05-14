@@ -8,14 +8,14 @@ class PageTracking extends StatelessWidget {
     buttons.add(ElevatedButton(
       onPressed: () async {
         String className = this.runtimeType.toString();
-        PluginMappintelligence.trackPage(className);
+        await PluginMappintelligence.trackPage(className);
       },
       child: Text('Track Page'),
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
         var pageParameters = {'uc709': 'Berlin'};
-        PluginMappintelligence.trackPage("customName", pageParameters);
+        await PluginMappintelligence.trackPage("customName", pageParameters);
       },
       child: Text('Track Custom Page'),
     ));
@@ -80,7 +80,7 @@ class PageTracking extends StatelessWidget {
         pageViewEvent.userCategories = userCategorises;
         pageViewEvent.ecommerceParameters = ecommerceProperties;
         pageViewEvent.campaignParameters = campaignProperties;
-        PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
+        await PluginMappintelligence.trackPageWithCustomData(pageViewEvent);
       },
       child: Text('Track Page with custom data'),
     ));

@@ -7,7 +7,6 @@ import com.example.plugin_mappintelligence.webviewflutter.FlutterCookieManager
 import com.example.plugin_mappintelligence.webviewflutter.WebViewFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
-import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /**
  * Java platform implementation of the webview_flutter plugin.

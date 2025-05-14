@@ -32,9 +32,12 @@ void main() async {
   await PluginMappintelligence.setEverId("0987654321");
   await PluginMappintelligence.setUserMatchingEnabled(true);
   await PluginMappintelligence.setEnableBackgroundSendout(true);
-  await PluginMappintelligence.enableCrashTracking(
-      ExceptionType.allExceptionTypes);
+  await PluginMappintelligence.enableCrashTracking(ExceptionType.allExceptionTypes);
+  await PluginMappintelligence.setSendAppVersionInEveryRequest(true);
   await PluginMappintelligence.setTemporarySessionId("user-xyz-1234");
+  await PluginMappintelligence.disableAutoTracking(true);
+  await PluginMappintelligence.disableActivityTracking(true);
+  await PluginMappintelligence.disableFragmentTracking(true);
   await PluginMappintelligence.build();
 
   // Initialize Mapp SDK plugin; It is required for user matching;
