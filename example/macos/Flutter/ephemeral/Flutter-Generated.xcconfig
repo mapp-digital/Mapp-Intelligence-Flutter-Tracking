@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/semsudin.tafilovic/flutter
-FLUTTER_APPLICATION_PATH=/Users/semsudin.tafilovic/VisualCodeProjects/intelligence-flutter-plugin/example
+FLUTTER_ROOT=/Users/stefan.stevanovic/development/flutter
+FLUTTER_APPLICATION_PATH=/Users/stefan.stevanovic/Documents/Mapp-Intelligence-Flutter-Tracking/example
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
