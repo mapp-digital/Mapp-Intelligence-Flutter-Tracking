@@ -7,6 +7,7 @@
   - issue: https://github.com/mapp-digital/Mapp-Intelligence-Flutter-Tracking/issues/8
 - Updated kotlin version: 2.0.20
 - Updated android targetSdk to version: 35
+- Updated native Mapp Intelligence iOS SDK to version 5.0.15
 
 ## 5.0.7
 
