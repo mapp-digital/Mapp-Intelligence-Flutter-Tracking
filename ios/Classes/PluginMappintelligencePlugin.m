@@ -296,6 +296,25 @@ static NSNumber* logLevelGlobal = nil;
     trackIDs = newArray;
     [[MappIntelligence shared] setIdsAndDomain:newArray onTrackdomain:domain];
     result(@"success");
+  } else if ([@"getIdsAndDomain" isEqualToString: call.method]) {
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    [dict setObject:[MappIntelligence getId] forKey:@"trackIds"];
+    [dict setObject:[MappIntelligence getUrl] forKey:@"trackDomain"];
+    result(dict);
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+
+    if (!error) {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"%@", jsonString);
+        result(jsonString);
+    } else {
+        NSLog(@"Error serializing dictionary: %@", error.localizedDescription);
+        result(error.localizedDescription);
+    }
+    
+    result(@"default success");
   } else if ([@"setSendAppVersionInEveryRequest" isEqualToString: call.method]) {
     NSNumber* isEnabled = call.arguments[0];
     [[MappIntelligence shared] setSendAppVersionInEveryRequest:[isEnabled boolValue]];
