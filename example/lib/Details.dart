@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
+import 'NativeBridge.dart';
 
 // ignore: must_be_immutable
 class DetailsView extends StatelessWidget {
@@ -76,7 +77,8 @@ class DetailsView extends StatelessWidget {
     ));
     buttons.add(ElevatedButton(
       onPressed: () async {
-        await PluginMappintelligence.optOutAndSendCurrentData(true);
+        await NativeBridge.askPhotoPermission();
+        //await PluginMappintelligence.optOutAndSendCurrentData(true);
       },
       child: Text('Show Gallery Permission'),
     ));
