@@ -119,4 +119,3 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 local.properties
 example/android/app/release-key
-example/android/app/google-services.json

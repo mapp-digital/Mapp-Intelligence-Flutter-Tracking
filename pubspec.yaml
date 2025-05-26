@@ -35,3 +35,6 @@ flutter:
         pluginClass: PluginMappintelligencePlugin
       ios:
         pluginClass: PluginMappintelligencePlugin
+
+false_secrets:
+  - "example/android/app/google-services.json"
