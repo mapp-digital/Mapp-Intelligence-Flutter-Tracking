@@ -1,6 +1,7 @@
 #import "PluginMappintelligencePlugin.h"
 #import <WebKit/WebKit.h>
 #import <UIKit/UIKit.h>
+#import <objc/runtime.h>
 #import "MappIntelligence.h"
 #import "MIWebViewTracker.h"
 #import "MIDefaultTracker.h"
@@ -268,6 +269,19 @@ static NSNumber* logLevelGlobal = nil;
         }
     });
     result(@"success");
+  } else if ([@"trackWebviewConfiguration" isEqualToString: call.method]) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIViewController *rootVC = UIApplication.sharedApplication.delegate.window.rootViewController;
+        WKWebView *webView = [self findWKWebViewInView:rootVC.view];
+
+            if (webView != nil) {
+                NSLog(@"✅ Found WKWebView: %@", webView);
+                [[MIWebViewTracker sharedInstance] updateConfiguration:webView.configuration];
+            } else {
+                NSLog(@"❌ WKWebView not found");
+            }
+    });
+    result(@"success");
   } else if ([@"disposeWebview" isEqualToString: call.method]) {
     if (self.webView) {
         self.webView.removeFromSuperview;
@@ -382,6 +396,39 @@ static NSNumber* logLevelGlobal = nil;
   } else { 
     result(FlutterMethodNotImplemented);
   }
+}
+
+-(WKWebView* ) findWKWebViewInView: (UIView *) view {
+    NSLog(@"%@", [view description]);
+    if ([view isKindOfClass:[WKWebView class]]) {
+        return (WKWebView *)view;
+    }
+    for (UIView *subview in view.subviews) {
+        WKWebView *found = [self findWKWebViewInView:subview];
+        if (found != nil) {
+            return found;
+        }
+    }
+    return nil;
+}
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Method original = class_getInstanceMethod(self, @selector(didAddSubview:));
+        Method swizzled = class_getInstanceMethod(self, @selector(swizzled_didAddSubview:));
+        method_exchangeImplementations(original, swizzled);
+    });
+}
+
+- (void)swizzled_didAddSubview:(UIView *)subview {
+    [self swizzled_didAddSubview:subview]; // call original
+    NSLog(@"swizling started");
+    if ([subview isKindOfClass:[WKWebView class]]) {
+        NSLog(@"✅ WKWebView added to hierarchy: %@", subview);
+        WKWebView *webView = (WKWebView *)subview;
+        // You can now modify webView.configuration, inject scripts, etc.
+    }
 }
 
 -(UIViewController* ) topViewController: (UIViewController* ) base {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewApp extends StatelessWidget {
   @override
@@ -21,36 +22,54 @@ class WebviewScreen extends StatefulWidget {
 
 class _WebviewScreenState extends State<WebviewScreen> {
   bool isInitialized = false;
+  late final WebViewController _controller;
+  
   @override
   void initState() {
+    _controller = WebViewController()
+  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  ..setNavigationDelegate(
+    NavigationDelegate(
+      onProgress: (int progress) {
+        // Update loading bar.
+      },
+      onPageStarted: (String url) {},
+      onPageFinished: (String url) {},
+      onHttpError: (HttpResponseError error) {},
+      onWebResourceError: (WebResourceError error) {},
+      onNavigationRequest: (NavigationRequest request) {
+        if (request.url.startsWith('https://www.youtube.com/')) {
+          return NavigationDecision.prevent;
+        }
+        return NavigationDecision.navigate;
+      },
+    ),
+  )
+  ..loadRequest(Uri.parse('https://demoshop.webtrekk.com/media/web2app/index.html'));
+  isInitialized = true;
     super.initState();
   }
 
   @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
-    PluginMappintelligence.disposeWebview();
+    //PluginMappintelligence.disposeWebview();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+    body: WebViewWidget(controller: _controller),
+  );
   }
 
   @override
   void didChangeDependencies() {
-    if (!isInitialized) {
-      PluginMappintelligence.trackWebview(
-          0.0,
-          Scaffold.of(context).appBarMaxHeight ??
-              MediaQuery.of(context).padding.top + kToolbarHeight,
-          MediaQuery.of(context).size.width,
-          MediaQuery.of(context).size.height -
-              (Scaffold.of(context).appBarMaxHeight ??
-                  MediaQuery.of(context).padding.top + kToolbarHeight),
-          'https://demoshop.webtrekk.com/media/web2app/index.html');
-      isInitialized = true;
+    if (isInitialized) {
+      
+        //find wkwebview for iOS 
+        PluginMappintelligence.trackWebviewConfiguration();
     }
     super.didChangeDependencies();
   }
