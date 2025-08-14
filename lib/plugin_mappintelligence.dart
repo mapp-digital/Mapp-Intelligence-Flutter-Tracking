@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'object_tracking_classes.dart';
 
 class PluginMappintelligence {
@@ -141,14 +143,39 @@ class PluginMappintelligence {
       await _channel.invokeMethod('trackWebview', [urlString]);
     }
   }
-  static Future<void> trackWebviewConfiguration() async {
+  static Future<void> trackWebviewConfiguration(WebViewController controller) async {
     print("trackWebviewConfiguration is pressed");
-    
+    if(Platform.isAndroid){
+      await Future.value();
+    }else{
       await _channel
           .invokeMethod('trackWebviewConfiguration', []);
+    }
   }
 
-//This method is only for iOS
+  static Future<void> trackWebPage(String name, String params) async{
+    if(Platform.isAndroid){
+        await _channel.invokeMethod('trackWebPage', <String,String>{
+          'name': name,
+          'params': params
+        });
+    }else{
+      return Future.value();
+    }
+  }
+
+  static Future<void> trackWebEvent(String name, String params) async{
+    if(Platform.isAndroid){
+        await _channel.invokeMethod('trackWebEvent', <String,String>{
+          'name': name,
+          'params': params
+        });
+    }else{
+      return Future.value();
+    }
+  }
+
+  //This method is only for iOS
   static Future<void> disposeWebview() async {
     await _channel.invokeMethod('disposeWebview');
   }

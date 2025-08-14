@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mapp_sdk/helper_classes.dart';
-import 'package:mapp_sdk/mapp_sdk.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:plugin_mappintelligence/tracking/mapp_analytics_observer.dart';
@@ -18,7 +16,6 @@ import 'Media.dart';
 import 'PageTracking.dart';
 import 'PageViewEvent.dart';
 import 'Webview.dart';
-import 'WebviewForAndroid.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,7 +80,6 @@ class _HomePageState extends State<HomePage> {
     "Campaign",
     "Ecommerce",
     "Webview",
-    "WebviewForAndroid",
     "Media",
     "Exception",
     "Page View Event",
@@ -168,16 +164,14 @@ class _HomePageState extends State<HomePage> {
       case 6:
         return WebviewApp();
       case 7:
-        return WebviewForAndroid();
-      case 8:
         return Media();
-      case 9:
+      case 8:
         return ExceptionTracking();
-      case 10:
+      case 9:
         return PageViewEventScreen();
-      case 11:
+      case 10:
         return FormTrackingScreen();
-      case 12:
+      case 11:
         return ProductStatuses();
       default:
         return DetailsView(index);
