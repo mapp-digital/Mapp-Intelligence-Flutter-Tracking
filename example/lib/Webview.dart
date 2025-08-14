@@ -59,10 +59,10 @@ class _WebviewScreenState extends State<WebviewScreen> {
 
   @override
   void didChangeDependencies() {
-    if (isInitialized) {
-      //find wkwebview for iOS
-      PluginMappintelligence.trackWebviewConfiguration(_controller);
-    }
+    // if (isInitialized) {
+    //   //find wkwebview for iOS
+    //   PluginMappintelligence.trackWebviewConfiguration(_controller);
+    // }
     super.didChangeDependencies();
   }
 }

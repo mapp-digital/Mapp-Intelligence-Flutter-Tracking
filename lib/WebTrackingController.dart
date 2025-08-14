@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -38,6 +39,10 @@ class WebTrackingController {
   }
 
   void _setupChannels() {
+    if(Platform.isIOS){
+      PluginMappintelligence.trackWebviewConfiguration();
+    }
+
     controller.setNavigationDelegate(NavigationDelegate(onPageFinished: (url) {
       print('Page finished loading: $url');
       handleLoad();
