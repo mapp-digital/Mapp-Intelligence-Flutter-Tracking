@@ -276,7 +276,7 @@ class PluginMappintelligence {
 
   static Future<String> _updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pubspec.yaml plugin file
-    final flutterPluginVersion = "5.0.8";
+    final flutterPluginVersion = "5.0.9";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
     final result = await _channel
         .invokeMethod("updateCustomParams", [flutterPluginVersion]);
