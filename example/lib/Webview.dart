@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plugin_mappintelligence/WebTrackingController.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -23,53 +24,44 @@ class WebviewScreen extends StatefulWidget {
 class _WebviewScreenState extends State<WebviewScreen> {
   bool isInitialized = false;
   late final WebViewController _controller;
-  
+
   @override
   void initState() {
-    _controller = WebViewController()
-  ..setJavaScriptMode(JavaScriptMode.unrestricted)
-  ..setNavigationDelegate(
-    NavigationDelegate(
-      onProgress: (int progress) {
-        // Update loading bar.
-      },
-      onPageStarted: (String url) {},
-      onPageFinished: (String url) {},
-      onHttpError: (HttpResponseError error) {},
-      onWebResourceError: (WebResourceError error) {},
-      onNavigationRequest: (NavigationRequest request) {
-        if (request.url.startsWith('https://www.youtube.com/')) {
-          return NavigationDecision.prevent;
-        }
-        return NavigationDecision.navigate;
-      },
-    ),
-  )
-  ..loadRequest(Uri.parse('https://demoshop.webtrekk.com/media/web2app/index.html'));
-  isInitialized = true;
+    _controller = WebViewController();
+    _controller.setJavaScriptMode(JavaScriptMode.unrestricted);
+
+    WebTrackingController(controller: _controller);
+
+    _controller.loadRequest(
+        Uri.parse('https://demoshop.webtrekk.com/media/web2app/index.html'));
+
+    isInitialized = true;
     super.initState();
   }
 
   @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
-    //PluginMappintelligence.disposeWebview();
+    // PluginMappintelligence.disposeWebview();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: WebViewWidget(controller: _controller),
-  );
+      body: Stack(
+        children: [
+          WebViewWidget(controller: _controller),
+        ],
+      ),
+    );
   }
 
   @override
   void didChangeDependencies() {
     if (isInitialized) {
-      
-        //find wkwebview for iOS 
-        PluginMappintelligence.trackWebviewConfiguration();
+      //find wkwebview for iOS
+      PluginMappintelligence.trackWebviewConfiguration(_controller);
     }
     super.didChangeDependencies();
   }

@@ -6,21 +6,19 @@ import android.net.Uri
 import android.util.Log
 import androidx.annotation.NonNull
 import com.example.plugin_mappintelligence.Parser.toMap
-import com.example.plugin_mappintelligence.webviewflutter.FlutterCookieManager
-import com.example.plugin_mappintelligence.webviewflutter.WebViewFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.PluginRegistry
 import org.json.JSONObject
 import webtrekk.android.sdk.DefaultConfiguration
 import webtrekk.android.sdk.ExceptionType
 import webtrekk.android.sdk.Logger
 import webtrekk.android.sdk.Webtrekk
 import webtrekk.android.sdk.WebtrekkConfiguration
+import webtrekk.android.sdk.WebtrekkWebInterface
 import webtrekk.android.sdk.events.ActionEvent
 import webtrekk.android.sdk.events.MediaEvent
 import webtrekk.android.sdk.events.PageViewEvent
@@ -44,23 +42,15 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
     private var channel: MethodChannel? = null
     private var mContext: Context? = null
     private var activity: Activity? = null
-    private var flutterCookieManager: FlutterCookieManager? = null
-
     private lateinit var instance: Webtrekk
     private val configAdapter = ConfigAdapter()
+
+    private lateinit var webInterface: WebtrekkWebInterface
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "plugin_mappintelligence")
         channel?.setMethodCallHandler(this)
         mContext = flutterPluginBinding.applicationContext
-        val messenger = flutterPluginBinding.binaryMessenger
-        flutterPluginBinding
-            .platformViewRegistry
-            .registerViewFactory(
-                "plugin_mappintelligence/webview",
-                WebViewFactory(messenger,  /*containerView=*/null)
-            )
-        flutterCookieManager = FlutterCookieManager(messenger)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -241,6 +231,28 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
             FlutterFunctions.DISABLE_FRAGMENT_TRACKING -> {
                 val disabled = call.arguments<Boolean>() == true
                 disableFragmentTracking(disabled, result)
+            }
+
+            FlutterFunctions.WEBVIEW_CONFIGURATION -> {
+                result.success("ok")
+            }
+
+            FlutterFunctions.TRACK_WEB_PAGE->{
+                if(this::webInterface.isInitialized){
+                    val name=call.arguments<Map<String,String>>()?.getOrElse("name") {null} ?: ""
+                    val params=call.arguments<Map<String,String>>()?.getOrElse("params") {null} ?: ""
+
+                    webInterface.trackCustomPage(name,params)
+                }
+            }
+
+            FlutterFunctions.TRACK_WEB_EVENT->{
+                if(this::webInterface.isInitialized){
+                    val name=call.arguments<Map<String,String>>()?.getOrElse("name") {null} ?: ""
+                    val params=call.arguments<Map<String,String>>()?.getOrElse("params") {null} ?: ""
+
+                    webInterface.trackCustomEvent(name,params)
+                }
             }
 
             else -> result.notImplemented()
@@ -639,6 +651,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     )
                     this.setTemporarySessionId(configAdapter.temporarySessionId)
                 }
+                webInterface= WebtrekkWebInterface(instance)
             }
         }, whenInitialized = {})
         result.success("Ok")
@@ -679,11 +692,6 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel?.setMethodCallHandler(null)
-        if (flutterCookieManager == null) {
-            return
-        }
-        flutterCookieManager!!.dispose()
-        flutterCookieManager = null
     }
 
 
@@ -936,6 +944,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val SET_REQUEST_INTERVAL = "setRequestInterval"
         const val OPT_IN = "OptIn"
         const val OPT_OUT_WITH_DATA = "optOutAndSendCurrentData"
+        const val TRACK_WEB_PAGE="trackWebPage"
+        const val TRACK_WEB_EVENT="trackWebEvent"
         const val TRACK_PAGE = "trackPage"
         const val TRACK_CUSTOM_PAGE = "trackCustomPage"
         const val TRACK_OBJECT_PAGE_WITHOUT_DATA = "trackPageWithCustomNameAndPageViewEvent"
@@ -978,6 +988,8 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
         const val PRINT_USAGE_STATISTICS_CALCULATION_LOG = "printUsageStatisticsCalculationLog"
         const val SET_TEMPORARY_SESSION_ID = "setTemporarySessionId"
         const val SET_BACKGROUND_SENDOUT = "setEnableBackgroundSendout"
+
+        const val WEBVIEW_CONFIGURATION = "trackWebviewConfiguration"
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
