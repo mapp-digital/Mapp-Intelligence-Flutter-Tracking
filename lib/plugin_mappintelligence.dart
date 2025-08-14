@@ -141,6 +141,12 @@ class PluginMappintelligence {
       await _channel.invokeMethod('trackWebview', [urlString]);
     }
   }
+  static Future<void> trackWebviewConfiguration() async {
+    print("trackWebviewConfiguration is pressed");
+    
+      await _channel
+          .invokeMethod('trackWebviewConfiguration', []);
+  }
 
 //This method is only for iOS
   static Future<void> disposeWebview() async {
