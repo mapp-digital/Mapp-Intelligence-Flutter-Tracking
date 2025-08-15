@@ -1,5 +1,8 @@
-## 5.0.8
+## 5.0.9
+- Refactored webview tracking (old webview from MappIntelligence plugin should be removed and all related imports; Official webview_flutter: ^4.13.0 shoud be used);
+- code cleanup (removed old webview tracking implementation)
 
+## 5.0.8
 - Updated native Mapp Intelligence SDK to version 5.1.11
 - Added missing methods to disable auto tracking, activity tracking and fragment tracking
   - disableAutoTracking(bool); disableActivityTracking(bool); disableFragmentTracking(bool);

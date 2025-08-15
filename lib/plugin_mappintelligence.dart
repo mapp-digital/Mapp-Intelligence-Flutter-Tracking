@@ -143,6 +143,7 @@ class PluginMappintelligence {
       await _channel.invokeMethod('trackWebview', [urlString]);
     }
   }
+  
   static Future<void> trackWebviewConfiguration() async {
     print("trackWebviewConfiguration is pressed");
     if(Platform.isAndroid){

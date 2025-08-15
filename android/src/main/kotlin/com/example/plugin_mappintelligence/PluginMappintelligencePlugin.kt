@@ -973,6 +973,7 @@ class PluginMappintelligencePlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
         const val TRACK_EXCEPTION_WITH_NAME_AND_MESSAGE = "trackExceptionWithNameAndMessage"
         const val TRACK_EXCEPTION_WITH_TYPE = "trackExceptionWithType"
+        
         const val TRACK_ERROR = "trackError"
         const val RAISE_UNCAUGHT_EXCEPTION = "raiseUncaughtException"
         const val GET_CURRENT_CONFIG = "getCurrentConfig"
