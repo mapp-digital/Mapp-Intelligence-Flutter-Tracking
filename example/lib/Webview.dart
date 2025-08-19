@@ -39,11 +39,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-        ],
-      ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }
