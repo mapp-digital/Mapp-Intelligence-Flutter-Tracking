@@ -52,7 +52,7 @@ class _FormTrackingState extends State<FormTracking> {
     buttons.add(ListTile(
       title: const Text('Switch:'),
       trailing: CupertinoSwitch(
-        activeColor: Theme.of(context).primaryColorDark,
+        activeTrackColor: Theme.of(context).primaryColorDark,
         value: isSwitched,
         onChanged: (bool value) {
           setState(() {
@@ -83,7 +83,7 @@ class _FormTrackingState extends State<FormTracking> {
     buttons.add(ListTile(
       title: const Text('Anonymous:'),
       trailing: CupertinoSwitch(
-        activeColor: Theme.of(context).primaryColorDark,
+        activeTrackColor: Theme.of(context).primaryColorDark,
         value: isSwitchedAnonymous,
         onChanged: (bool value) {
           setState(() {
