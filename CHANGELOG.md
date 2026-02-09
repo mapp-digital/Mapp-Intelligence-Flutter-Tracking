@@ -1,3 +1,13 @@
+## 5.0.10
+- Updated Kotlin to 2.3.0 (plugin and example)
+- Updated Android Gradle Plugin to 8.13.2 and Gradle wrapper to 8.13
+- Bumped compileSdkVersion and targetSdkVersion to 36
+- Updated native Mapp Intelligence Android SDK to 5.1.13
+- Updated AndroidX dependencies (webkit 1.15.0, work-runtime-ktx 2.11.1)
+- Removed google-services from plugin module (library); applied only in app module to fix Gradle plugin error
+- Example app: use Flutter minSdkVersion and Kotlin 2.3.0 in settings.gradle
+- Minor code cleanup in PluginMappintelligencePlugin.kt
+
 ## 5.0.9
 - Refactored webview tracking (old webview from MappIntelligence plugin should be removed and all related imports; Official webview_flutter: ^4.13.0 shoud be used);
 - code cleanup (removed old webview tracking implementation)
