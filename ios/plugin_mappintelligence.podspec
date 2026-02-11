@@ -16,9 +16,13 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'MappIntelligence', '5.0.15'
-  s.platform = :ios, '12.0'
+  s.vendored_frameworks = 'Frameworks/MappIntelligenceiOS.xcframework'
+  s.platform = :ios, '14.0'
 
   # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.pod_target_xcconfig = {
+    'HEADER_SEARCH_PATHS' => '$(inherited) "$(PODS_ROOT)/plugin_mappintelligence/Frameworks/**" "$(PODS_ROOT)/../.symlinks/plugins/plugin_mappintelligence/ios/Frameworks/**"',
+    'FRAMEWORK_SEARCH_PATHS' => '$(inherited) "$(PODS_ROOT)/plugin_mappintelligence/Frameworks" "$(PODS_ROOT)/../.symlinks/plugins/plugin_mappintelligence/ios/Frameworks"', 
+    'DEFINES_MODULE' => 'YES', 
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 end
