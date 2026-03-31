@@ -40,3 +40,4 @@ flutter:
 
 false_secrets:
   - "example/android/app/google-services.json"
+  - "flutter/**"
