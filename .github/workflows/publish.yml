@@ -10,37 +10,13 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'  # tag pattern on pub.dev: v{{version}}
 
-env:
-  FLUTTER_VERSION: 3.27.4
-
 jobs:
-  test:
-    name: Run tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Flutter
-        run: |
-          curl -fsSL "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz" -o flutter.tar.xz
-          tar xf flutter.tar.xz
-          echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed lib/
-
-      - name: Analyze
-        run: flutter analyze --no-fatal-infos
-
-      - name: Run tests
-        run: flutter test
+  validate:
+    uses: ./.github/workflows/release-checks.yml
 
   publish:
     name: Publish to pub.dev
-    needs: test
+    needs: validate
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # Required for OIDC authentication with pub.dev
@@ -50,15 +26,12 @@ jobs:
 
       - name: Install Flutter
         run: |
-          curl -fsSL "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz" -o flutter.tar.xz
-          tar xf flutter.tar.xz
-          echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+          curl -fsSL "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.27.4-stable.tar.xz" -o "$RUNNER_TEMP/flutter.tar.xz"
+          tar -xf "$RUNNER_TEMP/flutter.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/flutter/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: flutter pub get
-
-      - name: Publish dry run
-        run: dart pub publish --dry-run
 
       - name: Publish to pub.dev
         run: dart pub publish --force

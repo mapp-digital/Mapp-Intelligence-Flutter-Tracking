@@ -1,0 +1,45 @@
+name: Release Checks
+
+on:
+  workflow_call:
+
+env:
+  FLUTTER_VERSION: 3.27.4
+
+jobs:
+  validate:
+    name: Validate Package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flutter
+        run: |
+          curl -fsSL "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz" -o "$RUNNER_TEMP/flutter.tar.xz"
+          tar -xf "$RUNNER_TEMP/flutter.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/flutter/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed lib/
+
+      - name: Validate version sync (pubspec.yaml vs source code)
+        run: |
+          PUBSPEC_VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          SOURCE_VERSION=$(sed -n 's/.*final flutterPluginVersion = "\(.*\)";/\1/p' lib/plugin_mappintelligence.dart | head -n 1)
+          if [ "$PUBSPEC_VERSION" != "$SOURCE_VERSION" ]; then
+            echo "❌ Version mismatch: pubspec.yaml=$PUBSPEC_VERSION, plugin_mappintelligence.dart=$SOURCE_VERSION"
+            exit 1
+          fi
+          echo "✅ Version $PUBSPEC_VERSION in sync"
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Publish dry run
+        run: dart pub publish --dry-run
