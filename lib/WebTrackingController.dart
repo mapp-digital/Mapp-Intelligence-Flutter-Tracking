@@ -7,17 +7,19 @@ class WebTrackingController {
   final WebViewController controller;
   final void Function(String data)? onMessage;
   final void Function()? onLoad;
+  final NavigationDelegate? navigationDelegate;
 
   WebTrackingController({
     required this.controller,
     this.onMessage,
     this.onLoad,
+    this.navigationDelegate,
   }) {
     _setupChannels();
   }
 
   // Injected scripts
-  final String _runOnce = """
+  static const String _runOnce = """
     var meta = document.createElement('meta');
     meta.setAttribute('name', 'viewport');
     meta.setAttribute('content', 'width=device-width, height=device-height, initial-scale=0.85, maximum-scale=1.0, user-scalable=no');
@@ -30,24 +32,29 @@ class WebTrackingController {
       final injectEverIdScript =
           "window.webtrekkApplicationEverId = '$everId'; true;";
       await controller.runJavaScript(_runOnce + injectEverIdScript);
+      onLoad?.call();
     } catch (error, stack) {
       print('Error: $error');
       PluginMappintelligence.trackExceptionWithNameAndMessage(error.runtimeType.toString(), stack.toString());
     }
-
-    if (onLoad != null) onLoad!();
   }
 
   void _setupChannels() {
-    if(Platform.isIOS){
+    if (Platform.isIOS) {
       PluginMappintelligence.trackWebviewConfiguration();
     }
 
-    controller.setNavigationDelegate(NavigationDelegate(onPageFinished: (url) {
-      print('Page finished loading: $url');
-      handleLoad();
-    }));
-    
+    controller.setNavigationDelegate(NavigationDelegate(
+      onNavigationRequest: navigationDelegate?.onNavigationRequest,
+      onPageStarted: navigationDelegate?.onPageStarted,
+      onProgress: navigationDelegate?.onProgress,
+      onWebResourceError: navigationDelegate?.onWebResourceError,
+      onPageFinished: (String url) {
+        print('Page finished loading: $url');
+        handleLoad().then((_) => navigationDelegate?.onPageFinished?.call(url));
+      },
+    ));
+
     controller.addJavaScriptChannel(
       'ReactNativeWebView',
       onMessageReceived: (message) {
@@ -58,16 +65,18 @@ class WebTrackingController {
           final params = data['params'];
           print('Method: $method, Name: $name, Params: $params');
 
+          if (method == null || name == null) return;
+
           if (method == 'trackCustomPage') {
-            PluginMappintelligence.trackWebPage(name,  params);
+            PluginMappintelligence.trackWebPage(name, params);
           } else if (method == 'trackCustomEvent') {
-            PluginMappintelligence.trackWebEvent(name,params);
+            PluginMappintelligence.trackWebEvent(name, params);
           }
         } catch (e) {
           print('Error parsing message from WebView: $e');
         }
 
-        if (onMessage != null) onMessage!(message.message);
+        onMessage?.call(message.message);
       },
     );
   }
