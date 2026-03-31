@@ -147,7 +147,22 @@ This only needs to be done once per package. It authorizes GitHub Actions to pub
 6. Enable the **"Allow workflow_dispatch"** checkbox
 7. Click **Save**
 
-### Step 2 — Verify the GitHub Actions workflows are present
+### Step 2 — Create a Personal Access Token (PAT) for workflow chaining
+
+GitHub Actions workflows triggered by `GITHUB_TOKEN` (the default) cannot trigger other workflows. The `Tag and Release` workflow needs a PAT so that its tag push is treated as a real user action and cascades into the `Publish` workflow.
+
+1. GitHub → profile avatar → **Settings**
+2. **Developer settings** → **Personal access tokens** → **Fine-grained tokens**
+3. Click **Generate new token**, set:
+   - **Repository access:** `mapp-digital/Mapp-Intelligence-Flutter-Tracking`
+   - **Permissions:** `Contents` → **Read and write**
+4. Click **Generate token** → copy it
+5. Go to the repo → **Settings** → **Secrets and variables** → **Actions**
+6. Click **New repository secret**:
+   - Name: `RELEASE_TOKEN`
+   - Value: paste the PAT
+
+### Step 3 — Verify the GitHub Actions workflows are present
 
 Confirm these three files exist in the repository:
 
@@ -256,6 +271,9 @@ Run `dart pub publish --dry-run` locally to see the exact issues. Common causes:
 - Missing `description` in `pubspec.yaml`
 - Files referenced in `pubspec.yaml` that don't exist
 - Dart files with analysis errors
+
+### Tag and Release runs successfully but Publish workflow never starts
+GitHub blocks workflow-to-workflow triggering when the default `GITHUB_TOKEN` is used. The `RELEASE_TOKEN` PAT secret must be set up (see Section 5, Step 2). Without it, the tag is pushed but GitHub treats it as an automated action and suppresses downstream workflow triggers.
 
 ### OIDC authentication fails in CI
 Verify the pub.dev admin setup in Section 5 is complete and the repository name matches exactly (`mapp-digital/Mapp-Intelligence-Flutter-Tracking`).
