@@ -1,0 +1,38 @@
+name: Tag and Release
+
+# Run this first. It creates the git tag which then automatically
+# triggers the "Publish to pub.dev" workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (must match pubspec.yaml, e.g. 5.0.10)'
+        required: true
+
+jobs:
+  tag:
+    name: Create tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push a tag
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate version sync (pubspec.yaml vs input)
+        run: |
+          PUBSPEC_VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          INPUT_VERSION="${{ github.event.inputs.version }}"
+          if [ "$PUBSPEC_VERSION" != "$INPUT_VERSION" ]; then
+            echo "❌ Version mismatch: pubspec.yaml has $PUBSPEC_VERSION but input is $INPUT_VERSION"
+            exit 1
+          fi
+          echo "✅ Version $PUBSPEC_VERSION confirmed"
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${{ github.event.inputs.version }}"
+          git push origin "v${{ github.event.inputs.version }}"
