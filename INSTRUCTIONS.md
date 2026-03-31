@@ -88,19 +88,19 @@ Follow these steps in order before publishing:
 
 ### Step 1 — Update version in `pubspec.yaml`
 ```yaml
-version: 5.0.11
+version: <VERSION>
 ```
 
 ### Step 2 — Update version in `lib/plugin_mappintelligence.dart`
 Find `_updateCustomParams()` and update the hardcoded string to match:
 ```dart
-final flutterPluginVersion = "5.0.11";
+final flutterPluginVersion = "<VERSION>";
 ```
 
 ### Step 3 — Update `CHANGELOG.md`
 Add a new section at the top:
 ```markdown
-## 5.0.11
+## <VERSION>
 - Description of changes
 ```
 
@@ -122,7 +122,7 @@ dart pub publish --dry-run
 ### Step 7 — Commit and push to `main`
 ```bash
 git add -A
-git commit -m "chore: release 5.0.11"
+git commit -m "chore: release <VERSION>"
 git push origin main
 ```
 
@@ -147,11 +147,21 @@ This only needs to be done once. It authorizes GitHub Actions to publish using O
 
 ## 6. Publishing a New Version
 
-After completing [Section 4](#4-making-a-release) and [Section 5](#5-publishing-to-pubdev--one-time-setup), push a git tag:
+After completing [Section 4](#4-making-a-release) and [Section 5](#5-publishing-to-pubdev--one-time-setup), recreate and push the release tag. For example, for version `5.0.11`:
 
 ```bash
-git tag v5.0.11
-git push origin v5.0.11
+./release-version 5.0.11
+```
+
+This helper script deletes the local and remote tag if they already exist, recreates `v5.0.11`, and pushes it to `origin`.
+
+If you prefer the manual commands, the equivalent is:
+
+```bash
+git tag -d v<VERSION>
+git push origin --delete v<VERSION>
+git tag v<VERSION>
+git push origin v<VERSION>
 ```
 
 This automatically triggers the **Publish to pub.dev** workflow which:
@@ -188,9 +198,7 @@ dart pub publish --dry-run
 
 ### "tag already exists"
 ```bash
-git tag -d v5.0.11                    # delete local tag
-git push origin --delete v5.0.11     # delete remote tag
-git tag v5.0.11 && git push origin v5.0.11  # recreate
+./release-version <VERSION>
 ```
 
 ### pub.dev dry run fails
