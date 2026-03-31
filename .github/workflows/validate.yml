@@ -4,9 +4,6 @@ name: Validate
 # Verifies that the package is ready to publish without actually publishing.
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main

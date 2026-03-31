@@ -17,24 +17,9 @@ jobs:
   publish:
     name: Publish to pub.dev
     needs: validate
-    runs-on: ubuntu-latest
     permissions:
       id-token: write  # Required for OIDC authentication with pub.dev
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Flutter
-        run: |
-          curl -fsSL "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.27.4-stable.tar.xz" -o "$RUNNER_TEMP/flutter.tar.xz"
-          tar -xf "$RUNNER_TEMP/flutter.tar.xz" -C "$RUNNER_TEMP"
-          echo "$RUNNER_TEMP/flutter/bin" >> $GITHUB_PATH
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Publish to pub.dev
-        run: dart pub publish --force
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
 
   github-release:
     name: Create GitHub Release
