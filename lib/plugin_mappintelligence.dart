@@ -144,32 +144,27 @@ class PluginMappintelligence {
 
   static Future<void> trackWebviewConfiguration() async {
     print("trackWebviewConfiguration is pressed");
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       await Future.value();
-    }else{
-      await _channel
-          .invokeMethod('trackWebviewConfiguration', []);
+    } else {
+      await _channel.invokeMethod('trackWebviewConfiguration', []);
     }
   }
 
-  static Future<void> trackWebPage(String name, String params) async{
-    if(Platform.isAndroid){
-        await _channel.invokeMethod('trackWebPage', <String,String>{
-          'name': name,
-          'params': params
-        });
-    }else{
+  static Future<void> trackWebPage(String name, String params) async {
+    if (Platform.isAndroid) {
+      await _channel.invokeMethod(
+          'trackWebPage', <String, String>{'name': name, 'params': params});
+    } else {
       return Future.value();
     }
   }
 
-  static Future<void> trackWebEvent(String name, String params) async{
-    if(Platform.isAndroid){
-        await _channel.invokeMethod('trackWebEvent', <String,String>{
-          'name': name,
-          'params': params
-        });
-    }else{
+  static Future<void> trackWebEvent(String name, String params) async {
+    if (Platform.isAndroid) {
+      await _channel.invokeMethod(
+          'trackWebEvent', <String, String>{'name': name, 'params': params});
+    } else {
       return Future.value();
     }
   }
@@ -275,7 +270,7 @@ class PluginMappintelligence {
 
   static Future<String> _updateCustomParams() async {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pubspec.yaml plugin file
-    final flutterPluginVersion = "5.0.9";
+    final flutterPluginVersion = "5.0.10";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
     final result = await _channel
         .invokeMethod("updateCustomParams", [flutterPluginVersion]);

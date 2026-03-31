@@ -4,7 +4,7 @@ import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
 class DeepLinkTracking extends StatelessWidget {
   DeepLinkTracking({Key? key}) : super(key: key);
 
-  TextEditingController _controller =
+  final TextEditingController _controller =
       TextEditingController(text: "google.g.g.g");
 
   void testMCParameterTracking() {

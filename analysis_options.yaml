@@ -1,0 +1,11 @@
+# Keep analysis focused on package sources. Do not downgrade real diagnostics
+# globally just to avoid noise from checked-out SDKs or generated artifacts.
+analyzer:
+  errors:
+    unused_import: ignore
+  exclude:
+    - build/**
+    - .dart_tool/**
+    - example/build/**
+    - example/.dart_tool/**
+    - flutter/**

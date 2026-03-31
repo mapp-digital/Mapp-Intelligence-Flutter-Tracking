@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
 import 'package:plugin_mappintelligence/plugin_mappintelligence.dart';
@@ -35,8 +33,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // Create and store the VideoPlayerController. The VideoPlayerController
     // offers several different constructors to play videos from assets, files,
     // or the internet.
-    _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(
+        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+      ),
     );
     _chewieController = ChewieController(
       videoPlayerController: _controller,
@@ -89,8 +89,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       _seekPosition = _controller.value.position.inMilliseconds;
     });
 
-    // Initialize the controller and store the Future for later use.
-    Future<void> _initializeVideoPlayerFuture = _controller.initialize();
+    // Initialize the controller before playback.
+    _controller.initialize();
 
     // Use the controller to loop the video.
     _controller.setLooping(true);

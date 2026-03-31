@@ -1,4 +1,6 @@
 ## 5.0.10
+- WebTrackingController: added optional `navigationDelegate` parameter allowing clients to provide their own NavigationDelegate; all callbacks (onPageStarted, onPageFinished, onProgress, onWebResourceError, onNavigationRequest) are preserved alongside the plugin's tracking logic
+- WebTrackingController: client-provided onPageFinished now fires after EverID injection completes; onLoad is invoked only on successful page load; added null guard for malformed WebView messages
 - Updated Kotlin to 2.3.0 (plugin and example)
 - Updated Android Gradle Plugin to 8.13.2 and Gradle wrapper to 8.13
 - Bumped compileSdkVersion and targetSdkVersion to 36

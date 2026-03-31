@@ -27,7 +27,27 @@ class _WebviewScreenState extends State<WebviewScreen> {
     _controller = WebViewController();
     _controller.setJavaScriptMode(JavaScriptMode.unrestricted);
 
-    WebTrackingController(controller: _controller);
+    WebTrackingController(
+      controller: _controller,
+      navigationDelegate: NavigationDelegate(
+        onPageStarted: (String url) {
+          print('Client onPageStarted: $url');
+        },
+        onPageFinished: (String url) {
+          print('Client onPageFinished: $url');
+        },
+        onProgress: (int progress) {
+          print('Client onProgress: $progress%');
+        },
+        onWebResourceError: (WebResourceError error) {
+          print('Client onWebResourceError: ${error.description}');
+        },
+        onNavigationRequest: (NavigationRequest request) {
+          print('Client onNavigationRequest: ${request.url}');
+          return NavigationDecision.navigate;
+        },
+      ),
+    );
 
     _controller.loadRequest(
         Uri.parse('https://demoshop.webtrekk.com/media/web2app/index.html'));

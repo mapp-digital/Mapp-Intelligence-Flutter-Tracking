@@ -117,7 +117,7 @@ class _FormTrackingState extends State<FormTracking> {
           SizedBox(
             height: 250,
             child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
+                initialDateTime: _chosenDateTime,
                 onDateTimeChanged: (val) {
                   setState(() {
                     _chosenDateTime = val;
