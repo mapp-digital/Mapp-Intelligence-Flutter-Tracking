@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -500,6 +501,44 @@ void main() {
       expect(lastCall().arguments['domain'], 'com.example');
       expect(lastCall().arguments['code'], 42);
       expect(lastCall().arguments['userInfo'], {'key': 'val'});
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Version sync — pubspec.yaml must match the hardcoded version in source
+  // ---------------------------------------------------------------------------
+
+  group('version sync', () {
+    test('flutterPluginVersion in _updateCustomParams matches pubspec.yaml', () async {
+      // Read pubspec.yaml from the package root (two levels up from test/)
+      final pubspecFile = File('pubspec.yaml');
+      final pubspecContent = await pubspecFile.readAsString();
+
+      // Extract version: value without adding a yaml parser dependency
+      final match = RegExp(r'^version:\s*(\S+)', multiLine: true)
+          .firstMatch(pubspecContent);
+      expect(match, isNotNull, reason: 'version field not found in pubspec.yaml');
+      final pubspecVersion = match!.group(1)!;
+
+      // Trigger _updateCustomParams via build() and capture the channel call
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+        log.add(call);
+        return 'ok';
+      });
+
+      await PluginMappintelligence.build();
+
+      final updateCall = log.firstWhere((c) => c.method == 'updateCustomParams');
+      final hardcodedVersion = (updateCall.arguments as List).first as String;
+
+      expect(
+        hardcodedVersion,
+        pubspecVersion,
+        reason: 'flutterPluginVersion in plugin_mappintelligence.dart ($hardcodedVersion) '
+            'is out of sync with pubspec.yaml ($pubspecVersion). '
+            'Update the version string in _updateCustomParams().',
+      );
     });
   });
 }
