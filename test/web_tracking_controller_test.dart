@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,15 +48,19 @@ class FakeNavigationDelegate extends PlatformNavigationDelegate {
   WebResourceErrorCallback? _onWebResourceError;
   NavigationRequestCallback? _onNavigationRequest;
   @override
-  Future<void> setOnPageStarted(PageEventCallback cb) async => _onPageStarted = cb;
+  Future<void> setOnPageStarted(PageEventCallback cb) async =>
+      _onPageStarted = cb;
   @override
-  Future<void> setOnPageFinished(PageEventCallback cb) async => _onPageFinished = cb;
+  Future<void> setOnPageFinished(PageEventCallback cb) async =>
+      _onPageFinished = cb;
   @override
   Future<void> setOnProgress(ProgressCallback cb) async => _onProgress = cb;
   @override
-  Future<void> setOnWebResourceError(WebResourceErrorCallback cb) async => _onWebResourceError = cb;
+  Future<void> setOnWebResourceError(WebResourceErrorCallback cb) async =>
+      _onWebResourceError = cb;
   @override
-  Future<void> setOnNavigationRequest(NavigationRequestCallback cb) async => _onNavigationRequest = cb;
+  Future<void> setOnNavigationRequest(NavigationRequestCallback cb) async =>
+      _onNavigationRequest = cb;
   @override
   Future<void> setOnUrlChange(UrlChangeCallback cb) async {}
   @override
@@ -64,10 +70,13 @@ class FakeNavigationDelegate extends PlatformNavigationDelegate {
 
   // Simulation helpers
   void simulatePageStarted(String url) => _onPageStarted?.call(url);
-  Future<void> simulatePageFinished(String url) async => _onPageFinished?.call(url);
+  Future<void> simulatePageFinished(String url) async =>
+      _onPageFinished?.call(url);
   void simulateProgress(int progress) => _onProgress?.call(progress);
-  void simulateWebResourceError(WebResourceError error) => _onWebResourceError?.call(error);
-  Future<NavigationDecision> simulateNavigationRequest(NavigationRequest req) async =>
+  void simulateWebResourceError(WebResourceError error) =>
+      _onWebResourceError?.call(error);
+  Future<NavigationDecision> simulateNavigationRequest(
+          NavigationRequest req) async =>
       await _onNavigationRequest?.call(req) ?? NavigationDecision.navigate;
 }
 
@@ -85,7 +94,8 @@ class FakeWebViewController extends PlatformWebViewController {
   Future<void> setBackgroundColor(Color color) async {}
 
   @override
-  Future<void> setPlatformNavigationDelegate(PlatformNavigationDelegate handler) async {
+  Future<void> setPlatformNavigationDelegate(
+      PlatformNavigationDelegate handler) async {
     capturedDelegate = handler as FakeNavigationDelegate;
   }
 
@@ -122,6 +132,15 @@ class FakeCookieManager extends PlatformWebViewCookieManager {
 // ---------------------------------------------------------------------------
 FakeWebViewController _fakePlatformController(WebViewController controller) {
   return controller.platform as FakeWebViewController;
+}
+
+Future<T> _runQuietly<T>(FutureOr<T> Function() body) {
+  return runZoned(
+    () async => await body(),
+    zoneSpecification: ZoneSpecification(
+      print: (_, __, ___, ____) {},
+    ),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -189,8 +208,10 @@ void main() {
   //    (demonstrates what the issue was before the fix)
   // -------------------------------------------------------------------------
 
-  test('REGRESSION: without fix, a second setNavigationDelegate call would '
-      'override the first — verified by confirming only one delegate is active', () {
+  test(
+      'REGRESSION: without fix, a second setNavigationDelegate call would '
+      'override the first — verified by confirming only one delegate is active',
+      () {
     // Before the fix, clients had to call setNavigationDelegate themselves,
     // which WebTrackingController then replaced. Now clients pass their
     // callbacks via navigationDelegate parameter — only one delegate is set.
@@ -274,11 +295,28 @@ void main() {
     expect(clientCalled, isTrue);
   });
 
+  test('onNavigationRequest preserves prevent decision from client callback',
+      () async {
+    WebTrackingController(
+      controller: controller,
+      navigationDelegate: NavigationDelegate(
+        onNavigationRequest: (_) => NavigationDecision.prevent,
+      ),
+    );
+
+    final decision =
+        await fakeController.capturedDelegate!.simulateNavigationRequest(
+      NavigationRequest(url: 'https://example.com', isMainFrame: true),
+    );
+    expect(decision, NavigationDecision.prevent);
+  });
+
   // -------------------------------------------------------------------------
   // 4. onPageFinished ordering — client fires AFTER EverID injection
   // -------------------------------------------------------------------------
 
-  test('onPageFinished: plugin injects EverID before client callback fires', () async {
+  test('onPageFinished: plugin injects EverID before client callback fires',
+      () async {
     final log = <String>[];
 
     WebTrackingController(
@@ -288,20 +326,26 @@ void main() {
       ),
     );
 
-    await fakeController.capturedDelegate!.simulatePageFinished('https://example.com');
+    await fakeController.capturedDelegate!
+        .simulatePageFinished('https://example.com');
     // Flush the full async chain: handleLoad (method channel) → runJavaScript → .then(client cb)
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
-    expect(fakeController.jsLog.any((js) => js.contains('webtrekkApplicationEverId')),
-        isTrue, reason: 'EverID script must have been injected');
+    expect(
+        fakeController.jsLog
+            .any((js) => js.contains('webtrekkApplicationEverId')),
+        isTrue,
+        reason: 'EverID script must have been injected');
     expect(log, contains('client'),
         reason: 'Client onPageFinished must fire after injection');
   });
 
-  test('onPageFinished: EverID value from native is injected into the page', () async {
+  test('onPageFinished: EverID value from native is injected into the page',
+      () async {
     WebTrackingController(controller: controller);
 
-    await fakeController.capturedDelegate!.simulatePageFinished('https://example.com');
+    await fakeController.capturedDelegate!
+        .simulatePageFinished('https://example.com');
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
     expect(
@@ -338,8 +382,33 @@ void main() {
       onLoad: () => onLoadCalled = true,
     );
 
-    await wt.handleLoad();
+    await _runQuietly(() => wt.handleLoad());
     expect(onLoadCalled, isFalse);
+  });
+
+  test('client onPageFinished still fires when EverID injection fails',
+      () async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+      if (call.method == 'getEverId') throw PlatformException(code: 'ERROR');
+      return null;
+    });
+
+    bool clientCalled = false;
+    WebTrackingController(
+      controller: controller,
+      navigationDelegate: NavigationDelegate(
+        onPageFinished: (_) => clientCalled = true,
+      ),
+    );
+
+    await _runQuietly(() async {
+      await fakeController.capturedDelegate!
+          .simulatePageFinished('https://example.com');
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    });
+
+    expect(clientCalled, isTrue);
   });
 
   // -------------------------------------------------------------------------
@@ -352,12 +421,15 @@ void main() {
         .firstWhere((c) => c.name == 'ReactNativeWebView');
 
     expect(
-      () => channel.onMessageReceived(JavaScriptMessage(message: 'not-json')),
+      () => _runQuietly(
+        () => channel.onMessageReceived(JavaScriptMessage(message: 'not-json')),
+      ),
       returnsNormally,
     );
   });
 
-  test('message missing method/name fields does not dispatch tracking call', () {
+  test('message missing method/name fields does not dispatch tracking call',
+      () {
     final methodCalls = <String>[];
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
@@ -369,7 +441,10 @@ void main() {
     final jsChannel = fakeController.channels
         .firstWhere((c) => c.name == 'ReactNativeWebView');
 
-    jsChannel.onMessageReceived(JavaScriptMessage(message: '{"foo":"bar"}'));
+    _runQuietly(
+      () => jsChannel
+          .onMessageReceived(JavaScriptMessage(message: '{"foo":"bar"}')),
+    );
     expect(methodCalls, isNot(contains('trackWebPage')));
     expect(methodCalls, isNot(contains('trackWebEvent')));
   });
@@ -384,7 +459,63 @@ void main() {
     final jsChannel = fakeController.channels
         .firstWhere((c) => c.name == 'ReactNativeWebView');
 
-    jsChannel.onMessageReceived(JavaScriptMessage(message: 'hello'));
+    _runQuietly(
+      () => jsChannel.onMessageReceived(JavaScriptMessage(message: 'hello')),
+    );
     expect(received, contains('hello'));
+  });
+
+  test('trackCustomPage message dispatches trackWebPage', () async {
+    final methodCalls = <MethodCall>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+      methodCalls.add(call);
+      return null;
+    });
+
+    WebTrackingController(controller: controller);
+    final jsChannel = fakeController.channels
+        .firstWhere((c) => c.name == 'ReactNativeWebView');
+
+    await _runQuietly(
+      () => jsChannel.onMessageReceived(
+        JavaScriptMessage(
+          message:
+              '{"method":"trackCustomPage","name":"Home","params":"{\\"foo\\":\\"bar\\"}"}',
+        ),
+      ),
+    );
+
+    expect(
+      methodCalls.any((call) => call.method == 'trackWebPage'),
+      Platform.isAndroid,
+    );
+  });
+
+  test('trackCustomEvent message dispatches trackWebEvent', () async {
+    final methodCalls = <MethodCall>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+      methodCalls.add(call);
+      return null;
+    });
+
+    WebTrackingController(controller: controller);
+    final jsChannel = fakeController.channels
+        .firstWhere((c) => c.name == 'ReactNativeWebView');
+
+    await _runQuietly(
+      () => jsChannel.onMessageReceived(
+        JavaScriptMessage(
+          message:
+              '{"method":"trackCustomEvent","name":"CTA","params":"{\\"foo\\":\\"bar\\"}"}',
+        ),
+      ),
+    );
+
+    expect(
+      methodCalls.any((call) => call.method == 'trackWebEvent'),
+      Platform.isAndroid,
+    );
   });
 }

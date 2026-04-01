@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_mappintelligence/object_tracking_classes.dart';
@@ -10,9 +12,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const channel = MethodChannel('plugin_mappintelligence');
+  final originalDebugPrint = debugPrint;
 
   // Captures every method call made through the channel.
   final List<MethodCall> log = [];
+
+  Future<T> runQuietly<T>(FutureOr<T> Function() body) {
+    return runZoned(
+      () async => await body(),
+      zoneSpecification: ZoneSpecification(
+        print: (_, __, ___, ____) {},
+      ),
+    );
+  }
 
   // Default handler — returns sensible values so methods don't throw.
   Future<Object?> defaultHandler(MethodCall call) async {
@@ -23,7 +35,10 @@ void main() {
       case 'setEverId':
         return 'ok';
       case 'getIdsAndDomain':
-        return {'trackIds': ['123'], 'trackDomain': 'example.com'};
+        return {
+          'trackIds': ['123'],
+          'trackDomain': 'example.com'
+        };
       case 'getCurrentConfig':
         return {'key': 'value'};
       case 'resetConfig':
@@ -49,11 +64,13 @@ void main() {
 
   setUp(() {
     log.clear();
+    debugPrint = (String? message, {int? wrapWidth}) {};
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, defaultHandler);
   });
 
   tearDown(() {
+    debugPrint = originalDebugPrint;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
   });
@@ -90,7 +107,8 @@ void main() {
 
   group('initialize', () {
     test('invokes initialize with trackIds and trackDomain', () async {
-      await PluginMappintelligence.initialize(['123456789'], 'track.example.com');
+      await PluginMappintelligence.initialize(
+          ['123456789'], 'track.example.com');
       final call = lastCall();
       expect(call.method, 'initialize');
       expect(call.arguments['trackIds'], ['123456789']);
@@ -230,10 +248,14 @@ void main() {
       expect(lastCall().arguments, ['Home']);
     });
 
-    test('with params invokes trackCustomPage with name and params map', () async {
+    test('with params invokes trackCustomPage with name and params map',
+        () async {
       await PluginMappintelligence.trackPage('Home', {'key': 'value'});
       expect(lastCall().method, 'trackCustomPage');
-      expect(lastCall().arguments, ['Home', {'key': 'value'}]);
+      expect(lastCall().arguments, [
+        'Home',
+        {'key': 'value'}
+      ]);
     });
   });
 
@@ -242,13 +264,15 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('trackPageWithCustomData', () {
-    test('with customName invokes trackPageWithCustomNameAndPageViewEvent', () async {
+    test('with customName invokes trackPageWithCustomNameAndPageViewEvent',
+        () async {
       await PluginMappintelligence.trackPageWithCustomData(null, 'MyPage');
       expect(lastCall().method, 'trackPageWithCustomNameAndPageViewEvent');
       expect(lastCall().arguments, ['MyPage']);
     });
 
-    test('with pageViewEvent invokes trackPageWithCustomData with JSON', () async {
+    test('with pageViewEvent invokes trackPageWithCustomData with JSON',
+        () async {
       final event = PageViewEvent('ProductPage');
       await PluginMappintelligence.trackPageWithCustomData(event);
       expect(lastCall().method, 'trackPageWithCustomData');
@@ -264,6 +288,11 @@ void main() {
       final decoded = jsonDecode(lastCall().arguments[0] as String);
       expect(decoded['pageParameters']['searchTerm'], 'shoes');
       expect(decoded['ecommerceParameters']['currency'], 'EUR');
+    });
+
+    test('with null inputs does not dispatch a native call', () async {
+      await PluginMappintelligence.trackPageWithCustomData(null);
+      expect(log, isEmpty);
     });
   });
 
@@ -295,6 +324,23 @@ void main() {
       final decoded = jsonDecode(lastCall().arguments[0] as String);
       expect(decoded['name'], 'ButtonClick');
       expect(decoded['eventParameters']['parameters']['1'], 'param_value');
+    });
+
+    test('propagates native failure', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+        log.add(call);
+        if (call.method == 'trackAction') {
+          throw PlatformException(code: 'TRACK_FAILED');
+        }
+        return defaultHandler(call);
+      });
+
+      final event = ActionEvent('ButtonClick');
+      await expectLater(
+        runQuietly(() => PluginMappintelligence.trackAction(event)),
+        throwsA(isA<PlatformException>()),
+      );
     });
   });
 
@@ -342,13 +388,16 @@ void main() {
 
   group('trackWebview', () {
     test('with all coordinates sends x, y, width, height, url', () async {
-      await PluginMappintelligence.trackWebview(0, 0, 320, 480, 'https://example.com');
+      await PluginMappintelligence.trackWebview(
+          0, 0, 320, 480, 'https://example.com');
       expect(lastCall().method, 'trackWebview');
-      expect(lastCall().arguments, [0.0, 0.0, 320.0, 480.0, 'https://example.com']);
+      expect(lastCall().arguments,
+          [0.0, 0.0, 320.0, 480.0, 'https://example.com']);
     });
 
     test('with null coordinates sends only url', () async {
-      await PluginMappintelligence.trackWebview(null, null, null, null, 'https://example.com');
+      await PluginMappintelligence.trackWebview(
+          null, null, null, null, 'https://example.com');
       expect(lastCall().method, 'trackWebview');
       expect(lastCall().arguments, ['https://example.com']);
     });
@@ -403,6 +452,20 @@ void main() {
       expect(lastCall().method, 'getIdsAndDomain');
       expect(data?['trackIds'], ['123']);
       expect(data?['trackDomain'], 'example.com');
+    });
+
+    test('returns null when native returns null', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+        log.add(call);
+        if (call.method == 'getIdsAndDomain') {
+          return null;
+        }
+        return defaultHandler(call);
+      });
+
+      final data = await PluginMappintelligence.getTrackIdsAndDomain();
+      expect(data, isNull);
     });
   });
 
@@ -496,7 +559,8 @@ void main() {
 
   group('trackError', () {
     test('sends userInfo, domain and code', () async {
-      await PluginMappintelligence.trackError({'key': 'val'}, 'com.example', 42);
+      await PluginMappintelligence.trackError(
+          {'key': 'val'}, 'com.example', 42);
       expect(lastCall().method, 'trackError');
       expect(lastCall().arguments['domain'], 'com.example');
       expect(lastCall().arguments['code'], 42);
@@ -509,7 +573,8 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('version sync', () {
-    test('flutterPluginVersion in _updateCustomParams matches pubspec.yaml', () async {
+    test('flutterPluginVersion in _updateCustomParams matches pubspec.yaml',
+        () async {
       // Read pubspec.yaml from the package root (two levels up from test/)
       final pubspecFile = File('pubspec.yaml');
       final pubspecContent = await pubspecFile.readAsString();
@@ -517,7 +582,8 @@ void main() {
       // Extract version: value without adding a yaml parser dependency
       final match = RegExp(r'^version:\s*(\S+)', multiLine: true)
           .firstMatch(pubspecContent);
-      expect(match, isNotNull, reason: 'version field not found in pubspec.yaml');
+      expect(match, isNotNull,
+          reason: 'version field not found in pubspec.yaml');
       final pubspecVersion = match!.group(1)!;
 
       // Trigger _updateCustomParams via build() and capture the channel call
@@ -527,15 +593,17 @@ void main() {
         return 'ok';
       });
 
-      await PluginMappintelligence.build();
+      await runQuietly(() => PluginMappintelligence.build());
 
-      final updateCall = log.firstWhere((c) => c.method == 'updateCustomParams');
+      final updateCall =
+          log.firstWhere((c) => c.method == 'updateCustomParams');
       final hardcodedVersion = (updateCall.arguments as List).first as String;
 
       expect(
         hardcodedVersion,
         pubspecVersion,
-        reason: 'flutterPluginVersion in plugin_mappintelligence.dart ($hardcodedVersion) '
+        reason:
+            'flutterPluginVersion in plugin_mappintelligence.dart ($hardcodedVersion) '
             'is out of sync with pubspec.yaml ($pubspecVersion). '
             'Update the version string in _updateCustomParams().',
       );
