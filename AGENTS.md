@@ -23,6 +23,8 @@ These instructions apply to the whole repository.
 - Prefer these checks after code changes:
   - `flutter analyze --no-fatal-infos`
   - `flutter test`
+- For runtime regression work, prefer the example smoke test:
+  - `cd example && flutter test integration_test/app_smoke_test.dart -d <DEVICE_ID>`
 - If you only changed package Dart code, still consider analyzer impact on `example/`.
 - If you change CI behavior, check `.github/workflows/validate.yml`.
 - If you change publish behavior, check `.github/workflows/publish.yml`.
@@ -49,6 +51,8 @@ These instructions apply to the whole repository.
 - Keep the example app buildable and analyzable.
 - Prefer minimal demo-oriented fixes in `example/`; avoid production-grade abstractions there unless requested.
 - If a dependency API deprecates, update the example usage when it is easy and low-risk.
+- Android example smoke coverage exists in `example/integration_test/app_smoke_test.dart`; keep it stable when changing example navigation or consent flow.
+- iOS runtime smoke coverage is not automated yet; do not claim parity unless it was explicitly tested.
 
 ## Analyzer Hygiene
 
