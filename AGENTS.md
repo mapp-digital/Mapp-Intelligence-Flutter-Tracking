@@ -53,6 +53,7 @@ These instructions apply to the whole repository.
 - If a dependency API deprecates, update the example usage when it is easy and low-risk.
 - Android example smoke coverage exists in `example/integration_test/app_smoke_test.dart`; keep it stable when changing example navigation or consent flow.
 - iOS runtime smoke coverage is not automated yet; do not claim parity unless it was explicitly tested.
+- Do not assume example integration tests can be enforced in CI; org action policy may require them to stay as local/manual checks.
 
 ## Analyzer Hygiene
 

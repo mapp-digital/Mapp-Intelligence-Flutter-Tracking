@@ -92,7 +92,7 @@ Purpose:
 - Intended as a smoke test, not full feature automation
 
 Current scope:
-- Android smoke coverage is automated in CI
+- Android smoke coverage exists as a local/manual runtime check
 - iOS runtime smoke coverage is not automated yet
 
 ### 2.3 Example widget test
@@ -182,7 +182,7 @@ git commit -m "chore: release <VERSION>"
 git push origin main
 ```
 
-The `validate.yml` GitHub Actions workflow runs on pull requests to `main`. It calls the shared release checks workflow, which verifies analysis, unit tests, Android integration smoke coverage, and a publish dry run. Wait for it to pass before proceeding to publish.
+The `validate.yml` GitHub Actions workflow runs on pull requests to `main`. It calls the shared release checks workflow, which verifies analysis, unit tests, and a publish dry run. Wait for it to pass before proceeding to publish.
 
 ---
 
@@ -222,9 +222,8 @@ git push origin v<VERSION>
 
 This automatically triggers the **Publish to pub.dev** workflow which:
 1. Runs formatting check, analysis, and all tests
-2. Runs the Android example integration smoke test
-3. Publishes the package to pub.dev via OIDC
-4. Creates a GitHub Release with the tag name and changelog notes extracted from `CHANGELOG.md`
+2. Publishes the package to pub.dev via OIDC
+3. Creates a GitHub Release with the tag name and changelog notes extracted from `CHANGELOG.md`
 
 Monitor the run at:
 `https://github.com/mapp-digital/Mapp-Intelligence-Flutter-Tracking/actions`
@@ -275,9 +274,9 @@ The version heading in `CHANGELOG.md` must match exactly `## <version>` with no 
 ### OIDC authentication fails in CI
 Verify the pub.dev admin setup in Section 5 is complete and the repository name matches exactly: `mapp-digital/Mapp-Intelligence-Flutter-Tracking`.
 
-### Android smoke test fails in CI
-The shared release checks workflow runs `example/integration_test/app_smoke_test.dart` on an Android emulator. Check:
-- emulator boot failures in the `integration-smoke` job
+### Android smoke test fails locally
+The runtime smoke test lives in `example/integration_test/app_smoke_test.dart`. Check:
+- device/emulator availability
 - example dependency resolution
 - UI text or navigation changes in the example app that invalidate the smoke test assertions
 
