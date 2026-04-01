@@ -222,8 +222,9 @@ git push origin v<VERSION>
 
 This automatically triggers the **Publish to pub.dev** workflow which:
 1. Runs formatting check, analysis, and all tests
-2. Publishes the package to pub.dev via OIDC
-3. Creates a GitHub Release with the tag name and changelog notes extracted from `CHANGELOG.md`
+2. Runs the Android example integration smoke test
+3. Publishes the package to pub.dev via OIDC
+4. Creates a GitHub Release with the tag name and changelog notes extracted from `CHANGELOG.md`
 
 Monitor the run at:
 `https://github.com/mapp-digital/Mapp-Intelligence-Flutter-Tracking/actions`
