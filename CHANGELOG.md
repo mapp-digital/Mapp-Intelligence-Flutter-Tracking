@@ -1,3 +1,14 @@
+## 5.0.11
+- Updated Android Gradle Plugin to 9.3.1 and Gradle wrapper to 9.5.0
+- Bumped Android compileSdkVersion, targetSdkVersion, and build tools to 37
+- Updated native Mapp Intelligence Android SDK to 5.1.14
+- Updated AndroidX dependencies (annotation 1.10.0, webkit 1.16.0, work-runtime-ktx 2.11.2)
+- Added AGP 9 compatibility settings for the plugin and example app
+- Migrated the plugin and example app Gradle configuration for built-in Kotlin support
+- Updated the minimum supported SDK versions to Flutter 3.44 and Dart 3.12
+- Updated the example app to mapp_sdk 0.1.2 and enabled Mapp Engage initialization
+- User matching requires mapp_sdk 0.1.2 or later
+
 ## 5.0.10
 - WebTrackingController: added optional `navigationDelegate` parameter allowing clients to provide their own NavigationDelegate; all callbacks (onPageStarted, onPageFinished, onProgress, onWebResourceError, onNavigationRequest) are preserved alongside the plugin's tracking logic
 - WebTrackingController: client-provided onPageFinished now fires after EverID injection completes; onLoad is invoked only on successful page load; added null guard for malformed WebView messages

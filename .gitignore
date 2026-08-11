@@ -103,6 +103,7 @@ unlinked_spec.ds
 **/ios/Runner/GeneratedPluginRegistrant.*
 
 # macOS
+example/macos/Flutter/
 **/macos/Flutter/GeneratedPluginRegistrant.swift
 
 # Linux
