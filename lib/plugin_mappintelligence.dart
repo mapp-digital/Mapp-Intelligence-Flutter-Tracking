@@ -7,8 +7,9 @@ import 'package:flutter/widgets.dart';
 import 'object_tracking_classes.dart';
 
 class PluginMappintelligence {
-  static const MethodChannel _channel =
-      const MethodChannel('plugin_mappintelligence');
+  static const MethodChannel _channel = const MethodChannel(
+    'plugin_mappintelligence',
+  );
 
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');
@@ -16,46 +17,60 @@ class PluginMappintelligence {
   }
 
   static Future<String?> initialize(
-      List<String> trackIds, String trackDomain) async {
-    final String? version = await _channel.invokeMethod('initialize',
-        <dynamic, dynamic>{'trackIds': trackIds, 'trackDomain': trackDomain});
+    List<String> trackIds,
+    String trackDomain,
+  ) async {
+    final String? version = await _channel.invokeMethod(
+      'initialize',
+      <dynamic, dynamic>{'trackIds': trackIds, 'trackDomain': trackDomain},
+    );
     return 'successfull $version';
   }
 
   static Future<String?> setLogLevel(LogLevel logLevel) async {
-    final String? version =
-        await _channel.invokeMethod('setLogLevel', [logLevel.index + 1]);
+    final String? version = await _channel.invokeMethod('setLogLevel', [
+      logLevel.index + 1,
+    ]);
     return '$version';
   }
 
   static Future<String?> setBatchSupportEnabledWithSize(
-      bool isEnabled, int size) async {
-    final String? version = await _channel
-        .invokeMethod('setBatchSupportEnabledWithSize', [isEnabled, size]);
+    bool isEnabled,
+    int size,
+  ) async {
+    final String? version = await _channel.invokeMethod(
+      'setBatchSupportEnabledWithSize',
+      [isEnabled, size],
+    );
     return 'successfull $version';
   }
 
   static Future<String?> setRequestInterval(int intervalSize) async {
-    final String? version =
-        await _channel.invokeMethod('setRequestInterval', [intervalSize]);
+    final String? version = await _channel.invokeMethod('setRequestInterval', [
+      intervalSize,
+    ]);
     return 'successfull $version';
   }
 
   static Future<String?> setRequestPerQueue(int requestNumber) async {
-    final String? version =
-        await _channel.invokeMethod('setRequestPerQueue', [requestNumber]);
+    final String? version = await _channel.invokeMethod('setRequestPerQueue', [
+      requestNumber,
+    ]);
     return 'successfull $version';
   }
 
   static Future<String?> setSendAppVersionInEveryRequest(bool value) async {
-    final String? version =
-        await _channel.invokeMethod('setSendAppVersionInEveryRequest', [value]);
+    final String? version = await _channel.invokeMethod(
+      'setSendAppVersionInEveryRequest',
+      [value],
+    );
     return 'successfull $version';
   }
 
   static Future<String?> enableCrashTracking(ExceptionType value) async {
-    final String? version =
-        await _channel.invokeMethod('enableCrashTracking', [value.index]);
+    final String? version = await _channel.invokeMethod('enableCrashTracking', [
+      value.index,
+    ]);
     return 'successfull $version';
   }
 
@@ -71,39 +86,57 @@ class PluginMappintelligence {
     return await _channel.invokeMethod('resetConfig');
   }
 
-  static Future<void> trackPage(String customName,
-      [Map<String, String>? trackingParameters]) async {
+  static Future<void> trackPage(
+    String customName, [
+    Map<String, String>? trackingParameters,
+  ]) async {
     if (trackingParameters == null) {
       await _channel.invokeMethod('trackPage', [customName]);
     } else {
-      await _channel
-          .invokeMethod('trackCustomPage', [customName, trackingParameters]);
+      await _channel.invokeMethod('trackCustomPage', [
+        customName,
+        trackingParameters,
+      ]);
     }
   }
 
-  static Future<void> trackPageWithCustomData(PageViewEvent? pageViewEvent,
-      [String? customName]) async {
+  static Future<void> trackPageWithCustomData(
+    PageViewEvent? pageViewEvent, [
+    String? customName,
+  ]) async {
     if (customName != null) {
-      await _channel.invokeMethod(
-          'trackPageWithCustomNameAndPageViewEvent', [customName]);
+      await _channel.invokeMethod('trackPageWithCustomNameAndPageViewEvent', [
+        customName,
+      ]);
     } else if (pageViewEvent != null) {
       //debugPrint(jsonEncode(pageViewEvent.toJson()), wrapWidth: 1024);
-      await _channel.invokeMethod(
-          'trackPageWithCustomData', [jsonEncode(pageViewEvent.toJson())]);
+      await _channel.invokeMethod('trackPageWithCustomData', [
+        jsonEncode(pageViewEvent.toJson()),
+      ]);
     }
   }
 
   static Future<void> trackExceptionWithNameAndMessage(
-      String exceptionName, String exceptionMessage) {
-    return _channel.invokeMethod('trackExceptionWithNameAndMessage',
-        <dynamic, dynamic>{"name": exceptionName, "message": exceptionMessage});
+    String exceptionName,
+    String exceptionMessage,
+  ) {
+    return _channel.invokeMethod(
+      'trackExceptionWithNameAndMessage',
+      <dynamic, dynamic>{"name": exceptionName, "message": exceptionMessage},
+    );
   }
 
   //This feature is iOS specific
   static Future<void> trackError(
-      Map<String, String> userInfo, String domain, int code) async {
-    await _channel.invokeMethod(
-        'trackError', {"userInfo": userInfo, "domain": domain, "code": code});
+    Map<String, String> userInfo,
+    String domain,
+    int code,
+  ) async {
+    await _channel.invokeMethod('trackError', {
+      "userInfo": userInfo,
+      "domain": domain,
+      "code": code,
+    });
   }
 
   //This feature is only for testing purpose. It produce exception which will crash the application on purpose.
@@ -113,8 +146,9 @@ class PluginMappintelligence {
 
   static Future<void> trackAction(ActionEvent actionEvent) async {
     debugPrint(jsonEncode(actionEvent.toJson()), wrapWidth: 1024);
-    await _channel
-        .invokeMethod('trackAction', [jsonEncode(actionEvent.toJson())]);
+    await _channel.invokeMethod('trackAction', [
+      jsonEncode(actionEvent.toJson()),
+    ]);
   }
 
   static Future<void> trackUrl(String urlString, String? mediaCode) async {
@@ -127,16 +161,27 @@ class PluginMappintelligence {
 
   static Future<void> trackMedia(MediaEvent mediaEvent) async {
     debugPrint(jsonEncode(mediaEvent.toJson()), wrapWidth: 1024);
-    await _channel
-        .invokeMethod('trackMedia', [jsonEncode(mediaEvent.toJson())]);
+    await _channel.invokeMethod('trackMedia', [
+      jsonEncode(mediaEvent.toJson()),
+    ]);
   }
 
-  static Future<void> trackWebview(double? x, double? y, double? width,
-      double? height, String urlString) async {
+  static Future<void> trackWebview(
+    double? x,
+    double? y,
+    double? width,
+    double? height,
+    String urlString,
+  ) async {
     //print("trackWebview is pressed");
     if (x != null && y != null && width != null && height != null) {
-      await _channel
-          .invokeMethod('trackWebview', [x, y, width, height, urlString]);
+      await _channel.invokeMethod('trackWebview', [
+        x,
+        y,
+        width,
+        height,
+        urlString,
+      ]);
     } else {
       await _channel.invokeMethod('trackWebview', [urlString]);
     }
@@ -153,8 +198,10 @@ class PluginMappintelligence {
 
   static Future<void> trackWebPage(String name, String params) async {
     if (Platform.isAndroid) {
-      await _channel.invokeMethod(
-          'trackWebPage', <String, String>{'name': name, 'params': params});
+      await _channel.invokeMethod('trackWebPage', <String, String>{
+        'name': name,
+        'params': params,
+      });
     } else {
       return Future.value();
     }
@@ -162,8 +209,10 @@ class PluginMappintelligence {
 
   static Future<void> trackWebEvent(String name, String params) async {
     if (Platform.isAndroid) {
-      await _channel.invokeMethod(
-          'trackWebEvent', <String, String>{'name': name, 'params': params});
+      await _channel.invokeMethod('trackWebEvent', <String, String>{
+        'name': name,
+        'params': params,
+      });
     } else {
       return Future.value();
     }
@@ -191,9 +240,13 @@ class PluginMappintelligence {
   }
 
   static Future<void> setIdsAndDomain(
-      List<String> trackIds, String trackDomain) async {
-    await _channel.invokeMethod("setIdsAndDomain",
-        <dynamic, dynamic>{'trackIds': trackIds, 'trackDomain': trackDomain});
+    List<String> trackIds,
+    String trackDomain,
+  ) async {
+    await _channel.invokeMethod("setIdsAndDomain", <dynamic, dynamic>{
+      'trackIds': trackIds,
+      'trackDomain': trackDomain,
+    });
   }
 
   static Future<Map<dynamic, dynamic>?> getTrackIdsAndDomain() async {
@@ -202,8 +255,10 @@ class PluginMappintelligence {
   }
 
   static Future<void> setAnonymousTracking(
-      bool anonymousTracking, List<String> params,
-      [bool? generateNewEverId = false]) async {
+    bool anonymousTracking,
+    List<String> params, [
+    bool? generateNewEverId = false,
+  ]) async {
     await _channel.invokeMethod('enableAnonymousTracking', <dynamic, dynamic>{
       'anonymousTracking': anonymousTracking,
       'params': params.isNotEmpty ? params : null,
@@ -228,14 +283,17 @@ class PluginMappintelligence {
   }
 
   static Future<String> _printUsageStatisticsCalculationLog() async {
-    final result =
-        await _channel.invokeMethod("printUsageStatisticsCalculationLog");
+    final result = await _channel.invokeMethod(
+      "printUsageStatisticsCalculationLog",
+    );
     return Future.value(result);
   }
 
   static Future<String> setTemporarySessionId(String temporarySessionId) async {
-    final result = await _channel.invokeMethod("setTemporarySessionId",
-        Map.of({"temporarySessionId": temporarySessionId}));
+    final result = await _channel.invokeMethod(
+      "setTemporarySessionId",
+      Map.of({"temporarySessionId": temporarySessionId}),
+    );
     return Future.value(result);
   }
 
@@ -250,8 +308,10 @@ class PluginMappintelligence {
 
   static Future<String> disableActivityTracking(bool value) async {
     if (Platform.isAndroid) {
-      final result =
-          await _channel.invokeMethod("disableActivityTracking", value);
+      final result = await _channel.invokeMethod(
+        "disableActivityTracking",
+        value,
+      );
       return Future.value(result);
     } else {
       return Future.value("ok");
@@ -260,8 +320,10 @@ class PluginMappintelligence {
 
   static Future<String> disableFragmentTracking(bool value) async {
     if (Platform.isAndroid) {
-      final result =
-          await _channel.invokeMethod("disableFragmentTracking", value);
+      final result = await _channel.invokeMethod(
+        "disableFragmentTracking",
+        value,
+      );
       return Future.value(result);
     } else {
       return Future.value("ok");
@@ -272,8 +334,9 @@ class PluginMappintelligence {
     // !! IMPORTANT !! UPDATE THIS VERSION TO BE THE SAME AS 'version' in pubspec.yaml plugin file
     final flutterPluginVersion = "5.0.11";
     debugPrint("FLUTTER PLUGIN VERSION: $flutterPluginVersion");
-    final result = await _channel
-        .invokeMethod("updateCustomParams", [flutterPluginVersion]);
+    final result = await _channel.invokeMethod("updateCustomParams", [
+      flutterPluginVersion,
+    ]);
     return Future.value(result);
   }
 
@@ -285,8 +348,10 @@ class PluginMappintelligence {
 
   static Future<String> setEnableBackgroundSendout(bool enabled) async {
     final args = <String, bool>{"enabled": enabled};
-    final result =
-        await _channel.invokeMethod("setEnableBackgroundSendout", args);
+    final result = await _channel.invokeMethod(
+      "setEnableBackgroundSendout",
+      args,
+    );
     return result;
   }
 }
