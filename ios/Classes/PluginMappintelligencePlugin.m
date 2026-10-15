@@ -2,9 +2,9 @@
 #import <WebKit/WebKit.h>
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
-#import "MappIntelligence.h"
-#import "MIWebViewTracker.h"
-#import "MIDefaultTracker.h"
+#import <MappIntelligenceiOS/MappIntelligence.h>
+#import <MappIntelligenceiOS/MIWebViewTracker.h>
+#import <MappIntelligenceiOS/MIDefaultTracker.h>
 
 @interface PluginMappintelligencePlugin ()
 @property WKWebView* webView;

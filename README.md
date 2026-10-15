@@ -17,7 +17,7 @@ A Flutter plugin for integrating the [Mapp Intelligence](https://mapp.com/) SDK 
 | Flutter | 1.20.0 |
 | Dart SDK | 2.17.0 |
 | Android | API 21 (Android 5.0) |
-| iOS | 12.0 |
+| iOS | 14.0 |
 
 ---
 
@@ -46,7 +46,9 @@ No native setup required. All initialization is done from Dart.
 
 ### iOS
 
-No native setup required. All initialization is done from Dart.
+CocoaPods integrates the bundled native SDK (`MappIntelligenceiOS.xcframework`). All initialization is done from Dart.
+
+The example app targets iOS 15.0 and applies that minimum to its CocoaPods targets for compatibility with the current Xcode simulator SDK. See the [example setup instructions](example/README.md#ios).
 
 ---
 

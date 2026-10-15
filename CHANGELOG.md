@@ -1,3 +1,7 @@
+## Unreleased
+- Fixed iOS header resolution for the bundled MappIntelligenceiOS XCFramework, addressing the compilation failure introduced in 5.0.10
+- Updated the example app and its CocoaPods deployment targets to a minimum of iOS 15.0 for compatibility with the current Xcode simulator SDK
+
 ## 5.0.11
 - Updated Android Gradle Plugin to 9.3.1 and Gradle wrapper to 9.5.0
 - Bumped Android compileSdkVersion, targetSdkVersion, and build tools to 37

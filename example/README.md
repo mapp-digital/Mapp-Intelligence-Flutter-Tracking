@@ -2,6 +2,18 @@
 
 Demonstrates how to use the plugin_mappintelligence plugin.
 
+## iOS
+
+The example app requires iOS 15.0 or later. Its Podfile applies this minimum to all pod build configurations, preserving any higher deployment targets required by dependencies.
+
+After changing the Podfile, regenerate the pod project from the `example/ios` directory:
+
+```bash
+pod install
+```
+
+Then run the example manually on your device or simulator.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
