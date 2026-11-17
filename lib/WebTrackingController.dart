@@ -36,7 +36,9 @@ class WebTrackingController {
     } catch (error, stack) {
       print('Error: $error');
       PluginMappintelligence.trackExceptionWithNameAndMessage(
-          error.runtimeType.toString(), stack.toString());
+        error.runtimeType.toString(),
+        stack.toString(),
+      );
     }
   }
 
@@ -45,16 +47,20 @@ class WebTrackingController {
       PluginMappintelligence.trackWebviewConfiguration();
     }
 
-    controller.setNavigationDelegate(NavigationDelegate(
-      onNavigationRequest: navigationDelegate?.onNavigationRequest,
-      onPageStarted: navigationDelegate?.onPageStarted,
-      onProgress: navigationDelegate?.onProgress,
-      onWebResourceError: navigationDelegate?.onWebResourceError,
-      onPageFinished: (String url) {
-        print('Page finished loading: $url');
-        handleLoad().then((_) => navigationDelegate?.onPageFinished?.call(url));
-      },
-    ));
+    controller.setNavigationDelegate(
+      NavigationDelegate(
+        onNavigationRequest: navigationDelegate?.onNavigationRequest,
+        onPageStarted: navigationDelegate?.onPageStarted,
+        onProgress: navigationDelegate?.onProgress,
+        onWebResourceError: navigationDelegate?.onWebResourceError,
+        onPageFinished: (String url) {
+          print('Page finished loading: $url');
+          handleLoad().then(
+            (_) => navigationDelegate?.onPageFinished?.call(url),
+          );
+        },
+      ),
+    );
 
     controller.addJavaScriptChannel(
       'ReactNativeWebView',

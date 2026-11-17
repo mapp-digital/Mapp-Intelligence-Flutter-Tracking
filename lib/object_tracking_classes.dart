@@ -4,20 +4,22 @@ class PageParameters {
   Map<int, String>? categories;
 
   Map<String, dynamic> toJson() => {
-        'searchTerm': searchTerm,
-        'params': params?.map((key, value) => MapEntry(key.toString(), value)),
-        'categories':
-            categories?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'searchTerm': searchTerm,
+    'params': params?.map((key, value) => MapEntry(key.toString(), value)),
+    'categories': categories?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 class SessionParameters {
   Map<int, String>? parameters;
 
   Map<String, dynamic> toJson() => {
-        'parameters':
-            parameters?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'parameters': parameters?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 enum Gender { unknown, male, female }
@@ -49,23 +51,24 @@ class UserCategories {
   Map<int, String>? customCategories;
 
   Map<String, dynamic> toJson() => {
-        'birthday': birthday?.toJson(),
-        'city': city,
-        'country': country,
-        'emailAddress': emailAddress,
-        'emailReceiverId': emailReceiverId,
-        'firstName': firstName,
-        'gender': gender?.index,
-        'customerId': customerId,
-        'lastName': lastName,
-        'newsletterSubscribed': newsletterSubscribed,
-        'phoneNumber': phoneNumber,
-        'street': street,
-        'streetNumber': streetNumber,
-        'zipCode': zipCode,
-        'customCategories': customCategories
-            ?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'birthday': birthday?.toJson(),
+    'city': city,
+    'country': country,
+    'emailAddress': emailAddress,
+    'emailReceiverId': emailReceiverId,
+    'firstName': firstName,
+    'gender': gender?.index,
+    'customerId': customerId,
+    'lastName': lastName,
+    'newsletterSubscribed': newsletterSubscribed,
+    'phoneNumber': phoneNumber,
+    'street': street,
+    'streetNumber': streetNumber,
+    'zipCode': zipCode,
+    'customCategories': customCategories?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 enum Status {
@@ -90,17 +93,19 @@ class Product {
   Map<int, String>? ecommerceParameters;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'cost': cost,
-        'quantity': quantity,
-        'productAdvertiseID': productAdvertiseID,
-        'productSoldOut': productSoldOut,
-        'productVariant': productVariant,
-        'categories':
-            categories?.map((key, value) => MapEntry(key.toString(), value)),
-        'ecommerceParameters': ecommerceParameters
-            ?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'name': name,
+    'cost': cost,
+    'quantity': quantity,
+    'productAdvertiseID': productAdvertiseID,
+    'productSoldOut': productSoldOut,
+    'productVariant': productVariant,
+    'categories': categories?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+    'ecommerceParameters': ecommerceParameters?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 class EcommerceParameters {
@@ -109,7 +114,7 @@ class EcommerceParameters {
   String? currency;
   String? orderID;
   double? orderValue;
-//new values
+  //new values
   String? returningOrNewCustomer;
   double? returnValue;
   double? cancellationValue;
@@ -124,24 +129,25 @@ class EcommerceParameters {
   Map<int, String>? customParameters;
 
   Map<String, dynamic> toJson() => {
-        'products': (products?.map((e) => e.toJson()))?.toList(),
-        'status': status?.index,
-        'currency': currency,
-        'orderID': orderID,
-        'orderValue': orderValue,
-        'returningOrNewCustomer': returningOrNewCustomer,
-        'returnValue': returnValue,
-        'cancellationValue': cancellationValue,
-        'couponValue': couponValue,
-        'paymentMethod': paymentMethod,
-        'shippingServiceProvider': shippingServiceProvider,
-        'shippingSpeed': shippingSpeed,
-        'shippingCost': shippingCost,
-        'markUp': markUp,
-        'orderStatus': orderStatus,
-        'customParameters': customParameters
-            ?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'products': (products?.map((e) => e.toJson()))?.toList(),
+    'status': status?.index,
+    'currency': currency,
+    'orderID': orderID,
+    'orderValue': orderValue,
+    'returningOrNewCustomer': returningOrNewCustomer,
+    'returnValue': returnValue,
+    'cancellationValue': cancellationValue,
+    'couponValue': couponValue,
+    'paymentMethod': paymentMethod,
+    'shippingServiceProvider': shippingServiceProvider,
+    'shippingSpeed': shippingSpeed,
+    'shippingCost': shippingCost,
+    'markUp': markUp,
+    'orderStatus': orderStatus,
+    'customParameters': customParameters?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 enum CampaignAction { click, view }
@@ -155,13 +161,14 @@ class CampaignParameters {
   Map<int, String>? customParameters;
 
   Map<String, dynamic> toJson() => {
-        'campaignId': campaignId,
-        'action': action?.index,
-        'mediaCode': mediaCode,
-        'oncePerSession': oncePerSession,
-        'customParameters': customParameters
-            ?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'campaignId': campaignId,
+    'action': action?.index,
+    'mediaCode': mediaCode,
+    'oncePerSession': oncePerSession,
+    'customParameters': customParameters?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 class PageViewEvent {
@@ -174,22 +181,23 @@ class PageViewEvent {
   CampaignParameters? campaignParameters;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'pageParameters': pageParameters?.toJson(),
-        'sessionParameters': sessionParameters?.toJson(),
-        'userCategories': userCategories?.toJson(),
-        'ecommerceParameters': ecommerceParameters?.toJson(),
-        'campaignParameters': campaignParameters?.toJson()
-      };
+    'name': name,
+    'pageParameters': pageParameters?.toJson(),
+    'sessionParameters': sessionParameters?.toJson(),
+    'userCategories': userCategories?.toJson(),
+    'ecommerceParameters': ecommerceParameters?.toJson(),
+    'campaignParameters': campaignParameters?.toJson(),
+  };
 }
 
 class EventParameters {
   Map<int, String>? parameters;
 
   Map<String, dynamic> toJson() => {
-        'parameters':
-            parameters?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'parameters': parameters?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 class ActionEvent {
@@ -202,13 +210,13 @@ class ActionEvent {
   CampaignParameters? campaignParameters;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'eventParameters': eventParameters?.toJson(),
-        'sessionParameters': sessionParameters?.toJson(),
-        'userCategories': userCategories?.toJson(),
-        'ecommerceParameters': ecommerceParameters?.toJson(),
-        'campaignParameters': campaignParameters?.toJson()
-      };
+    'name': name,
+    'eventParameters': eventParameters?.toJson(),
+    'sessionParameters': sessionParameters?.toJson(),
+    'userCategories': userCategories?.toJson(),
+    'ecommerceParameters': ecommerceParameters?.toJson(),
+    'campaignParameters': campaignParameters?.toJson(),
+  };
 }
 
 class MediaParameters {
@@ -223,16 +231,17 @@ class MediaParameters {
   Map<int, String>? customCategories;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'action': action,
-        'bandwith': bandwith,
-        'duration': duration,
-        'position': position,
-        'soundIsMuted': soundIsMuted,
-        'soundVolume': soundVolume,
-        'customCategories': customCategories
-            ?.map((key, value) => MapEntry(key.toString(), value))
-      };
+    'name': name,
+    'action': action,
+    'bandwith': bandwith,
+    'duration': duration,
+    'position': position,
+    'soundIsMuted': soundIsMuted,
+    'soundVolume': soundVolume,
+    'customCategories': customCategories?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+  };
 }
 
 class MediaEvent {
@@ -245,12 +254,12 @@ class MediaEvent {
   SessionParameters? sessionParameters;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'eventParameters': eventParameters?.toJson(),
-        'mediaParameters': mediaParameters.toJson(),
-        'ecommerceParameters': ecommerceParameters?.toJson(),
-        'sessionParameters': sessionParameters?.toJson()
-      };
+    'name': name,
+    'eventParameters': eventParameters?.toJson(),
+    'mediaParameters': mediaParameters.toJson(),
+    'ecommerceParameters': ecommerceParameters?.toJson(),
+    'sessionParameters': sessionParameters?.toJson(),
+  };
 }
 
 enum LogLevel { all, debug, warning, error, fault, info, none }
@@ -263,7 +272,7 @@ enum ExceptionType {
   allExceptionTypes,
   uncaught_and_custom,
   uncaught_and_caught,
-  custom_and_caught
+  custom_and_caught,
 }
 
 class ErrorUserInfo {
@@ -282,18 +291,22 @@ class MIFormParameters {
   int? anonymous;
   List<int>? pathAnalysis;
   Map<String, dynamic> toJson() => {
-        'formName': formName,
-        'fieldIds': (fieldIds?.map((e) => e))?.toList(),
-        'renameFields':
-            renameFields?.map((key, value) => MapEntry(key.toString(), value)),
-        'changeFieldsValue': changeFieldsValue
-            ?.map((key, value) => MapEntry(key.toString(), value)),
-        'anonymousSpecificFields':
-            (anonymousSpecificFields?.map((e) => e))?.toList(),
-        'fullContentSpecificFields':
-            (fullContentSpecificFields?.map((e) => e))?.toList(),
-        'confirmButton': confirmButton,
-        'anonymous': anonymous,
-        'pathAnalysis': (pathAnalysis?.map((e) => e))?.toList()
-      };
+    'formName': formName,
+    'fieldIds': (fieldIds?.map((e) => e))?.toList(),
+    'renameFields': renameFields?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+    'changeFieldsValue': changeFieldsValue?.map(
+      (key, value) => MapEntry(key.toString(), value),
+    ),
+    'anonymousSpecificFields': (anonymousSpecificFields?.map(
+      (e) => e,
+    ))?.toList(),
+    'fullContentSpecificFields': (fullContentSpecificFields?.map(
+      (e) => e,
+    ))?.toList(),
+    'confirmButton': confirmButton,
+    'anonymous': anonymous,
+    'pathAnalysis': (pathAnalysis?.map((e) => e))?.toList(),
+  };
 }

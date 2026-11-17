@@ -4,12 +4,13 @@ import 'package:plugin_mappintelligence/tracking/tracking_events.dart';
 class MappAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   final List<TrackingEvents> trackingEvents;
 
-  MappAnalyticsObserver(
-      [this.trackingEvents = const <TrackingEvents>[
-        TrackingEvents.PUSH,
-        TrackingEvents.POP,
-        TrackingEvents.REPLACE
-      ]]);
+  MappAnalyticsObserver([
+    this.trackingEvents = const <TrackingEvents>[
+      TrackingEvents.PUSH,
+      TrackingEvents.POP,
+      TrackingEvents.REPLACE,
+    ],
+  ]);
 
   void _sendScreenView(String actionName, Route<dynamic> route) {
     var screenName = route.settings.name;
