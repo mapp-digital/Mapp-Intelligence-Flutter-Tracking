@@ -1,4 +1,4 @@
-## Unreleased
+## 5.0.12
 - Fixed iOS header resolution for the bundled MappIntelligenceiOS XCFramework, addressing the compilation failure introduced in 5.0.10
 - Updated the example app and its CocoaPods deployment targets to a minimum of iOS 15.0 for compatibility with the current Xcode simulator SDK
 

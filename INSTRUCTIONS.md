@@ -203,13 +203,13 @@ This only needs to be done once. It authorizes GitHub Actions to publish using O
 
 ## 6. Publishing a New Version
 
-After completing [Section 4](#4-making-a-release) and [Section 5](#5-publishing-to-pubdev--one-time-setup), recreate and push the release tag. For example, for version `5.0.11`:
+After completing [Section 4](#4-making-a-release) and [Section 5](#5-publishing-to-pubdev--one-time-setup), recreate and push the release tag. For example, for version `5.0.12`:
 
 ```bash
-./release-version 5.0.11
+./release-version 5.0.12
 ```
 
-This helper script deletes the local and remote tag if they already exist, recreates `v5.0.11`, and pushes it to `origin`.
+This helper script deletes the local and remote tag if they already exist, recreates `v5.0.12`, and pushes it to `origin`.
 
 If you prefer the manual commands, the equivalent is:
 
@@ -270,7 +270,7 @@ Run `dart pub publish --dry-run` locally to see exact issues. Common causes:
 - Dart analysis errors
 
 ### GitHub Release has empty changelog
-The version heading in `CHANGELOG.md` must match exactly `## <version>` with no `v` prefix (e.g. `## 5.0.11`, not `## v5.0.11`).
+The version heading in `CHANGELOG.md` must match exactly `## <version>` with no `v` prefix (e.g. `## 5.0.12`, not `## v5.0.12`).
 
 ### OIDC authentication fails in CI
 Verify the pub.dev admin setup in Section 5 is complete and the repository name matches exactly: `mapp-digital/Mapp-Intelligence-Flutter-Tracking`.
